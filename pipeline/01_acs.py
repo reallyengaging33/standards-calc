@@ -15,7 +15,10 @@ Download (no account needed):
 Variables, checked against PUMS_Data_Dictionary_2024:
   SERIALNO  housing unit / GQ serial number (household link)
   PWGTP     person weight                     -> summed for population, never counted
-  AGEP      age 0-99 (top-coded)              -> keep 18+
+  AGEP      age 0-99, top-coded by state      -> keep 18+; 90 and over pooled as 90 ("90+").
+            PUMS replaces the oldest ages in each state with one stand-in value (the
+            2024 file has bumps at 92-95 and nobody 97-99), so single ages above 90
+            aren't real. The site treats 90 as "90 and over".
   SEX       1 male, 2 female
   MAR       1 married, 2 widowed, 3 divorced, 4 separated, 5 never married
             single = 2,3,5. Separated (4) is still legally married -> not single.
@@ -59,6 +62,7 @@ ZIP = RAW / "csv_pus.zip"
 DICT = RAW / "PUMS_Data_Dictionary_2024.csv"
 OUT = ROOT / "site" / "data"
 YEAR = 2024
+AGE_TOP = 90  # ages >= this are one group in the cube (PUMS top-coding)
 
 # Must match INCOME_STEPS in site/index.html
 INCOME_STEPS = [0, 10_000, 20_000, 25_000, 30_000, 40_000, 50_000, 60_000, 75_000,
@@ -163,6 +167,7 @@ def main():
     a["income"] = a.PINCP * a.ADJINC / 1e6
     a["inc"] = income_bucket(a.income.to_numpy())
     a["sex"] = (a.SEX - 1).astype(np.int8)  # 0 male, 1 female
+    a["AGEP"] = a.AGEP.clip(upper=AGE_TOP)   # top-coded ages -> one 90+ group (cube only)
 
     # ---- cube ----------------------------------------------------------------------
     dims = ["sex", "AGEP", "single", "eth", "inc", "kids"]
@@ -173,7 +178,8 @@ def main():
         "source": f"ACS {YEAR} 1-year PUMS, person file",
         "dims": {
             "sex": ["male", "female"],
-            "age": "years, 18-99 (99 = 99+ top-coded)",
+            "age": "years 18-90; 90 = 90 and over (PUMS top-codes the oldest ages by state)",
+            "age_top": AGE_TOP,
             "single": ["not single (married or separated)", "single (never married, divorced, widowed)"],
             "eth": ETHNICITIES,
             "inc": INCOME_STEPS,
@@ -195,7 +201,10 @@ def main():
     # ---- state context table -------------------------------------------------------
     st = a.groupby(["STATE", "sex", "single"]).PWGTP.sum()
     states = {}
+    present = set(st.index.get_level_values(0))  # PR is in the dictionary but not the US file
     for code, abbr in sorted(state_names.items()):
+        if code not in present:
+            continue
         g = lambda s, si: int(st.get((code, s, si), 0))
         states[abbr] = {"fips": f"{code:02d}",
                         "male": {"single": g(0, 1), "not_single": g(0, 0)},

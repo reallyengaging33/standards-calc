@@ -161,11 +161,14 @@ Aggregate ACS adults into a **weighted cube** (state dropped, because location n
 the odds):
 
 ```
-dimensions: sex(2) × age(18..99) × single(2) × ethnicity group(7) × income bucket(19) × kids(0..4)
+dimensions: sex(2) × age(18..90, 90 = 90+) × single(2) × ethnicity group(7) × income bucket(19) × kids(0..4)
 values:     sum of PWGTP (population), count of rows (sample size)
 ```
 - Income bucket = the highest `INCOME_STEPS` value that the person's adjusted income is ≥.
   Negative or zero income goes in bucket 0.
+- Ages 90+ are pooled as 90: PUMS top-codes the oldest ages by state, so single ages above
+  90 aren't real. At runtime a range reaching 90 includes the 90+ group, and a youngest age
+  above 90 shows "not available".
 - Keep only non-empty cells. Write `site/data/acs_2024_cube.json` (or a compact binary or
   columnar format). **Target under 2 MB gzipped.** Report the actual size.
 - Write `site/data/nhanes_2021_23.json` with the height CDFs and obesity shares.
