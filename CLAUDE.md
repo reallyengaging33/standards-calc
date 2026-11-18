@@ -182,7 +182,9 @@ with code that:
    ethnicity selection, `income bucket ≥ minIncome` and kids range.
 3. For each matching cell, multiplies its weight by
    P(height in range | sex, age band, race group) × P(not obese | same), if those
-   filters are on. These come from the NHANES tables.
+   filters are on. These come from the NHANES tables. (Implemented with a joint
+   `height_le_not_obese` table, P(height in range AND BMI < 30), so the two are never
+   multiplied as if independent.)
 4. pool = Σ weights for the sought sex (all adults 18+); matches = Σ adjusted weights.
    N = pool / matches.
 5. **Filter breakdown:** for each filter, report "keeps X%". Compute this as

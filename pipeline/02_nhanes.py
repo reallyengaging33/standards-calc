@@ -28,6 +28,9 @@ For each group:
                  for k = 0..30, i.e. inches 58..88. Then
                  P(min <= h <= max) = le(max) - le(min - 1), le(<58) = 0, le(>88) = 1.
   obese        = weighted share with BMI >= 30
+  height_le_not_obese[k] = weighted P(height <= HEIGHT_FROM + k AND BMI < 30), from people
+                 with both measures. Used whenever the obesity filter is on, so height and
+                 obesity are combined from the same respondents, not multiplied.
 If a group has fewer than MIN_N respondents (for height or BMI), it is merged with the
 neighbouring age band that has fewer respondents, repeatedly, until every pooled group
 has MIN_N. Merges are listed in the output.
@@ -76,11 +79,19 @@ def stats(g: pd.DataFrame) -> dict:
     w = h.WTMEC2YR.to_numpy()
     inch = np.clip(h.inch.to_numpy(), HEIGHT_FROM - 1, HEIGHT_TO + 1)
     le = [float(w[inch <= k].sum() / w.sum()) for k in range(HEIGHT_FROM, HEIGHT_TO + 1)]
+    # Joint table, so height and obesity are never multiplied as if independent:
+    # P(height <= k AND BMI < 30), on respondents with both measures (pregnant excluded).
+    j = g[g.BMXHT.notna() & g.BMXBMI.notna() & ~g.pregnant]
+    jw = j.WTMEC2YR.to_numpy()
+    jinch = np.clip(j.inch.to_numpy(), HEIGHT_FROM - 1, HEIGHT_TO + 1)
+    lean = (j.BMXBMI < 30).to_numpy()
+    jle = [float(jw[(jinch <= k) & lean].sum() / jw.sum()) for k in range(HEIGHT_FROM, HEIGHT_TO + 1)]
     return {
         "n_height": int(len(h)), "n_bmi": int(len(b)),
         "mean_height_in": round(float(np.average(h.BMXHT, weights=w) / 2.54), 2),
         "obese": round(float(np.average(b.BMXBMI >= 30, weights=b.WTMEC2YR)), 5),
         "height_le": [round(x, 5) for x in le],
+        "height_le_not_obese": [round(x, 5) for x in jle],
     }
 
 
@@ -147,6 +158,7 @@ def main():
         "height_from_in": HEIGHT_FROM, "height_to_in": HEIGHT_TO,
         "height_note": "height_le[k] = P(height rounded to nearest inch <= height_from_in + k)",
         "obese_note": "share with BMI >= 30, pregnant women excluded",
+        "joint_note": "height_le_not_obese[k] = P(height <= height_from_in + k AND BMI < 30); last value = P(not obese)",
         "min_n": MIN_N, "pooled": merges,
         "tables": tables,  # tables[sex][race][band_index]
     }

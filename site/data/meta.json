@@ -111,7 +111,7 @@
     }
   },
   "nhanes": {
-    "built": "2026-11-18T22:27:26+00:00",
+    "built": "2026-11-18T22:30:27+00:00",
     "source": "CDC/NCHS, National Health and Nutrition Examination Survey, Aug 2021\u2013Aug 2023",
     "url": "https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?Cycle=2021-2023",
     "files": [
@@ -119,7 +119,7 @@
       "BMX_L.xpt"
     ],
     "output": "nhanes_2021_23.json",
-    "bytes": 15736,
+    "bytes": 29121,
     "weight": "WTMEC2YR",
     "pooled_groups": [
       "male black: 18-29+30-39+40-49 pooled (n_height=141, n_bmi=141)",
