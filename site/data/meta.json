@@ -109,5 +109,38 @@
         "PAOC": 24.2
       }
     }
+  },
+  "nhanes": {
+    "built": "2026-11-18T22:27:26+00:00",
+    "source": "CDC/NCHS, National Health and Nutrition Examination Survey, Aug 2021\u2013Aug 2023",
+    "url": "https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?Cycle=2021-2023",
+    "files": [
+      "DEMO_L.xpt",
+      "BMX_L.xpt"
+    ],
+    "output": "nhanes_2021_23.json",
+    "bytes": 15736,
+    "weight": "WTMEC2YR",
+    "pooled_groups": [
+      "male black: 18-29+30-39+40-49 pooled (n_height=141, n_bmi=141)",
+      "male black: 50-59+60+ pooled (n_height=199, n_bmi=194)",
+      "male asian: 18-29+30-39+40-49+50-59+60+ pooled (n_height=154, n_bmi=154)",
+      "male hispanic: 18-29+30-39 pooled (n_height=198, n_bmi=198)",
+      "male hispanic: 40-49+50-59 pooled (n_height=151, n_bmi=150)",
+      "male other: 18-29+30-39+40-49+50-59+60+ pooled (n_height=203, n_bmi=203)",
+      "female black: 18-29+30-39 pooled (n_height=158, n_bmi=149)",
+      "female black: 40-49+50-59 pooled (n_height=123, n_bmi=119)",
+      "female asian: 18-29+30-39+40-49+50-59+60+ pooled (n_height=195, n_bmi=194)",
+      "female hispanic: 40-49+50-59 pooled (n_height=186, n_bmi=186)",
+      "female other: 18-29+30-39+40-49+50-59+60+ pooled (n_height=208, n_bmi=206)"
+    ],
+    "checks": {
+      "respondents_18plus_examined": 8153,
+      "obesity_20plus_pct": 40.3,
+      "mean_height_male_in": 68.92,
+      "obesity_18plus_male_pct": 38.7,
+      "mean_height_female_in": 63.48,
+      "obesity_18plus_female_pct": 40.8
+    }
   }
 }
