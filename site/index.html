@@ -517,7 +517,14 @@
     display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; border-radius: var(--radius-md);
     border: 1px dashed rgba(31, 179, 240, 0.45); background: var(--cyan-tint); color: var(--cyan-ink); font-size: 13px;
   }
-  .demo-note svg { width: 16px; height: 16px; color: var(--cyan); }
+  .demo-note svg { width: 16px; height: 16px; color: var(--cyan); flex: none; }
+  .demo-note.error { border-color: rgba(240, 31, 110, 0.5); background: transparent; color: var(--text); }
+  .odds-flag { display: inline-block; margin: 8px 0 0; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px dashed var(--border-strong); color: var(--text-2); }
+  .sources-line { margin: 4px 2px 14px; font-size: 13px; color: var(--text-3); }
+  .sources-line a, .method a { color: var(--cyan-ink); }
+  .method p, .method li { font-size: 14px; color: var(--text-2); line-height: 1.55; }
+  .method h3 { font-size: 15px; margin: 16px 0 4px; }
+  .method ul { padding-left: 18px; margin: 8px 0; }
   .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; padding: 28px; }
   .tier { font-family: var(--font-display); font-weight: 750; font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.03em; line-height: 1.05; margin: 0; color: var(--magenta-ink); text-wrap: balance; }
   .tier-line { margin: 8px 0 22px; color: var(--text-2); font-size: 16px; max-width: 38ch; }
@@ -764,6 +771,7 @@
         <div class="chips" id="eth-chips">
           <button type="button" class="chip" data-value="white" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>White</button>
           <button type="button" class="chip" data-value="black" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Black</button>
+          <button type="button" class="chip" data-value="hispanic" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Hispanic/Latino</button>
           <button type="button" class="chip" data-value="asian" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Asian</button>
           <button type="button" class="chip" data-value="middle_eastern" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Middle Eastern</button>
           <button type="button" class="chip" data-value="mixed" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Mixed</button>
@@ -810,6 +818,7 @@
           <input type="range" min="0" max="4" step="1" aria-label="Most children" data-end="hi">
         </div>
         <div class="steps5" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4+</span></div>
+        <p class="hint">Counts children living with them.</p>
       </div>
 
       <div class="field" role="group" aria-labelledby="height-label">
@@ -987,13 +996,14 @@
 
   <!-- ================= RESULTS ================= -->
   <div class="view" id="view-4" hidden>
-    <p class="demo-note"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span>Demo numbers. These are rough national estimates until the real census data is connected.</span></p>
+    <div class="demo-note" id="data-status" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span id="data-status-text"></span><button type="button" class="link-btn" id="data-retry" hidden>Try again</button></div>
 
     <section class="panel hero" id="result-panel" tabindex="-1" aria-labelledby="r-tier">
       <div class="hero-main">
         <h2 class="tier" id="r-tier"></h2>
         <p class="tier-line" id="r-line"></p>
         <p class="odds" id="r-odds"></p>
+        <p class="odds-flag" id="r-flag" hidden></p>
         <p class="odds-sub" id="r-sub"></p>
         <p class="odds-people" id="r-people"></p>
         <p class="odds-local" id="r-local" hidden></p>
@@ -1077,6 +1087,28 @@
       <div><h2 class="panel-title">Not happy with that?</h2><p class="panel-sub" style="margin:2px 0 0">Change your filters and see how the odds move.</p></div>
       <button type="button" class="btn-primary" id="edit-filters">Edit my filters<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </section>
+
+    <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 and CDC NHANES 2021–2023. <a href="#methodology">How this is calculated</a></p>
+
+    <section class="panel method" id="methodology" aria-labelledby="method-title">
+      <h2 class="panel-title" id="method-title">How this is calculated</h2>
+      <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. Nothing is sent anywhere: the data ships with the page and the maths runs on your device.</p>
+      <ul>
+        <li><strong>Sex, age, relationship status, ethnicity, income, children:</strong> U.S. Census Bureau, American Community Survey 2024 1-year Public Use Microdata Sample (about 2.8 million adult respondents, representing 267 million US adults).</li>
+        <li><strong>Height and obesity:</strong> CDC / NCHS National Health and Nutrition Examination Survey, August 2021–August 2023 (measured, not self-reported). Applied by sex, age band and ethnicity. Some smaller groups are pooled across age bands.</li>
+      </ul>
+      <h3>Definitions</h3>
+      <ul>
+        <li><strong>Single:</strong> never married, divorced or widowed. Separated people are still legally married, so they count as not single. Unmarried couples who live together count as single, because the census records marital status, not relationships.</li>
+        <li><strong>Children:</strong> their own children under 18 living in the same home. Children who live elsewhere aren't recorded.</li>
+        <li><strong>Income:</strong> total personal income from all sources, in 2024 dollars.</li>
+        <li><strong>Ethnicity:</strong> each person has exactly one group. Hispanic/Latino (any race) first, then Middle Eastern / North African (from reported ancestry, since the census has no such race box), then White, Black, Asian or Mixed race. Other groups appear only under “Doesn't matter”.</li>
+        <li><strong>Obesity:</strong> BMI of 30 or more.</li>
+        <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
+        <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
+      </ul>
+      <p>Everything in steps 2 and 3 (behaviour, Emotional Intelligence, skills, body types, looks, preferred income) isn't measured by any survey. It feeds the Standards score, which can push the delusion score up but never changes the odds. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+    </section>
   </div>
 
   <details class="dev">
@@ -1150,6 +1182,7 @@
     return "$" + n.toLocaleString("en-US");
   }
   /* Importance sliders scale a pillar: 0/10 → ×0.5, 5/10 → ×1.0, 10/10 → ×1.5 */
+  function incomeFloor(n) { var t = fmtMoney(n); return t.slice(-1) === "+" ? t : t + "+"; }
   function importanceMult(v) { return 0.5 + 0.1 * v; }
   function importanceWord(v, kind) {
     var words = kind === "looks"
@@ -1637,7 +1670,7 @@
   all("[data-skip]").forEach(function (b) { b.addEventListener("click", function () { goTo(current + 1); }); });
 
   /* ================= Summary / results ================= */
-  var LABELS = { white: "White", black: "Black", asian: "Asian", middle_eastern: "Middle Eastern", mixed: "Mixed" };
+  var LABELS = { white: "White", black: "Black", hispanic: "Hispanic/Latino", asian: "Asian", middle_eastern: "Middle Eastern", mixed: "Mixed" };
   function heightText() {
     if (state.heightMinIn === null && state.heightMaxIn === null) return "Any height";
     var lo = state.heightMinIn === null ? "any" : fmtHeight(state.heightMinIn);
@@ -1645,57 +1678,152 @@
     return lo + " to " + hi;
   }
   function countPicked(obj) { return Object.keys(obj).filter(function (k) { return obj[k] !== "any" && obj[k] !== false; }).length; }
-  /* ================= Demo model (replace with real census data) =================
-     Rough national shares only, and it multiplies filters as if they were independent.
-     The real version should filter weighted microdata rows instead. */
-  var DEMO = {
-    adults: { women: 133e6, men: 128e6 },
-    ethnicity: { white: 0.58, black: 0.12, asian: 0.06, middle_eastern: 0.01, mixed: 0.03 },
-    height: { men: { mean: 69.1, sd: 2.9 }, women: { mean: 63.6, sd: 2.7 } },
-    obesity: 0.40,
-    kids: [0.55, 0.18, 0.16, 0.07, 0.04],   // share of adults by children they have: 0,1,2,3,4+
-    incomeAtLeast: [1, .80, .66, .60, .55, .45, .37, .30, .22, .13, .085, .06, .033, .02, .014, .008, .005, .0025, .0015]
-  };
-  function ageWeight(a) { return a < 65 ? 1 : a < 75 ? 0.8 : a < 85 ? 0.45 : 0.1; }
-  function singleShare(a) { return a < 30 ? 0.75 : a < 45 ? 0.45 : a < 65 ? 0.38 : 0.45; }
-  function ageFactor(lo, hi) {
-    var tot = 0, sel = 0;
-    for (var a = 18; a <= 99; a++) { tot += ageWeight(a); if (a >= lo && a <= hi) sel += ageWeight(a); }
-    return sel / tot;
-  }
-  function singleFactor(lo, hi) {
-    var w = 0, s = 0;
-    for (var a = lo; a <= hi; a++) { w += ageWeight(a); s += ageWeight(a) * singleShare(a); }
-    return s / w;
-  }
-  function erf(x) { var t = 1 / (1 + 0.3275911 * Math.abs(x)); var y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; }
-  function ncdf(x, m, sd) { return 0.5 * (1 + erf((x - m) / (sd * Math.SQRT2))); }
-  function heightFactor(sex, lo, hi) {
-    var d = DEMO.height[sex];
-    var a = lo === null ? 0 : ncdf(lo - 0.5, d.mean, d.sd);
-    var b = hi === null ? 1 : ncdf(hi + 0.5, d.mean, d.sd);
-    return Math.max(b - a, 0);
-  }
-  function incomeFactor(sex, min) {
-    var p = DEMO.incomeAtLeast[INCOME_STEPS.indexOf(min)];
-    return sex === "women" && min >= 50000 ? p * 0.7 : p;
+  /* ================= Real-data model =================
+     ACS 2024 PUMS cube (site/data/acs_2024_cube.json) gives weighted adults by
+     sex × age × single × ethnicity × income bucket × kids. We count the cells that match
+     every filter at once, so correlated filters are never multiplied together.
+     Height and obesity come from NHANES 2021–23 tables by sex × age band × race group,
+     using a joint "height in range AND not obese" table when both apply. */
+  var DATA = null, dataError = null, dataLoading = false;
+  var SEX_IDX = { men: 0, women: 1 }, NH_SEX = { men: "male", women: "female" };
+  var LOW_N = 30;
+  var AGE_TOP = 90;   // the cube pools everyone 90+ (Census top-codes the oldest ages)
+
+  function loadData() {
+    if (DATA || dataLoading) return;
+    dataLoading = true; dataError = null; paintDataStatus();
+    var get = function (f) {
+      return fetch("data/" + f).then(function (r) { if (!r.ok) throw new Error(f + ": HTTP " + r.status); return r.json(); });
+    };
+    Promise.all([get("acs_2024_cube.json"), get("nhanes_2021_23.json")]).then(function (res) {
+      DATA = prepare(res[0], res[1]);
+    }).catch(function (e) {
+      dataError = e;
+      if (window.console) console.error("Standards Calc: could not load data", e);
+    }).then(function () {
+      dataLoading = false; paintDataStatus();
+      if (current === 4) renderResults();
+    });
   }
 
-  function computeFor(s, sex) {
-    var f = [];
-    f.push({ key: "age", label: "Age range", note: s.ageMin + "–" + s.ageMax, v: ageFactor(s.ageMin, s.ageMax) });
-    var eth = s.ethnicities === "any" ? 1 : s.ethnicities.reduce(function (t, k) { return t + DEMO.ethnicity[k]; }, 0);
-    f.push({ key: "ethnicity", label: "Ethnicity", note: s.ethnicities === "any" ? "Any" : s.ethnicities.length + " selected", v: eth });
-    f.push({ key: "single", label: "Relationship status", note: s.excludeMarried ? "Single only" : "Any", v: s.excludeMarried ? singleFactor(s.ageMin, s.ageMax) : 1 });
-    var hNote = (s.heightMinIn === null && s.heightMaxIn === null) ? "Any" : heightText();
-    f.push({ key: "height", label: "Height", note: hNote, v: heightFactor(sex, s.heightMinIn, s.heightMaxIn) });
-    f.push({ key: "income", label: "Minimum income", note: s.minIncome ? fmtMoney(s.minIncome) + "+" : "None", v: incomeFactor(sex, s.minIncome) });
-    var kidsShare = 0; for (var k = s.kidsMin; k <= s.kidsMax; k++) kidsShare += DEMO.kids[k];
-    f.push({ key: "kids", label: "Children", note: kidsText(), v: kidsShare });
-    f.push({ key: "obesity", label: "Exclude obesity", note: s.excludeObese ? "On" : "Off", v: s.excludeObese ? 1 - DEMO.obesity : 1 });
-    var p = f.reduce(function (t, x) { return t * x.v; }, 1);
-    return { factors: f, p: p, people: DEMO.adults[sex] * p, pool: DEMO.adults[sex] };
+  function paintDataStatus() {
+    var box = $("data-status"), txt = $("data-status-text"), retry = $("data-retry");
+    box.classList.toggle("error", !!dataError);
+    if (DATA) { box.hidden = true; return; }
+    box.hidden = false;
+    retry.hidden = !dataError;
+    txt.textContent = dataError
+      ? "Couldn't load the population data, so there are no results yet. Check your connection and try again." +
+        (location.protocol === "file:" ? " (This page has to be opened through a web server, not as a file.)" : "")
+      : "Loading population data…";
   }
+
+  function prepare(cube, nh) {
+    var d = cube.data, len = d.w.length;
+    var ethIdx = {}; cube.dims.eth.forEach(function (k, i) { ethIdx[k] = i; });
+    var starts = nh.age_band_starts, groups = ["white", "black", "asian", "hispanic", "other"];
+    var raceOfEth = cube.dims.eth.map(function (k) { return groups.indexOf(nh.eth_map[k]); });
+    var bandOfAge = []; for (var a = 0; a <= 120; a++) { var b = 0; while (b + 1 < starts.length && a >= starts[b + 1]) b++; bandOfAge[a] = b; }
+    var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], inc: [], kids: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
+    for (var i = 0; i < len; i++) {
+      var t = bySex[d.sex[i]];
+      t.age.push(d.age[i]); t.single.push(d.single[i]); t.eth.push(d.eth[i]); t.inc.push(d.inc[i]);
+      t.kids.push(d.kids[i]); t.w.push(d.w[i]); t.n.push(d.n[i]);
+      t.cell.push(bandOfAge[d.age[i]] * groups.length + raceOfEth[d.eth[i]]);   // NHANES cell index
+      t.total += d.w[i];
+      t.incW[d.inc[i]] = (t.incW[d.inc[i]] || 0) + d.w[i];
+    }
+    bySex.forEach(function (t) {   // share of all adults of that sex with income >= each step
+      var above = 0; t.incomeAtLeast = [];
+      for (var k = INCOME_STEPS.length - 1; k >= 0; k--) { above += t.incW[k] || 0; t.incomeAtLeast[k] = above / t.total; }
+    });
+    return { sex: bySex, ethIdx: ethIdx, nh: nh, groups: groups, nBands: starts.length };
+  }
+
+  // P(height in range [, and not obese]) for every NHANES cell, for one sex
+  function bodyTable(s, sex, useHeight, useObese) {
+    var nh = DATA.nh, out = [], from = nh.height_from_in, to = nh.height_to_in;
+    var lo = s.heightMinIn === null ? null : s.heightMinIn, hi = s.heightMaxIn === null ? null : s.heightMaxIn;
+    function le(arr, k) { return k < from ? 0 : k > to ? arr[arr.length - 1] : arr[k - from]; }
+    for (var b = 0; b < DATA.nBands; b++) {
+      DATA.groups.forEach(function (g) {
+        var row = nh.tables[NH_SEX[sex]][g][b];
+        var arr = useObese ? row.height_le_not_obese : row.height_le;
+        var p;
+        if (!useHeight) p = useObese ? arr[arr.length - 1] : 1;
+        else p = (hi === null ? arr[arr.length - 1] : le(arr, hi)) - (lo === null ? 0 : le(arr, lo - 1));
+        out.push(Math.max(p, 0));
+      });
+    }
+    return out;
+  }
+
+  var FILTER_KEYS = ["age", "ethnicity", "single", "height", "income", "kids", "obesity"];
+
+  /* One pass over the cube: weighted matches with all filters, and with each filter removed. */
+  function computeFor(s, sex) {
+    var t = DATA.sex[SEX_IDX[sex]];
+    var ethOk = [];
+    for (var e = 0; e < 7; e++) ethOk[e] = s.ethnicities === "any";
+    if (s.ethnicities !== "any") s.ethnicities.forEach(function (k) { if (k in DATA.ethIdx) ethOk[DATA.ethIdx[k]] = true; });
+    var incMin = INCOME_STEPS.indexOf(s.minIncome); if (incMin < 0) incMin = 0;
+    var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
+    var both = bodyTable(s, sex, hOn, oOn), noH = bodyTable(s, sex, false, oOn), noO = bodyTable(s, sex, hOn, false);
+    var matched = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0];
+    for (var i = 0; i < t.w.length; i++) {
+      var f0 = t.age[i] === AGE_TOP ? s.ageMax >= AGE_TOP : (t.age[i] >= s.ageMin && t.age[i] <= s.ageMax);
+      var f1 = ethOk[t.eth[i]];
+      var f2 = !s.excludeMarried || t.single[i] === 1;
+      var f4 = t.inc[i] >= incMin;
+      var f5 = t.kids[i] >= s.kidsMin && t.kids[i] <= s.kidsMax;
+      var miss = (f0 ? 0 : 1) + (f1 ? 0 : 1) + (f2 ? 0 : 1) + (f4 ? 0 : 1) + (f5 ? 0 : 1);
+      var w = t.w[i], c = t.cell[i];
+      // each filter on its own (used only when removing one filter still leaves nobody)
+      if (f0) alone[0] += w; if (f1) alone[1] += w; if (f2) alone[2] += w; if (f4) alone[4] += w; if (f5) alone[5] += w;
+      alone[3] += w * noO[c]; alone[6] += w * noH[c];
+      if (miss > 1) continue;
+      var pb = both[c];
+      if (miss === 0) {
+        matched += w * pb;
+        if (pb > 0) n += t.n[i];
+        without[3] += w * noH[c];   // height removed
+        without[6] += w * noO[c];   // obesity removed
+        without[0] += w * pb; without[1] += w * pb; without[2] += w * pb; without[4] += w * pb; without[5] += w * pb;
+      } else {
+        var k = !f0 ? 0 : !f1 ? 1 : !f2 ? 2 : !f4 ? 4 : 5;  // the single ACS filter this cell fails
+        without[k] += w * pb;
+      }
+    }
+    return { pool: t.total, people: matched, n: n, without: without, alone: alone };
+  }
+
+  function factorRows(s, matched, without, alone, pool) {
+    var hNote = (s.heightMinIn === null && s.heightMaxIn === null) ? "Any" : heightText();
+    var meta = {
+      age: ["Age range", s.ageMin + "–" + s.ageMax],
+      ethnicity: ["Ethnicity", s.ethnicities === "any" ? "Any" : s.ethnicities.map(function (k) { return LABELS[k] || k; }).join(", ")],
+      single: ["Relationship status", s.excludeMarried ? "Single only" : "Any"],
+      height: ["Height", hNote],
+      income: ["Minimum income", s.minIncome ? incomeFloor(s.minIncome) : "None"],
+      kids: ["Children", kidsText()],
+      obesity: ["Exclude obesity", s.excludeObese ? "On" : "Off"]
+    };
+    return FILTER_KEYS.map(function (key, i) {
+      // share of the pool-without-this-filter that survives it, so overlaps are real.
+      // If nobody is left even without it (two filters each empty the pool), fall back to
+      // the share of all adults this filter keeps on its own.
+      var v = without[i] > 0 ? matched / without[i] : alone[i] / pool;
+      return { key: key, label: meta[key][0], note: meta[key][1], v: Math.min(1, v) };
+    });
+  }
+
+  function incomeAtLeast(s, step) {
+    var k = INCOME_STEPS.indexOf(step), sexes = s.seeking === "either" ? [0, 1] : [SEX_IDX[s.seeking]];
+    var num = 0, den = 0;
+    sexes.forEach(function (x) { var t = DATA.sex[x]; num += t.incomeAtLeast[k] * t.total; den += t.total; });
+    return num / den;
+  }
+
 
   /* ================= Standards score (subjective) =================
      Three pillars, each scored 0–10, then weighted into a 0–10 Standards score.
@@ -1746,7 +1874,7 @@
       if (SCORING.triLifestyle[v]) life.push({ label: names[k] + " (" + v + ")", pts: SCORING.triLifestyle[v] });
     });
     if (s.preferredIncome > s.minIncome) {
-      var gap = Math.log10(DEMO.incomeAtLeast[INCOME_STEPS.indexOf(s.minIncome)] / DEMO.incomeAtLeast[INCOME_STEPS.indexOf(s.preferredIncome)]);
+      var gap = Math.log10(incomeAtLeast(s, s.minIncome) / Math.max(incomeAtLeast(s, s.preferredIncome), 1e-9));
       life.push({ label: "Prefers " + fmtMoney(s.preferredIncome) + "+ income", pts: r2(Math.min(SCORING.incomeMax, 0.3 + 1.2 * gap)) });
     }
 
@@ -1766,15 +1894,20 @@
   }
 
   function compute(s) {
+    if (s.ageMin > AGE_TOP) {   // the data can't tell 91 from 99
+      return { p: NaN, N: NaN, people: NaN, factors: [], standards: standardsScore(s), n: 0, lowConfidence: false,
+               unavailable: "Not available for ages above " + AGE_TOP + ": the census groups everyone " + AGE_TOP + " and over together. Set the youngest age to " + AGE_TOP + " or below." };
+    }
     var sexes = s.seeking === "either" ? ["women", "men"] : [s.seeking];
     var parts = sexes.map(function (x) { return computeFor(s, x); });
-    var people = parts.reduce(function (t, r) { return t + r.people; }, 0);
-    var pool = parts.reduce(function (t, r) { return t + r.pool; }, 0);
+    var sum = function (f) { return parts.reduce(function (t, r) { return t + f(r); }, 0); };
+    var people = sum(function (r) { return r.people; });
+    var pool = sum(function (r) { return r.pool; });
+    var n = sum(function (r) { return r.n; });
+    var without = FILTER_KEYS.map(function (k, i) { return sum(function (r) { return r.without[i]; }); });
+    var alone = FILTER_KEYS.map(function (k, i) { return sum(function (r) { return r.alone[i]; }); });
     var p = people / pool;
-    var factors = parts[0].factors.map(function (f, i) {
-      var v = parts.reduce(function (t, r) { return t + r.factors[i].v * r.pool; }, 0) / pool;
-      return { key: f.key, label: f.label, note: f.note, v: v };
-    });
+    var factors = factorRows(s, people, without, alone, pool);
     var N = p > 0 ? 1 / p : Infinity;
     var oddsScore = N <= 1 ? 0 : Math.min(10, Math.log10(N) * 2.1);   // 0–10 from the odds alone
     var standards = standardsScore(s);                                // 0–10 from subjective picks
@@ -1782,7 +1915,7 @@
     var stdBoost = (10 - oddsScore) * SCORING.standardsPull * standards.score / 10;
     var overall = oddsScore + stdBoost;
     var score = Math.max(0, Math.min(10, Math.round(overall)));
-    return { p: p, N: N, people: people, factors: factors, oddsScore: oddsScore, standards: standards, stdBoost: stdBoost, overall: overall, score: score };
+    return { p: p, N: N, people: people, factors: factors, oddsScore: oddsScore, standards: standards, stdBoost: stdBoost, overall: overall, score: score, n: n, lowConfidence: n < LOW_N };
   }
 
   /* ================= Results rendering ================= */
@@ -1814,7 +1947,7 @@
     if (n >= 1e4) return Math.round(n / 1000).toLocaleString("en-US") + ",000";
     return Math.round(n).toLocaleString("en-US");
   }
-  function fmtFactor(v) { return "keeps " + (v >= 0.995 ? "100" : v < 0.01 ? (v * 100).toFixed(1) : Math.round(v * 100)) + "%"; }
+  function fmtFactor(v) { return v > 0 && v < 0.001 ? "keeps <0.1%" : "keeps " + (v >= 0.995 ? "100" : v < 0.01 ? (v * 100).toFixed(1) : Math.round(v * 100)) + "%"; }
 
   function drawDots(N) {
     var c = $("dots"), dpr = window.devicePixelRatio || 1;
@@ -1839,7 +1972,21 @@
   }
 
   function renderResults() {
+    var ready = !!DATA;
+    $("result-panel").hidden = !ready;
+    all("#view-4 > section, #view-4 > .sources-line").forEach(function (el) { el.hidden = !ready; });
+    if (!ready) { if (!dataError) loadData(); paintDataStatus(); return; }
     var s = state, res = compute(s); lastResult = res;
+    var heroSide = $("result-panel").querySelector(".hero-side");
+    heroSide.hidden = !!res.unavailable;
+    if (res.unavailable) {   // the data can't answer this, so say so instead of guessing
+      all("#view-4 > section").forEach(function (el) { el.hidden = el.id !== "result-panel" && !el.querySelector("#edit-filters"); });
+      $("r-tier").textContent = "Not available";
+      $("r-line").textContent = res.unavailable;
+      $("r-odds").textContent = "—"; $("r-odds").className = "odds";
+      $("r-sub").textContent = ""; $("r-people").textContent = ""; $("r-flag").hidden = true; $("r-local").hidden = true;
+      return;
+    }
     var tierIdx = TIERS.findIndex(function (t) { return res.score <= t.max; });
     var tier = TIERS[tierIdx].name;
     $("r-tier").textContent = tier;
@@ -1847,7 +1994,10 @@
     var oddsTxt = fmtOdds(res.N); $("r-odds").textContent = oddsTxt;
     $("r-odds").className = "odds" + (oddsTxt.length > 11 ? " xlong" : oddsTxt.length > 8 ? " long" : "");
     $("r-sub").textContent = NOUN[s.seeking] + " in " + REGION[s.region] + " meet your criteria" + (s.region !== "us" ? " (US figures for now)" : "");
-    $("r-people").textContent = "About " + fmtPeople(res.people) + " people";
+    $("r-people").textContent = res.people > 0 ? "About " + fmtPeople(res.people) + " people" : "No survey respondents match all of these filters";
+    var flag = $("r-flag");
+    flag.hidden = !(res.lowConfidence && res.people > 0);
+    flag.textContent = "Very rare: estimate is rough (" + res.n + " survey respondent" + (res.n === 1 ? "" : "s") + ")";
     var place = null;
     if (s.distance === "metro") place = s.city === "other" ? (s.customCity || null) : s.cityName;
     else if (s.distance === "state" && s.usState) place = US_STATES.filter(function (x) { return x.code === s.usState; })[0].name;
@@ -1939,7 +2089,7 @@
     if (s.heightMaxIn !== null) trial("Drop the maximum height", "Any height below", function (c) { c.heightMaxIn = null; });
     if (s.minIncome) {
       var i = INCOME_STEPS.indexOf(s.minIncome), lower = INCOME_STEPS[Math.max(0, i - 3)];
-      trial("Lower your income bar", lower ? fmtMoney(lower) + "+" : "No minimum", function (c) { c.minIncome = lower; });
+      trial("Lower your income bar", lower ? incomeFloor(lower) : "No minimum", function (c) { c.minIncome = lower; });
     }
     if (s.kidsMin !== 0 || s.kidsMax !== 4) trial("Be open to any number of kids", "0 to 4+", function (c) { c.kidsMin = 0; c.kidsMax = 4; });
     if (s.excludeObese) trial("Allow any body weight", "Turn off the obesity filter", function (c) { c.excludeObese = false; });
@@ -1951,10 +2101,14 @@
       li.innerHTML = '<span class="wi-text"><small></small></span><span class="wi-gain"></span>';
       li.querySelector(".wi-text").insertBefore(document.createTextNode(idea.label), li.querySelector("small"));
       li.querySelector("small").textContent = idea.detail + " → " + fmtOdds(idea.N);
-      li.querySelector(".wi-gain").textContent = idea.gain >= 1.95 ? Math.round(idea.gain * 10) / 10 + "× more" : "+" + Math.round((idea.gain - 1) * 100) + "%";
+      li.querySelector(".wi-gain").textContent = !isFinite(idea.gain) ? "First matches" : idea.gain >= 1.95 ? Math.round(idea.gain * 10) / 10 + "× more" : "+" + Math.round((idea.gain - 1) * 100) + "%";
       ul.appendChild(li);
     });
-    if (!ideas.length) { var li = document.createElement("li"); li.innerHTML = '<span class="wi-text">Nothing to relax. Your filters are already wide open.</span>'; ul.appendChild(li); }
+    if (!ideas.length) {
+      var li = document.createElement("li"); li.innerHTML = '<span class="wi-text"></span>';
+      li.querySelector(".wi-text").textContent = isFinite(res.N) ? "Nothing to relax. Your filters are already wide open." : "No single change finds a match. Try loosening two filters at once.";
+      ul.appendChild(li);
+    }
   }
 
   function shareText(res, tier) {
@@ -1989,7 +2143,7 @@
     var who = { men: "Men", women: "Women", either: "Men or women" }[state.seeking];
     var bits = [state.excludeMarried ? "Single only" : "Incl. married"];
     if (state.heightMinIn !== null || state.heightMaxIn !== null) bits.push(heightText());
-    if (state.minIncome) bits.push(fmtMoney(state.minIncome) + "+");
+    if (state.minIncome) bits.push(incomeFloor(state.minIncome));
     if (state.kidsMin !== 0 || state.kidsMax !== 4) bits.push("Kids: " + kidsText().toLowerCase());
     if (state.ethnicities !== "any") bits.push(state.ethnicities.length + " ethnicit" + (state.ethnicities.length > 1 ? "ies" : "y"));
     $("summary-main").textContent = who + ", " + state.ageMin + "–" + state.ageMax;
@@ -2007,7 +2161,9 @@
     } catch (e) { fail(); }
   });
 
+  $("data-retry").addEventListener("click", loadData);
   paintHeight(); paintIncome();
+  loadData();
   goTo(1);
   window.scrollTo(0, 0);
 })();
