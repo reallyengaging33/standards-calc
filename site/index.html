@@ -585,9 +585,39 @@
   .loc-msg { margin: 10px 0 0; font-size: 13px; color: var(--danger); }
   .loc-msg:empty { display: none; }
   .odds-local { margin: 6px 0 0; font-size: 13px; color: var(--cyan-ink); }
+  #r-sub { font-size: 13px; font-weight: 500; color: var(--text-3); margin-top: 14px; max-width: 46ch; }
+  .odds-pair { display: grid; gap: 10px; margin-top: 4px; }
+  .op { display: grid; gap: 2px; }
+  .op-label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 650; color: var(--text-2); }
+  .op-label .key { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .key.cyan { background: var(--cyan); } .key.pink { background: var(--pink); }
+  .op-num { font-family: var(--font-display); font-weight: 750; letter-spacing: -0.035em; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .op-census .op-num { font-size: clamp(30px, 5vw, 40px); color: var(--cyan-ink); }
+  .op-real .op-num { font-size: clamp(54px, 9.5vw, 84px); color: var(--pink); }
+  .op-real .op-num.long { font-size: clamp(44px, 7.5vw, 68px); }
+  .op-real .op-num.xlong { font-size: clamp(36px, 6vw, 54px); }
+  .op-pct { font-size: 14px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .op-real .op-pct { color: var(--text); font-weight: 600; }
+  .op-mult { justify-self: start; font-size: 13px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: var(--pink-tint); color: #ffc2de; border: 1px dashed rgba(240, 80, 155, 0.5); }
+  .equation { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 14px; border-radius: var(--radius-md); background: var(--bg-raise); border: 1px solid var(--border); margin-bottom: 12px; }
+  .eq-term { display: grid; gap: 1px; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); text-align: center; min-width: 74px; }
+  .eq-term b { font-size: 17px; font-weight: 750; font-variant-numeric: tabular-nums; color: #ffc2de; white-space: nowrap; }
+  .eq-term small { font-size: 11.5px; color: var(--text-3); }
+  .eq-term.census b { color: var(--cyan-ink); }
+  .eq-term.flat b { color: var(--text-3); }
+  .eq-term.result { background: var(--pink); }
+  .eq-term.result b, .eq-term.result small { color: #fff; }
+  .eq-op { color: var(--text-3); font-weight: 700; font-size: 16px; }
+  .pl-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .pl-items li { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: baseline; font-size: 12.5px; padding: 6px 0; border-top: 1px solid var(--border); }
+  .pi-name { color: var(--text); }
+  .pi-keep { color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pi-mult { font-weight: 750; color: #ffb3d6; font-variant-numeric: tabular-nums; }
+  .score-math .lead { color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .assume-note { margin: 12px 0 0; font-size: 12px; color: var(--text-3); }
   .slider-hint { margin: -4px 0 6px; font-size: 13px; color: var(--text-3); }
   .subscores { margin-top: 14px; display: grid; gap: 8px; text-align: left; }
-  .subscore { display: grid; grid-template-columns: 112px 1fr 34px; grid-template-rows: auto auto; column-gap: 10px; align-items: center; }
+  .subscore { display: grid; grid-template-columns: 112px 1fr 40px; grid-template-rows: auto auto; column-gap: 10px; align-items: center; }
   .ss-name { font-size: 13px; font-weight: 650; }
   .ss-bar { height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
   .ss-bar i { display: block; height: 100%; border-radius: 6px; background: var(--cyan); transition: width 600ms var(--ease-out); }
@@ -916,13 +946,13 @@
   <div class="view" id="view-2" hidden>
     <div class="notice">
       <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
-      <span>Optional step<em>Feeds your Standards score.</em></span>
+      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
       <button type="button" class="link-btn" data-skip>Skip this step</button>
     </div>
     <section class="panel" aria-labelledby="p2-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-sparkle"/></svg></span>
-        <div><h2 id="p2-title">Preference filters</h2><p>These shape your Standards score, not your odds.</p></div>
+        <div><h2 id="p2-title">Preference filters</h2><p>These multiply your census odds into real-world odds.</p></div>
         <span class="badge pink">Standards</span>
       </div>
 
@@ -931,7 +961,7 @@
           <span class="label" id="looks-label"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>How much do looks matter?</span>
           <output class="value-out" id="looks-out"></output>
         </div>
-        <p class="slider-hint">Multiplies your physical score (body types, size).</p>
+        <p class="slider-hint">Powers up how much your physical picks (body types, size) narrow things.</p>
         <div class="slider"><div class="range-rail" aria-hidden="true"></div><input type="range" min="0" max="10" step="1" data-key="looksImportance" aria-labelledby="looks-label"></div>
         <div class="ticks" aria-hidden="true"><span>0</span><span class="mid">5</span><span>10</span></div>
       </div>
@@ -947,7 +977,7 @@
           <span class="label" id="emo-label"><svg class="icon" aria-hidden="true"><use href="#i-calm"/></svg>Emotional Intelligence &amp; Healthy Attachment</span>
           <output class="value-out" id="emo-out"></output>
         </div>
-        <p class="slider-hint">Manages their emotions, communicates needs, feels secure in a relationship. Multiplies your character score.</p>
+        <p class="slider-hint">Manages their emotions, communicates needs, feels secure in a relationship. Powers up how much your character picks narrow things.</p>
         <div class="slider"><div class="range-rail" aria-hidden="true"></div><input type="range" min="0" max="10" step="1" data-key="emotionalRegulation" aria-labelledby="emo-label"></div>
         <div class="ticks" aria-hidden="true"><span>0</span><span class="mid">5</span><span>10</span></div>
       </div>
@@ -963,19 +993,19 @@
   <div class="view" id="view-3" hidden>
     <div class="notice">
       <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
-      <span>Optional step<em>Feeds your Standards score.</em></span>
+      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
       <button type="button" class="link-btn" data-skip>Skip this step</button>
     </div>
     <section class="panel" aria-labelledby="p3-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-person"/></svg></span>
-        <div><h2 id="p3-title">Physical &amp; lifestyle</h2><p>These shape your Standards score, not your odds.</p></div>
+        <div><h2 id="p3-title">Physical &amp; lifestyle</h2><p>These multiply your census odds into real-world odds.</p></div>
         <span class="badge pink">Standards</span>
       </div>
 
       <fieldset class="field">
         <legend class="label" id="body-label">Body types you're into</legend>
-        <p class="group-sub">Select all that apply. Rarer builds push your score up more.</p>
+        <p class="group-sub">Select all that apply. Rarer builds make your match rarer.</p>
         <div class="bodies" id="bodies"></div>
       </fieldset>
 
@@ -1002,10 +1032,21 @@
       <div class="hero-main">
         <h2 class="tier" id="r-tier"></h2>
         <p class="tier-line" id="r-line"></p>
-        <p class="odds" id="r-odds"></p>
+        <div class="odds-pair">
+          <div class="op op-census">
+            <span class="op-label"><i class="key cyan"></i>Census odds</span>
+            <span class="op-num" id="r-odds"></span>
+            <span class="op-pct" id="r-pct"></span>
+          </div>
+          <div class="op-mult" id="r-mult"></div>
+          <div class="op op-real">
+            <span class="op-label"><i class="key pink"></i>With your standards</span>
+            <span class="op-num" id="r-odds-adj"></span>
+            <span class="op-pct" id="r-pct-adj"></span>
+          </div>
+        </div>
         <p class="odds-flag" id="r-flag" hidden></p>
         <p class="odds-sub" id="r-sub"></p>
-        <p class="odds-people" id="r-people"></p>
         <p class="odds-local" id="r-local" hidden></p>
       </div>
       <div class="hero-side">
@@ -1013,7 +1054,7 @@
           <canvas id="dots" width="400" height="250" role="img" aria-label=""></canvas>
           <figcaption>
             <span>Each dot is one person</span>
-            <span><span class="legend"><i style="background:var(--cyan)"></i>Matches</span>&nbsp;&nbsp;<span class="legend"><i style="background:var(--border-strong)"></i>Everyone else</span></span>
+            <span><span class="legend"><i style="background:var(--cyan)"></i>Census match</span>&nbsp;&nbsp;<span class="legend"><i style="background:var(--pink)"></i>Also meets standards</span></span>
           </figcaption>
         </figure>
         <div class="score">
@@ -1022,8 +1063,8 @@
           <div class="meter" id="r-meter" aria-hidden="true"></div>
           <div class="meter-ends" aria-hidden="true"><span>Chill</span><span>Moderate</span><span>Extreme</span></div>
           <div class="subscores">
-            <div class="subscore"><span class="ss-name">Odds score</span><span class="ss-bar"><i id="r-odds-bar"></i></span><span class="ss-val" id="r-odds-score"></span><span class="ss-note">from population data</span></div>
-            <div class="subscore pink"><span class="ss-name">Standards score</span><span class="ss-bar"><i id="r-std-bar"></i></span><span class="ss-val" id="r-std-score"></span><span class="ss-note">from your picks</span></div>
+            <div class="subscore"><span class="ss-name">Census odds</span><span class="ss-bar"><i id="r-odds-bar"></i></span><span class="ss-val" id="r-odds-score"></span><span class="ss-note">from population data</span></div>
+            <div class="subscore pink"><span class="ss-name">Your standards</span><span class="ss-bar"><i id="r-std-bar"></i></span><span class="ss-val" id="r-std-score"></span><span class="ss-note">from your picks</span></div>
           </div>
         </div>
       </div>
@@ -1035,11 +1076,13 @@
       <ol class="breakdown" id="r-breakdown"></ol>
     </section>
 
-    <section class="panel" aria-labelledby="std-title">
-      <div class="extras-head"><h2 class="panel-title" id="std-title">Standards breakdown</h2><span class="extras-total" id="r-std-total"></span></div>
-      <p class="panel-sub">Your subjective picks, scored by how much harder they make things. Looks and Emotional Intelligence act as multipliers. Standards push your delusion score up from where your odds put it: a perfect 10 closes 75% of the gap to 10.</p>
+    <section class="panel" aria-labelledby="eq-title">
+      <h2 class="panel-title" id="eq-title">Your rarity equation</h2>
+      <p class="panel-sub">Your census odds, multiplied by how much each part of your standards narrows things down. Looks and Emotional Intelligence power up their part.</p>
+      <div class="equation" id="r-equation" role="math"></div>
       <div class="pillars" id="r-pillars"></div>
       <div class="score-math" id="r-score-math" aria-live="polite"></div>
+      <p class="assume-note">Census odds come from population data. The pass rates behind your standards are estimates (no survey measures them).</p>
     </section>
 
     <section class="panel" aria-labelledby="wi-title">
@@ -1107,7 +1150,7 @@
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
-      <p>Everything in steps 2 and 3 (behaviour, Emotional Intelligence, skills, body types, looks, preferred income) isn't measured by any survey. It feeds the Standards score, which can push the delusion score up but never changes the odds. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Census odds</strong> use only the step 1 filters above. Everything in steps 2 and 3 (behaviour, Emotional Intelligence, dealbreakers, skills, body types, size, looks) isn't measured by any survey, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
     </section>
   </div>
 
@@ -1625,7 +1668,7 @@
   /* ================= Navigation ================= */
   var STEPS = {
     1: { title: "Who are you looking for?", sub: "Set the basics. These filters drive the probability, using real population data.", eta: "about 45 sec", pct: 33 },
-    2: { title: "What matters most?", sub: "Optional. These feed your Standards score.", eta: "about 20 sec", pct: 67 },
+    2: { title: "What matters most?", sub: "Optional. These turn your census odds into real-world odds.", eta: "about 20 sec", pct: 67 },
     3: { title: "The finer details", sub: "Optional. Looks and lifestyle, for the full picture.", eta: "about 25 sec", pct: 100 },
     4: { title: "You're all set", sub: "Here's everything we'll calculate with.", eta: "done", pct: 100 }
   };
@@ -1767,9 +1810,10 @@
     for (var e = 0; e < 7; e++) ethOk[e] = s.ethnicities === "any";
     if (s.ethnicities !== "any") s.ethnicities.forEach(function (k) { if (k in DATA.ethIdx) ethOk[DATA.ethIdx[k]] = true; });
     var incMin = INCOME_STEPS.indexOf(s.minIncome); if (incMin < 0) incMin = 0;
+    var incPref = Math.max(incMin, INCOME_STEPS.indexOf(s.preferredIncome));
     var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
     var both = bodyTable(s, sex, hOn, oOn), noH = bodyTable(s, sex, false, oOn), noO = bodyTable(s, sex, hOn, false);
-    var matched = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0];
+    var matched = 0, matchedPref = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0];
     for (var i = 0; i < t.w.length; i++) {
       var f0 = t.age[i] === AGE_TOP ? s.ageMax >= AGE_TOP : (t.age[i] >= s.ageMin && t.age[i] <= s.ageMax);
       var f1 = ethOk[t.eth[i]];
@@ -1785,6 +1829,7 @@
       var pb = both[c];
       if (miss === 0) {
         matched += w * pb;
+        if (t.inc[i] >= incPref) matchedPref += w * pb;   // matching group, earning >= preferred
         if (pb > 0) n += t.n[i];
         without[3] += w * noH[c];   // height removed
         without[6] += w * noO[c];   // obesity removed
@@ -1794,7 +1839,7 @@
         without[k] += w * pb;
       }
     }
-    return { pool: t.total, people: matched, n: n, without: without, alone: alone };
+    return { pool: t.total, people: matched, peoplePref: matchedPref, n: n, without: without, alone: alone };
   }
 
   function factorRows(s, matched, without, alone, pool) {
@@ -1825,77 +1870,73 @@
   }
 
 
-  /* ================= Standards score (subjective) =================
-     Three pillars, each scored 0–10, then weighted into a 0–10 Standards score.
-       Physical  = body types + size preference, × looks multiplier
-       Character = behaviour preferences + dealbreakers, × Emotional Intelligence multiplier
-       Lifestyle = skills + preferred income above your minimum
-     All numbers below are design choices, not data. Tune them here. */
-  var SCORING = {
-    tri: { required: 2.0, preferred: 0.8 },        // character items (4 of them)
-    triLifestyle: { required: 2.5, preferred: 1.0 }, // skills (3 of them)
-    dealbreaker: 1.0,
-    bodySelectivity: 4.0,   // × (1 − picked / total)
-    bodyRarity: 1.5,        // × (average rarity − 1)
-    bodyMax: 7,
-    size: { average_plus: 1.5, above_average: 3.0 },
-    incomeMax: 2.5,
-    weights: { physical: 0.55, character: 0.40, lifestyle: 0.25 },
-    standardsPull: 0.75     // a 10/10 Standards score closes 75% of the gap between your odds score and 10
+  /* ================= Standards as rarity multipliers =================
+     Every subjective pick has a pass rate: the share of people who'd meet it.
+     Required = the full pass rate. Preferred = half as strict (square root of the rate).
+     Each pillar's rarity = 1 / (product of its pass rates).
+       Physical  rarity is raised to the power of the Looks multiplier (×0.5 to ×1.5)
+       Character rarity is raised to the power of the Emotional Intelligence multiplier
+     Real-world odds = census odds × Physical × Character × Lifestyle
+     Delusion score  = 2.1 × log10(real-world N), capped at 10,
+                     which splits exactly into census points + each pillar's points.
+     Pass rates below are estimates, not survey data. Tune them here. */
+  var RARITY = {
+    scale: 2.1,                 // delusion points per 10× rarer
+    preferredPower: 0.5,        // Preferred = pass rate ^ 0.5
+    character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, healthyCoping: 0.50, communication: 0.50 },
+    lifestyle: { cooking: 0.60, active: 0.50, cleanliness: 0.60 },
+    dealbreakers: { heavyPartying: 0.85, unreliable: 0.70 },
+    size: { average_plus: 0.69, above_average: 0.50 }   // from Veale et al. 2015 distribution
   };
 
-  function standardsScore(s) {
+  // incomeKeep: share of the matching group earning >= preferred, from the cube (see compute()).
+  function standardsRarity(s, incomeKeep) {
     var names = { mentalHealth: "Works on themselves", lowSubstanceUse: "Low substance use", healthyCoping: "Healthy routines", communication: "Good communicator", cooking: "Cooks", active: "Active", cleanliness: "Tidy" };
-    function r2(n) { return Math.round(n * 100) / 100; }
-
+    function item(label, keep) { return { label: label, keep: keep, R: 1 / keep }; }
+    function triItems(obj, rates) {
+      var out = [];
+      Object.keys(obj).forEach(function (k) {
+        if (obj[k] === "required") out.push(item(names[k] + " (required)", rates[k]));
+        else if (obj[k] === "preferred") out.push(item(names[k] + " (preferred)", Math.pow(rates[k], RARITY.preferredPower)));
+      });
+      return out;
+    }
     // Physical
     var phys = [];
     if (s.bodyTypes !== "any") {
-      var total = bodyOptionsFor(s.seeking).length, n = s.bodyTypes.length;
-      var avgR = s.bodyTypes.reduce(function (t, id) { return t + (BODY_RARITY[id] || 1); }, 0) / n;
-      var bp = Math.min(SCORING.bodyMax, SCORING.bodySelectivity * (1 - n / total) + SCORING.bodyRarity * (avgR - 1));
-      phys.push({ label: n + " body type" + (n > 1 ? "s" : "") + (avgR > 1.05 ? ", avg " + (Math.round(avgR * 10) / 10) + "\u00d7 rarer" : ""), pts: r2(bp) });
+      var all = bodyOptionsFor(s.seeking), tot = 0, sel = 0;
+      all.forEach(function (b) { var w = 1 / b[2]; tot += w; if (s.bodyTypes.indexOf(b[0]) > -1) sel += w; });
+      var n = s.bodyTypes.length;
+      phys.push(item(n + " of " + all.length + " body types (rarity-weighted)", sel / tot));
     }
-    if (SCORING.size[s.sizePreference]) phys.push({ label: s.sizePreference === "above_average" ? "Size: above average only" : "Size: average or above", pts: SCORING.size[s.sizePreference] });
-
+    if (RARITY.size[s.sizePreference]) phys.push(item(s.sizePreference === "above_average" ? "Size: above average only" : "Size: average or above", RARITY.size[s.sizePreference]));
     // Character
-    var chr = [];
-    Object.keys(s.behavior).forEach(function (k) {
-      var v = s.behavior[k];
-      if (SCORING.tri[v]) chr.push({ label: names[k] + " (" + v + ")", pts: SCORING.tri[v] });
-    });
-    if (s.dealbreakers.heavyPartying) chr.push({ label: "No heavy partying", pts: SCORING.dealbreaker });
-    if (s.dealbreakers.unreliable) chr.push({ label: "No unreliable behaviour", pts: SCORING.dealbreaker });
-
+    var chr = triItems(s.behavior, RARITY.character);
+    if (s.dealbreakers.heavyPartying) chr.push(item("No heavy partying", RARITY.dealbreakers.heavyPartying));
+    if (s.dealbreakers.unreliable) chr.push(item("No unreliable behaviour", RARITY.dealbreakers.unreliable));
     // Lifestyle
-    var life = [];
-    Object.keys(s.skills).forEach(function (k) {
-      var v = s.skills[k];
-      if (SCORING.triLifestyle[v]) life.push({ label: names[k] + " (" + v + ")", pts: SCORING.triLifestyle[v] });
-    });
+    var life = triItems(s.skills, RARITY.lifestyle);
     if (s.preferredIncome > s.minIncome) {
-      var gap = Math.log10(incomeAtLeast(s, s.minIncome) / Math.max(incomeAtLeast(s, s.preferredIncome), 1e-9));
-      life.push({ label: "Prefers " + fmtMoney(s.preferredIncome) + "+ income", pts: r2(Math.min(SCORING.incomeMax, 0.3 + 1.2 * gap)) });
+      var ratio = incomeKeep != null ? incomeKeep : incomeAtLeast(s, s.preferredIncome) / incomeAtLeast(s, s.minIncome);
+      life.push(item("Prefers " + fmtMoney(s.preferredIncome) + "+ income (preferred)", Math.pow(ratio, RARITY.preferredPower)));
     }
-
-    function pillar(key, label, items, mult, multLabel) {
-      items.sort(function (a, b) { return b.pts - a.pts; });
-      var base = Math.min(10, items.reduce(function (t, it) { return t + it.pts; }, 0));
-      var eff = Math.min(10, base * mult);
-      return { key: key, label: label, items: items, base: base, mult: mult, multLabel: multLabel, eff: eff, weight: SCORING.weights[key] };
+    function pillar(key, label, items, power, powerLabel) {
+      var keep = items.reduce(function (t, it) { return t * it.keep; }, 1);
+      var baseR = 1 / keep, R = Math.pow(baseR, power);
+      return { key: key, label: label, items: items, keep: keep, baseR: baseR, power: power, powerLabel: powerLabel, R: R, pts: RARITY.scale * Math.log10(R) };
     }
     var pillars = [
       pillar("physical", "Physical", phys, importanceMult(s.looksImportance), "Looks " + s.looksImportance + "/10"),
       pillar("character", "Character", chr, importanceMult(s.emotionalRegulation), "Emotional Intelligence " + s.emotionalRegulation + "/10"),
       pillar("lifestyle", "Lifestyle", life, 1, "")
     ];
-    var score = Math.min(10, pillars.reduce(function (t, p) { return t + p.eff * p.weight; }, 0));
-    return { pillars: pillars, score: score };
+    var R = pillars.reduce(function (t, p) { return t * p.R; }, 1);
+    return { pillars: pillars, R: R, pts: RARITY.scale * Math.log10(R) };
   }
 
   function compute(s) {
     if (s.ageMin > AGE_TOP) {   // the data can't tell 91 from 99
-      return { p: NaN, N: NaN, people: NaN, factors: [], standards: standardsScore(s), n: 0, lowConfidence: false,
+      return { p: NaN, N: NaN, people: NaN, factors: [], std: standardsRarity(s), Nadj: NaN, pAdj: NaN, peopleAdj: NaN, censusPts: NaN, total: NaN, score: NaN, n: 0, lowConfidence: false,
                unavailable: "Not available for ages above " + AGE_TOP + ": the census groups everyone " + AGE_TOP + " and over together. Set the youngest age to " + AGE_TOP + " or below." };
     }
     var sexes = s.seeking === "either" ? ["women", "men"] : [s.seeking];
@@ -1909,13 +1950,15 @@
     var p = people / pool;
     var factors = factorRows(s, people, without, alone, pool);
     var N = p > 0 ? 1 / p : Infinity;
-    var oddsScore = N <= 1 ? 0 : Math.min(10, Math.log10(N) * 2.1);   // 0–10 from the odds alone
-    var standards = standardsScore(s);                                // 0–10 from subjective picks
-    // Standards push you up from where the odds put you; they never pull you down.
-    var stdBoost = (10 - oddsScore) * SCORING.standardsPull * standards.score / 10;
-    var overall = oddsScore + stdBoost;
-    var score = Math.max(0, Math.min(10, Math.round(overall)));
-    return { p: p, N: N, people: people, factors: factors, oddsScore: oddsScore, standards: standards, stdBoost: stdBoost, overall: overall, score: score, n: n, lowConfidence: n < LOW_N };
+    // preferred income: share of the people who match your filters who also earn >= preferred
+    var incomeKeep = people > 0 ? sum(function (r) { return r.peoplePref; }) / people : null;
+    var std = standardsRarity(s, incomeKeep);
+    var Nadj = N * std.R;                                   // real-world odds
+    var censusPts = isFinite(N) ? Math.max(0, RARITY.scale * Math.log10(N)) : Infinity;
+    var total = censusPts + std.pts;                         // = 2.1 × log10(Nadj)
+    var score = Math.max(0, Math.min(10, Math.round(total)));
+    return { p: p, N: N, people: people, factors: factors, std: std, Nadj: Nadj, pAdj: p / std.R, peopleAdj: people / std.R,
+             censusPts: censusPts, total: total, score: score, n: n, lowConfidence: n < LOW_N };
   }
 
   /* ================= Results rendering ================= */
@@ -1936,11 +1979,27 @@
   var cardTheme = "dark", cardShape = "square";
   var lastResult = null;
 
+  function fmtPct(p) {
+    var v = p * 100;
+    if (!isFinite(v) || v <= 0) return "0%";
+    if (v >= 10) return Math.round(v) + "%";
+    if (v >= 1) return v.toFixed(1) + "%";
+    if (v >= 0.0001) return parseFloat(v.toPrecision(2)) + "%";
+    return "<0.0001%";
+  }
+  function fmtMult(r) { return r >= 100 ? Math.round(r).toLocaleString("en-US") : r >= 10 ? r.toFixed(1) : r.toFixed(2); }
   function fmtOdds(N) {
     if (!isFinite(N)) return "0 matches";
     if (N < 1.5) return "1 in 1";
+    if (N >= 1e9) return "1 in " + (N / 1e9).toFixed(N >= 1e10 ? 0 : 1) + "B";
     if (N >= 1e6) return "1 in " + (N / 1e6).toFixed(N >= 1e7 ? 0 : 1) + "M";
     return "1 in " + Math.round(N).toLocaleString("en-US");
+  }
+  function fmtPeopleShort(n) {
+    if (n < 1) return "fewer than 1 person";
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + " million";
+    if (n >= 1000) return Math.round(n / 100) / 10 + "k";
+    return Math.round(n).toLocaleString("en-US");
   }
   function fmtPeople(n) {
     if (n >= 1e6) return (n / 1e6).toFixed(1) + " million";
@@ -1949,7 +2008,7 @@
   }
   function fmtFactor(v) { return v > 0 && v < 0.001 ? "keeps <0.1%" : "keeps " + (v >= 0.995 ? "100" : v < 0.01 ? (v * 100).toFixed(1) : Math.round(v * 100)) + "%"; }
 
-  function drawDots(N) {
+  function drawDots(N, Nadj) {
     var c = $("dots"), dpr = window.devicePixelRatio || 1;
     var cols = 40, rows = 25, total = cols * rows, gap = 10, r = 2.4;
     c.width = cols * gap * dpr; c.height = rows * gap * dpr;
@@ -1962,13 +2021,17 @@
     for (var i = 0; i < total; i++) idx.push(i);
     for (i = total - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; var j = Math.floor(seed / 233280 * (i + 1)); var t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
     var lit = {}; for (i = 0; i < matches; i++) lit[idx[i]] = true;
+    var adjMatches = !isFinite(Nadj) ? 0 : Math.min(matches, Math.round(total / Nadj));
+    var hot = {}; for (i = 0; i < adjMatches; i++) hot[idx[i]] = true;
+    var pink = css.getPropertyValue("--pink").trim();
     for (i = 0; i < total; i++) {
       ctx.beginPath();
       ctx.arc((i % cols) * gap + gap / 2, Math.floor(i / cols) * gap + gap / 2, lit[i] ? r + 0.8 : r, 0, Math.PI * 2);
-      ctx.fillStyle = lit[i] ? on : off; ctx.fill();
+      ctx.fillStyle = hot[i] ? pink : lit[i] ? on : off; ctx.fill();
     }
-    c.setAttribute("aria-label", matches ? matches + " of 1,000 people match" : "Fewer than 1 in 1,000 people match");
-    c.parentNode.querySelector("figcaption span").textContent = matches ? "1,000 people. " + matches + " match." : "1,000 people. None match.";
+    var cap = "1,000 people: " + matches + " pass the census filters, " + adjMatches + " also meet your standards.";
+    c.setAttribute("aria-label", cap);
+    c.parentNode.querySelector("figcaption span").textContent = cap;
   }
 
   function renderResults() {
@@ -1978,26 +2041,31 @@
     if (!ready) { if (!dataError) loadData(); paintDataStatus(); return; }
     var s = state, res = compute(s); lastResult = res;
     var heroSide = $("result-panel").querySelector(".hero-side");
-    heroSide.hidden = !!res.unavailable;
+    var pair = $("result-panel").querySelector(".odds-pair");
+    heroSide.hidden = pair.hidden = !!res.unavailable;
     if (res.unavailable) {   // the data can't answer this, so say so instead of guessing
       all("#view-4 > section").forEach(function (el) { el.hidden = el.id !== "result-panel" && !el.querySelector("#edit-filters"); });
       $("r-tier").textContent = "Not available";
       $("r-line").textContent = res.unavailable;
-      $("r-odds").textContent = "—"; $("r-odds").className = "odds";
-      $("r-sub").textContent = ""; $("r-people").textContent = ""; $("r-flag").hidden = true; $("r-local").hidden = true;
+      $("r-sub").textContent = ""; $("r-flag").hidden = true; $("r-local").hidden = true;
       return;
     }
     var tierIdx = TIERS.findIndex(function (t) { return res.score <= t.max; });
     var tier = TIERS[tierIdx].name;
     $("r-tier").textContent = tier;
     $("r-line").textContent = LINES[s.resultTone][tierIdx];
-    var oddsTxt = fmtOdds(res.N); $("r-odds").textContent = oddsTxt;
-    $("r-odds").className = "odds" + (oddsTxt.length > 11 ? " xlong" : oddsTxt.length > 8 ? " long" : "");
-    $("r-sub").textContent = NOUN[s.seeking] + " in " + REGION[s.region] + " meet your criteria" + (s.region !== "us" ? " (US figures for now)" : "");
-    $("r-people").textContent = res.people > 0 ? "About " + fmtPeople(res.people) + " people" : "No survey respondents match all of these filters";
+    var noun = NOUN[s.seeking];
+    $("r-odds").textContent = fmtOdds(res.N);
+    $("r-pct").textContent = res.people > 0 ? fmtPct(res.p) + " of " + noun + " \u00b7 about " + fmtPeopleShort(res.people) : "No survey respondents match all of these filters";
     var flag = $("r-flag");
     flag.hidden = !(res.lowConfidence && res.people > 0);
-    flag.textContent = "Very rare: estimate is rough (" + res.n + " survey respondent" + (res.n === 1 ? "" : "s") + ")";
+    flag.textContent = "Very rare: census estimate is rough (" + res.n + " survey respondent" + (res.n === 1 ? "" : "s") + ")";
+    var adjTxt = fmtOdds(res.Nadj);
+    $("r-odds-adj").textContent = adjTxt;
+    $("r-odds-adj").className = "op-num" + (adjTxt.length > 11 ? " xlong" : adjTxt.length > 9 ? " long" : "");
+    $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
+    $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
+    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in the United States. Census odds use your Step 1 filters; your standards come from Steps 2 and 3.";
     var place = null;
     if (s.distance === "metro") place = s.city === "other" ? (s.customCity || null) : s.cityName;
     else if (s.distance === "state" && s.usState) place = US_STATES.filter(function (x) { return x.code === s.usState; })[0].name;
@@ -2006,7 +2074,7 @@
     $("r-score").textContent = res.score;
     var m = $("r-meter"); m.innerHTML = "";
     for (var i = 0; i < 10; i++) { var seg = document.createElement("span"); if (i < res.score) seg.className = "on" + (i >= 7 ? " hot" : ""); m.appendChild(seg); }
-    drawDots(res.N);
+    drawDots(res.N, res.Nadj);
 
     var sorted = res.factors.slice().sort(function (a, b) { return a.v - b.v; });
     var ol = $("r-breakdown"); ol.innerHTML = "";
@@ -2022,57 +2090,64 @@
       var bar = li.querySelector(".bd-bar span"); bar.style.width = Math.max(f.v * 100, 1) + "%"; bar.style.animationDelay = (i * 60) + "ms";
       ol.appendChild(li);
     });
-    renderStandards(res);
+    renderEquation(res);
 
     renderWhatIf(res);
     renderShare(res, tier);
   }
 
   function fmtPts(n) { return (Math.round(n * 100) / 100).toFixed(2).replace(/0$/, "").replace(/\.$/, ""); }
-  function renderStandards(res) {
-    var st = res.standards, box = $("r-pillars"); box.innerHTML = "";
-    st.pillars.forEach(function (p) {
-      var card = document.createElement("div"); card.className = "pillar " + p.key;
-      var head = document.createElement("div"); head.className = "pl-head";
-      var h = document.createElement("h3"); h.textContent = p.label; head.appendChild(h);
-      var v = document.createElement("span"); v.className = "pl-val"; v.textContent = p.eff.toFixed(1); 
-      var sm = document.createElement("small"); sm.textContent = "/10"; v.appendChild(sm); head.appendChild(v);
-      card.appendChild(head);
-      var bar = document.createElement("div"); bar.className = "pl-bar"; var bi = document.createElement("i"); bi.style.width = (p.eff * 10) + "%"; bar.appendChild(bi); card.appendChild(bar);
-      var calc = document.createElement("p"); calc.className = "pl-calc";
-      if (p.multLabel) calc.textContent = p.base.toFixed(1) + " picks \u00d7 " + p.mult.toFixed(1) + " (" + p.multLabel + ")" + (p.base * p.mult > 10 ? ", capped at 10" : "");
-      else calc.textContent = p.base.toFixed(1) + " from picks";
+  function renderEquation(res) {
+    var std = res.std;
+    function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+    // Equation strip
+    var eq = $("r-equation"); eq.innerHTML = "";
+    function term(num, label, cls) { var t = el("span", "eq-term " + (cls || "")); t.appendChild(el("b", null, num)); t.appendChild(el("small", null, label)); return t; }
+    eq.appendChild(term(fmtOdds(res.N), "census odds", "census"));
+    std.pillars.forEach(function (p) { eq.appendChild(el("span", "eq-op", "\u00d7")); eq.appendChild(term(fmtMult(p.R), p.label.toLowerCase(), p.R > 1.005 ? "" : "flat")); });
+    eq.appendChild(el("span", "eq-op", "="));
+    eq.appendChild(term(fmtOdds(res.Nadj), fmtPct(res.pAdj) + " of people", "result"));
+    eq.setAttribute("aria-label", fmtOdds(res.N) + " census odds times " + std.pillars.map(function (p) { return fmtMult(p.R) + " " + p.label; }).join(" times ") + " equals " + fmtOdds(res.Nadj));
+
+    // Pillar cards
+    var box = $("r-pillars"); box.innerHTML = "";
+    std.pillars.forEach(function (p) {
+      var card = el("div", "pillar " + p.key);
+      var head = el("div", "pl-head"); head.appendChild(el("h3", null, p.label));
+      var v = el("span", "pl-val", "\u00d7" + fmtMult(p.R)); head.appendChild(v); card.appendChild(head);
+      var calc = el("p", "pl-calc");
+      if (!p.items.length) calc.textContent = "Nothing set, so no change";
+      else if (p.powerLabel) calc.textContent = "Picks \u00d7" + fmtMult(p.baseR) + ", raised to the power " + p.power.toFixed(1) + " (" + p.powerLabel + ")";
+      else calc.textContent = "Picks \u00d7" + fmtMult(p.baseR);
       card.appendChild(calc);
-      var tags = document.createElement("div"); tags.className = "extra-tags";
-      if (!p.items.length) { var none = document.createElement("span"); none.className = "muted"; none.textContent = "Nothing set"; tags.appendChild(none); }
-      p.items.forEach(function (it) {
-        var sp = document.createElement("span"); sp.appendChild(document.createTextNode(it.label));
-        var b = document.createElement("b"); b.textContent = "+" + it.pts.toFixed(2); sp.appendChild(b);
-        tags.appendChild(sp);
+      var list = el("ul", "pl-items");
+      p.items.slice().sort(function (a, b) { return a.keep - b.keep; }).forEach(function (it) {
+        var li = el("li");
+        li.appendChild(el("span", "pi-name", it.label));
+        li.appendChild(el("span", "pi-keep", "keeps " + fmtPct(it.keep)));
+        li.appendChild(el("span", "pi-mult", "\u00d7" + fmtMult(it.R)));
+        list.appendChild(li);
       });
-      card.appendChild(tags);
-      var w = document.createElement("p"); w.className = "pl-weight"; w.textContent = "Counts " + Math.round(p.weight * 100) + "% toward Standards";
-      card.appendChild(w);
+      card.appendChild(list);
+      card.appendChild(el("p", "pl-weight", "+" + p.pts.toFixed(1) + " delusion points"));
       box.appendChild(card);
     });
-    $("r-std-total").textContent = st.score.toFixed(1) + " / 10";
 
-    // overall maths
+    // Score maths
     var math = $("r-score-math"); math.innerHTML = "";
-    function part(num, txt) { var s = document.createElement("span"); var b = document.createElement("strong"); b.textContent = num; s.appendChild(b); s.appendChild(document.createTextNode(" " + txt)); return s; }
-    function op(t) { var s = document.createElement("span"); s.className = "op"; s.textContent = t; return s; }
-    math.appendChild(part(res.oddsScore.toFixed(1), "from your odds"));
-    math.appendChild(op("+"));
-    math.appendChild(part(res.stdBoost.toFixed(1), "from your standards"));
-    math.appendChild(op("="));
-    var fin = part(res.score + "/10", Math.abs(res.overall - res.score) > 0.05 ? "delusion score (" + res.overall.toFixed(1) + " rounded)" : "delusion score");
+    function part(num, txt) { var s = el("span"); s.appendChild(el("strong", null, num)); s.appendChild(document.createTextNode(" " + txt)); return s; }
+    math.appendChild(el("span", "lead", "2.1 \u00d7 log\u2081\u2080(" + fmtOdds(res.Nadj).replace("1 in ", "") + ") ="));
+    math.appendChild(part(res.censusPts.toFixed(1), "census"));
+    std.pillars.forEach(function (p) { math.appendChild(el("span", "op", "+")); math.appendChild(part(p.pts.toFixed(1), p.label.toLowerCase())); });
+    math.appendChild(el("span", "op", "="));
+    var fin = part(res.score + "/10", res.total > 10.05 ? "delusion score (" + res.total.toFixed(1) + ", capped)" : Math.abs(res.total - res.score) > 0.05 ? "delusion score (" + res.total.toFixed(1) + " rounded)" : "delusion score");
     fin.className = "final"; math.appendChild(fin);
 
-    // hero sub-scores
-    $("r-odds-score").textContent = res.oddsScore.toFixed(1);
-    $("r-std-score").textContent = st.score.toFixed(1);
-    $("r-odds-bar").style.width = (res.oddsScore * 10) + "%";
-    $("r-std-bar").style.width = (st.score * 10) + "%";
+    // Hero sub-scores
+    $("r-odds-score").textContent = res.censusPts.toFixed(1);
+    $("r-std-score").textContent = "+" + std.pts.toFixed(1);
+    $("r-odds-bar").style.width = Math.min(100, res.censusPts * 10) + "%";
+    $("r-std-bar").style.width = Math.min(100, std.pts * 10) + "%";
   }
 
   function renderWhatIf(res) {
@@ -2080,7 +2155,7 @@
     function trial(label, detail, patch) {
       var copy = JSON.parse(JSON.stringify(s)); patch(copy);
       var r = compute(copy);
-      if (r.N < res.N * 0.97) ideas.push({ label: label, detail: detail, N: r.N, gain: res.N / r.N });
+      if (r.Nadj < res.Nadj * 0.97) ideas.push({ label: label, detail: detail, N: r.Nadj, gain: res.Nadj / r.Nadj });
     }
     trial("Widen your age range by 5 years", (Math.max(18, s.ageMin - 5)) + "–" + Math.min(99, s.ageMax + 5),
       function (c) { c.ageMin = Math.max(18, c.ageMin - 5); c.ageMax = Math.min(99, c.ageMax + 5); });
@@ -2094,6 +2169,12 @@
     if (s.kidsMin !== 0 || s.kidsMax !== 4) trial("Be open to any number of kids", "0 to 4+", function (c) { c.kidsMin = 0; c.kidsMax = 4; });
     if (s.excludeObese) trial("Allow any body weight", "Turn off the obesity filter", function (c) { c.excludeObese = false; });
     if (s.excludeMarried) trial("Count people who are married", "Not recommended, but it's maths", function (c) { c.excludeMarried = false; });
+    if (s.bodyTypes !== "any") trial("Accept every body type", "No body-type preference", function (c) { c.bodyTypes = "any"; });
+    if (s.looksImportance > 5) trial("Turn looks importance down to 5", "Looks 5/10", function (c) { c.looksImportance = 5; });
+    var hasReq = ["behavior", "skills"].some(function (g) { return Object.keys(s[g]).some(function (k) { return s[g][k] === "required"; }); });
+    if (hasReq) trial("Make your Required items Preferred", "Softer standards", function (c) {
+      ["behavior", "skills"].forEach(function (g) { Object.keys(c[g]).forEach(function (k) { if (c[g][k] === "required") c[g][k] = "preferred"; }); });
+    });
     ideas.sort(function (a, b) { return b.gain - a.gain; });
     var ul = $("r-whatif"); ul.innerHTML = "";
     ideas.slice(0, 3).forEach(function (idea) {
@@ -2106,19 +2187,21 @@
     });
     if (!ideas.length) {
       var li = document.createElement("li"); li.innerHTML = '<span class="wi-text"></span>';
-      li.querySelector(".wi-text").textContent = isFinite(res.N) ? "Nothing to relax. Your filters are already wide open." : "No single change finds a match. Try loosening two filters at once.";
+      li.querySelector(".wi-text").textContent = isFinite(res.Nadj) ? "Nothing to relax. Your filters are already wide open." : "No single change finds a match. Try loosening two filters at once.";
       ul.appendChild(li);
     }
   }
 
   function shareText(res, tier) {
-    return tier + ": only " + fmtOdds(res.N) + " " + NOUN[state.seeking] + " meet my dating standards. Delusion score " + res.score + "/10. How picky are you?";
+    return tier + ": only " + fmtOdds(res.Nadj) + " " + NOUN[state.seeking] + " (" + fmtPct(res.pAdj) + ") meet my dating standards. Census alone says " + fmtOdds(res.N) + ". Delusion score " + res.score + "/10. How picky are you?";
   }
   function renderShare(res, tier) {
     $("sc-tier").textContent = tier;
-    $("sc-odds").textContent = fmtOdds(res.N);
-    $("sc-odds").className = "sc-odds" + (fmtOdds(res.N).length > 8 ? " long" : "");
-    var top = res.factors.slice().sort(function (a, b) { return a.v - b.v; }).filter(function (f) { return f.v < 0.995; }).slice(0, 3);
+    $("sc-odds").textContent = fmtOdds(res.Nadj);
+    $("sc-odds").className = "sc-odds" + (fmtOdds(res.Nadj).length > 8 ? " long" : "");
+    var top = res.factors.slice().sort(function (a, b) { return a.v - b.v; }).filter(function (f) { return f.v < 0.995; }).slice(0, 2);
+    top.unshift({ label: "Census odds", note: fmtOdds(res.N) });
+    if (res.std.R > 1.005) top.push({ label: "My standards", note: "\u00d7" + fmtMult(res.std.R) + " rarer" });
     var ul = $("sc-list"); ul.innerHTML = "";
     top.forEach(function (f) { var li = document.createElement("li"); var b = document.createElement("b"); b.textContent = f.label + ": "; li.appendChild(b); li.appendChild(document.createTextNode(f.note)); ul.appendChild(li); });
     $("sc-score").textContent = "Delusion score " + res.score + "/10";

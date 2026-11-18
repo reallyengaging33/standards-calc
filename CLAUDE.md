@@ -75,7 +75,7 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 | `heightMinIn`, `heightMaxIn` | inches 59–88, or `null` = no limit | **odds** (via NHANES) |
 | `heightUnit` | `imperial` / `metric` | display only |
 | `minIncome` | one of the `INCOME_STEPS` values (0 … 1,000,000) | **odds** |
-| `preferredIncome` | ≥ `minIncome` | Standards score (Lifestyle) |
+| `preferredIncome` | ≥ `minIncome` | Lifestyle rarity multiplier (uses real income shares) |
 | `excludeObese` | bool (BMI ≥ 30) | **odds** (via NHANES) |
 | `region` | always `us` for now | dataset choice |
 | `distance` | `metro` / `state` / `country` | context line only, never the odds |
@@ -83,12 +83,12 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 | `city`, `cityName` | city id and display name from `US_STATES` in index.html (e.g. `atlanta` / `Atlanta`), or `city = "other"` | local context |
 | `customCity` | typed name when `city === "other"` | display only (no data lookup) |
 | `resultTone` | `stats` / `playful` / `brutal` | copy only |
-| `looksImportance` | 0–10 | Standards: multiplies the Physical pillar (×0.5 to ×1.5) |
-| `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". Standards: multiplies the Character pillar (×0.5 to ×1.5). Key name kept for compatibility |
-| `behavior.*`, `skills.*` | `any` / `preferred` / `required` | Standards (Character / Lifestyle) |
-| `dealbreakers.*` | bool | Standards (Character) |
-| `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Standards (Physical), weighted by each type's assumed rarity in `BODY_SETS` |
-| `sizePreference` | `any` / `average_plus` / `above_average` | Standards (Physical) |
+| `looksImportance` | 0–10 | power on the Physical rarity multiplier (0.5 to 1.5) |
+| `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
+| `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
+| `dealbreakers.*` | bool | pass-rate multipliers (Character) |
+| `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Physical multiplier: rarity-weighted share of builds accepted (rarity values in `BODY_SETS`) |
+| `sizePreference` | `any` / `average_plus` / `above_average` | Physical multiplier (69% / 50% pass) |
 
 `INCOME_STEPS` in index.html: 0, 10k, 20k, 25k, 30k, 40k, 50k, 60k, 75k, 100k, 125k, 150k,
 200k, 250k, 300k, 400k, 500k, 750k, 1M.
@@ -161,10 +161,10 @@ Veale et al., BJU International 2015, erect length mean 13.12 cm, SD 1.66 cm (n 
 "Above average only" ≈ 50%, "Average or above" = share above mean − 0.5 SD ≈ 69%.
 **Leave as strictness-only unless Nick says otherwise.**
 
-### Not from any dataset (Standards score only)
+### Not from any dataset (rarity multipliers on top of the census odds)
 Body types, all of Step 2 (behaviour, Emotional Intelligence, dealbreakers), skills, looks
-importance, preferred income. No survey measures these. They feed the **Standards score**
-(subjective), never the odds. Body-type rarity multipliers in `BODY_SETS` are Nick's
+importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
+odds** (real-world odds), never the census odds themselves. Body-type rarity multipliers in `BODY_SETS` are Nick's
 assumptions. Do not invent proxies or replace them with "data".
 Body types could later get a fun stat from the site's own anonymous usage
 ("8% of people picked only BBL"), but that needs analytics and is out of scope.
@@ -219,13 +219,17 @@ with code that:
    loosened. The UI logic already does this through `compute()`.
 7. **Low confidence:** if the matching unweighted row count is under 30, show
    "Very rare: estimate is rough" beside the number.
-8. **Two scores, one headline.** Keep `standardsScore()` and the `SCORING` config exactly as they are.
-   They are deliberate design choices, not data, so don't "fix" them with numbers.
-   - Odds score (0–10) = min(10, log10(N) × 2.1), from the real N
-   - Standards score (0–10) = Physical × 0.55 + Character × 0.40 + Lifestyle × 0.25 (capped at 10),
-     where Physical is multiplied by looks importance and Character by Emotional Intelligence
-   - Delusion score = odds + (10 − odds) × 0.75 × standards / 10, rounded.
-     Standards only ever push the score up from the odds; they never pull it down.
+8. **Census odds × standards = real-world odds.** Keep `standardsRarity()` and the `RARITY`
+   config exactly as they are. Their pass rates are deliberate estimates, not data, so don't
+   "fix" them with numbers. The only change: the **preferred income** pass rate must use the
+   real income shares from the cube (share earning ≥ preferred ÷ share earning ≥ minimum,
+   for the matching group), not the demo table.
+   - Census odds: N from the cube (shown as "1 in N" and as a % of the pool)
+   - Each pillar's rarity = 1 / (product of its pass rates). Physical is raised to the power
+     of the Looks multiplier (0.5 to 1.5), Character to the Emotional Intelligence multiplier
+   - Real-world odds: N_adj = N × Physical × Character × Lifestyle (also shown as a %)
+   - Delusion score = 2.1 × log10(N_adj), capped at 10. This splits exactly into census
+     points + each pillar's points, which the equation panel shows.
 9. **Local context line** (`#r-local` on the results page): when `distance` is `metro` (with a
    known city) or `state`, show "In <place>, that's about X people", with X = the local pool
    × the same match rate (or, better, run the cube logic on the local table). For
@@ -235,7 +239,7 @@ with code that:
    methodology section.
 
 Keep `computeFor()` / `compute()` returning the same shape the results UI already reads:
-`{ p, N, people, factors[{key,label,note,v}], extras, score }`.
+`{ p, N, people, factors[{key,label,note,v}], std, Nadj, pAdj, peopleAdj, censusPts, total, score }`.
 
 ---
 
