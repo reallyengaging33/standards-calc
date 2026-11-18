@@ -47,6 +47,17 @@ Preview the site with a local server, because `fetch()` doesn't work when the fi
 opened by double-clicking:
 `cd site && python -m http.server 8000`, then open http://localhost:8000
 
+### If running in Claude Code on the web (cloud session)
+- The environment needs network access to `census.gov`, `www2.census.gov` and
+  `wwwn.cdc.gov` (and `cdc.gov`). If a download fails with "host not allowed", stop and tell
+  Nick to change the environment's network access. Don't try to work around it.
+- Disk space is limited. Download the ACS person file in its split parts if available, process
+  each part in chunks, and **delete the raw file once its part of the cube is built**.
+- There's no localhost preview for Nick. In Phase 1, add a GitHub Actions workflow that
+  publishes `site/` to **GitHub Pages**, so every merged change is viewable at a public URL.
+  Tell Nick to switch Pages on (repo Settings → Pages → Source: GitHub Actions).
+- Work is pushed to a branch. Tell Nick when a phase is ready to merge.
+
 ---
 
 ## Filter state (the contract between UI and data)
@@ -57,23 +68,27 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 |---|---|---|
 | `gender` | `male` / `female` | the user, not the filter |
 | `seeking` | `men` / `women` / `either` | **odds** (sex) |
-| `ethnicities` | `"any"` or array of `white`, `black`, `asian`, `middle_eastern`, `mixed`, `hispanic` (Phase 4) | **odds** (OR logic) |
+| `ethnicities` | `"any"` or array of `white`, `black`, `asian`, `middle_eastern`, `mixed`, `hispanic` | **odds** (OR logic) |
 | `ageMin`, `ageMax` | 18–99 | **odds** |
 | `excludeMarried` | bool | **odds** |
 | `kidsMin`, `kidsMax` | 0–4 (4 means "4 or more") | **odds** |
 | `heightMinIn`, `heightMaxIn` | inches 59–88, or `null` = no limit | **odds** (via NHANES) |
 | `heightUnit` | `imperial` / `metric` | display only |
 | `minIncome` | one of the `INCOME_STEPS` values (0 … 1,000,000) | **odds** |
-| `preferredIncome` | ≥ `minIncome` | strictness score only |
+| `preferredIncome` | ≥ `minIncome` | Lifestyle rarity multiplier (uses real income shares) |
 | `excludeObese` | bool (BMI ≥ 30) | **odds** (via NHANES) |
-| `region` | `us` (others later) | dataset choice |
-| `distance` | `metro` / `state` / `country` / `anywhere` | context line only, never the odds |
+| `region` | always `us` for now | dataset choice |
+| `distance` | `metro` / `state` / `country` | context line only, never the odds |
+| `usState` | 2-letter code (`GA`) or `null` | local context |
+| `city`, `cityName` | city id and display name from `US_STATES` in index.html (e.g. `atlanta` / `Atlanta`), or `city = "other"` | local context |
+| `customCity` | typed name when `city === "other"` | display only (no data lookup) |
 | `resultTone` | `stats` / `playful` / `brutal` | copy only |
-| `looksImportance`, `emotionalRegulation` | 0–10 | strictness only |
-| `behavior.*`, `skills.*` | `any` / `preferred` / `required` | strictness only |
-| `dealbreakers.*` | bool | strictness only |
-| `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | strictness only (see below) |
-| `sizePreference` | `any` / `average_plus` / `above_average` | strictness only for now |
+| `looksImportance` | 0–10 | power on the Physical rarity multiplier (0.5 to 1.5) |
+| `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
+| `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
+| `dealbreakers.*` | bool | pass-rate multipliers (Character) |
+| `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Physical multiplier: rarity-weighted share of builds accepted (rarity values in `BODY_SETS`) |
+| `sizePreference` | `any` / `average_plus` / `above_average` | Physical multiplier (69% / 50% pass) |
 
 `INCOME_STEPS` in index.html: 0, 10k, 20k, 25k, 30k, 40k, 50k, 60k, 75k, 100k, 125k, 150k,
 200k, 250k, 300k, 400k, 500k, 750k, 1M.
@@ -114,8 +129,8 @@ Variables (confirm in the 2024 dictionary):
 3. else `white`, `black`, `asian`, `mixed` from `RAC1P`
 4. else `other`
 
-> **Decided:** add a Hispanic/Latino chip (`hispanic`) in Phase 4. About 18% of US adults
-> (ACS 2024), who were otherwise only counted under "Doesn't matter".
+> **Decided:** the page has a Hispanic/Latino chip (`hispanic`). About 18% of US adults
+> (ACS 2024), who would otherwise only be counted under "Doesn't matter".
 
 **Children:** ACS only knows about children who **live in the same household**. A parent
 whose kids live elsewhere counts as 0. Derive "own children in household" per adult by
@@ -146,9 +161,11 @@ Veale et al., BJU International 2015, erect length mean 13.12 cm, SD 1.66 cm (n 
 "Above average only" ≈ 50%, "Average or above" = share above mean − 0.5 SD ≈ 69%.
 **Leave as strictness-only unless Nick says otherwise.**
 
-### Not from any dataset (keep as strictness only)
-Body types, all of Step 2 (behaviour, calm under stress, dealbreakers), skills, looks
-importance, preferred income. No survey measures these. Do not invent proxies.
+### Not from any dataset (rarity multipliers on top of the census odds)
+Body types, all of Step 2 (behaviour, Emotional Intelligence, dealbreakers), skills, looks
+importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
+odds** (real-world odds), never the census odds themselves. Body-type rarity multipliers in `BODY_SETS` are Nick's
+assumptions. Do not invent proxies or replace them with "data".
 Body types could later get a fun stat from the site's own anonymous usage
 ("8% of people picked only BBL"), but that needs analytics and is out of scope.
 
@@ -172,8 +189,13 @@ values:     sum of PWGTP (population), count of rows (sample size)
 - Keep only non-empty cells. Write `site/data/acs_2024_cube.json` (or a compact binary or
   columnar format). **Target under 2 MB gzipped.** Report the actual size.
 - Write `site/data/nhanes_2021_23.json` with the height CDFs and obesity shares.
-- Write `site/data/state_adults.json`: weighted adults by state × sex × single, for the
+- Write `site/data/state_adults.json`: weighted adults by state × sex × single × age, for the
   local context line.
+- Write `site/data/metro_adults.json`: the same for each city in `US_STATES` (index.html).
+  ACS PUMS only identifies PUMAs, not cities, so map each city to its metro area (CBSA) with
+  a PUMA-to-CBSA crosswalk (Census relationship files or MABLE Geocorr), weighting by
+  population overlap. List the CBSA each city id maps to in `meta.json`. Names like
+  "Northern Virginia (DC area)" map to the part of that metro inside the chosen state.
 - Write `site/data/meta.json`: sources, years, build date, ancestry codes used, total
   weighted adults (for sanity checks).
 
@@ -197,19 +219,34 @@ with code that:
    loosened. The UI logic already does this through `compute()`.
 7. **Low confidence:** if the matching unweighted row count is under 30, show
    "Very rare: estimate is rough" beside the number.
-8. Keep `strictnessExtras()` and the score formula, but feed them the real N.
-9. Remove the "Demo numbers" banner and add a small "Sources" line linking a
+8. **Census odds × standards = real-world odds.** Keep `standardsRarity()` and the `RARITY`
+   config exactly as they are. Their pass rates are deliberate estimates, not data, so don't
+   "fix" them with numbers. The only change: the **preferred income** pass rate must use the
+   real income shares from the cube (share earning ≥ preferred ÷ share earning ≥ minimum,
+   for the matching group), not the demo table.
+   - Census odds: N from the cube (shown as "1 in N" and as a % of the pool)
+   - Each pillar's rarity = 1 / (product of its pass rates). Physical is raised to the power
+     of the Looks multiplier (0.5 to 1.5), Character to the Emotional Intelligence multiplier
+   - Real-world odds: N_adj = N × Physical × Character × Lifestyle (also shown as a %)
+   - Delusion score = 2.1 × log10(N_adj), capped at 10. This splits exactly into census
+     points + each pillar's points, which the equation panel shows.
+9. **Local context line** (`#r-local` on the results page): when `distance` is `metro` (with a
+   known city) or `state`, show "In <place>, that's about X people", with X = the local pool
+   × the same match rate (or, better, run the cube logic on the local table). For
+   `city === "other"`, say local data isn't available for custom cities. This never
+   changes N, the odds score or the delusion score.
+10. Remove the "Demo numbers" banner and add a small "Sources" line linking a
    methodology section.
 
 Keep `computeFor()` / `compute()` returning the same shape the results UI already reads:
-`{ p, N, people, factors[{key,label,note,v}], extras, score }`.
+`{ p, N, people, factors[{key,label,note,v}], std, Nadj, pAdj, peopleAdj, censusPts, total, score }`.
 
 ---
 
 ## Validation (`pipeline/03_validate.py`) — must pass before calling it done
 - Total weighted US adults 18+ ≈ the official ACS 2024 figure (about 260 million; report the exact value).
-- Share of 25–34-year-olds never married, by sex, matches the ACS published table (S1201)
-  within ~1 point.
+- Share of 25–34-year-olds never married, by sex, matches the ACS published tables within
+  ~1 point (B12002 / B01001: S1201 has no 25–34 age group).
 - Median personal income by sex is in line with published ACS figures.
 - NHANES weighted adult obesity ≈ 40% (CDC published 40.3% for adults 20+, 2021–2023).
 - Mean height: men ≈ 69 in, women ≈ 63.5 in.
@@ -223,7 +260,7 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
 3. **NHANES pipeline:** download, build the height and obesity lookups.
 4. **Wire up:** replace the demo model in `index.html`, add loading, error and low-confidence states.
 5. **Validate:** run `03_validate.py`, fix anything off, then click through the site.
-6. **Later:** methodology page, Hispanic/Latino chip (if approved), other countries,
+6. **Later:** methodology page, other countries,
    hosting (Cloudflare Pages / Vercel / Netlify), share-image download.
 
 ## Data credits to show on the site
