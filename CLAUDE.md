@@ -57,7 +57,7 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 |---|---|---|
 | `gender` | `male` / `female` | the user, not the filter |
 | `seeking` | `men` / `women` / `either` | **odds** (sex) |
-| `ethnicities` | `"any"` or array of `white`, `black`, `asian`, `middle_eastern`, `mixed` | **odds** (OR logic) |
+| `ethnicities` | `"any"` or array of `white`, `black`, `asian`, `middle_eastern`, `mixed`, `hispanic` (Phase 4) | **odds** (OR logic) |
 | `ageMin`, `ageMax` | 18–99 | **odds** |
 | `excludeMarried` | bool | **odds** |
 | `kidsMin`, `kidsMax` | 0–4 (4 means "4 or more") | **odds** |
@@ -103,7 +103,7 @@ Variables (confirm in the 2024 dictionary):
 | Ancestry | `ANC1P`, `ANC2P` | use to identify Middle Eastern / North African (see below) |
 | Income | `PINCP` × (`ADJINC` / 1,000,000) | total personal income, inflation-adjusted. **Apply ADJINC.** |
 | Own children | see "Children" below | 0, 1, 2, 3, 4+ |
-| State | `ST` | context table only |
+| State | `STATE` | context table only (2024 file uses `STATE`, not `ST`) |
 
 **Ethnicity groups must be mutually exclusive.** Assign each person exactly one:
 1. `hispanic` if `HISP` ≠ 01 (any race)
@@ -114,16 +114,16 @@ Variables (confirm in the 2024 dictionary):
 3. else `white`, `black`, `asian`, `mixed` from `RAC1P`
 4. else `other`
 
-> **Open UI decision for Nick:** the page has no "Hispanic/Latino" chip, so Hispanic people
-> are currently only counted under "Doesn't matter". Recommend adding a Hispanic/Latino chip
-> (about 1 in 5 US adults). Ask before changing the UI.
+> **Decided:** add a Hispanic/Latino chip (`hispanic`) in Phase 4. About 18% of US adults
+> (ACS 2024), who were otherwise only counted under "Doesn't matter".
 
 **Children:** ACS only knows about children who **live in the same household**. A parent
 whose kids live elsewhere counts as 0. Derive "own children in household" per adult by
 linking people within a household (`SERIALNO`) via the relationship variable (`RELSHIPP`:
 biological, adopted and stepchildren of the householder count toward the householder and
-their spouse/partner). Check the dictionary for a ready-made variable (`NOC` / `PAOC`) and
-use it if it fits better. Cap at 4 ("4+"). Add this note under the kids slider:
+their spouse/partner). (Checked: `NOC` is household-level and `PAOC` is women-only
+presence, so neither fits; `01_acs.py` derives the count via `RELSHIPP` plus subfamily `SFN`/`SFR`,
+under-18 never-married children, matching the Census own-child definition.) Cap at 4 ("4+"). Add this note under the kids slider:
 "Counts children living with them."
 
 ### B. NHANES: height and obesity (not in the ACS)

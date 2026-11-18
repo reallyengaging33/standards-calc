@@ -1,0 +1,113 @@
+{
+  "built": "2026-11-18T22:23:05+00:00",
+  "acs": {
+    "source": "U.S. Census Bureau, American Community Survey 2024 1-year PUMS (person file, US)",
+    "url": "https://www2.census.gov/programs-surveys/acs/data/pums/2024/1-Year/csv_pus.zip",
+    "dictionary": "PUMS_Data_Dictionary_2024",
+    "year": 2024,
+    "files": {
+      "cube": "acs_2024_cube.json",
+      "states": "state_adults.json"
+    },
+    "cube_cells": 72006,
+    "cube_bytes": 1447268,
+    "cube_bytes_gzip": 226492,
+    "ethnicity_order": [
+      "white",
+      "black",
+      "asian",
+      "middle_eastern",
+      "mixed",
+      "hispanic",
+      "other"
+    ],
+    "ethnicity_rule": "hispanic if HISP!=01; else middle_eastern if ANC1P/ANC2P in mena_ancestry_codes; else RAC1P 1 white, 2 black, 6 asian, 9 mixed; else other",
+    "mena_ancestry_codes": {
+      "400": "Algerian",
+      "402": "Egyptian",
+      "404": "Libyan",
+      "406": "Moroccan",
+      "408": "Tunisian",
+      "411": "North African",
+      "416": "Iranian",
+      "417": "Iraqi",
+      "419": "Israeli",
+      "421": "Jordanian",
+      "425": "Lebanese",
+      "427": "Saudi Arabian",
+      "429": "Syrian",
+      "431": "Armenian",
+      "434": "Turkish",
+      "435": "Yemeni",
+      "442": "Kurdish",
+      "465": "Palestinian",
+      "483": "Assyrian",
+      "484": "Chaldean",
+      "490": "Mideast",
+      "495": "Arab",
+      "496": "Arabic",
+      "499": "Other Arab"
+    },
+    "single_rule": "MAR 2 widowed, 3 divorced, 5 never married = single; 1 married, 4 separated = not single",
+    "income_rule": "PINCP * ADJINC / 1e6, bucket = highest INCOME_STEPS value <= income; <=0 -> bucket 0",
+    "income_steps": [
+      0,
+      10000,
+      20000,
+      25000,
+      30000,
+      40000,
+      50000,
+      60000,
+      75000,
+      100000,
+      125000,
+      150000,
+      200000,
+      250000,
+      300000,
+      400000,
+      500000,
+      750000,
+      1000000
+    ],
+    "kids_rule": "own never-married children under 18 living in the same household (householder + spouse/partner via RELSHIPP 25/26/27; subfamily parents via SFN/SFR); capped at 4",
+    "universe": "all persons 18+, household and group-quarters population",
+    "checks": {
+      "total_weighted_adults_18plus": 267241508,
+      "weighted_men": 130934877,
+      "weighted_women": 136306631,
+      "respondent_rows_18plus": 2790132,
+      "never_married_25_34_men_pct": 62.1,
+      "median_income_men_all_adults": 46498,
+      "median_income_men_with_income": 50762,
+      "never_married_25_34_women_pct": 52.7,
+      "median_income_women_all_adults": 30458,
+      "median_income_women_with_income": 35534,
+      "ethnicity_share_pct": {
+        "white": 58.04,
+        "black": 11.54,
+        "asian": 6.46,
+        "middle_eastern": 1.06,
+        "mixed": 3.65,
+        "hispanic": 18.12,
+        "other": 1.14
+      },
+      "kids_share_pct": {
+        "0": 76.29,
+        "1": 10.16,
+        "2": 8.85,
+        "3": 3.3,
+        "4": 1.39
+      },
+      "single_pct": {
+        "men": 46.4,
+        "women": 49.7
+      },
+      "women_with_own_kids_pct": {
+        "derived": 25.19,
+        "PAOC": 24.2
+      }
+    }
+  }
+}
