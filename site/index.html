@@ -900,7 +900,7 @@
     <section class="panel" aria-labelledby="loc-title">
       <div class="panel-head">
         <span class="panel-icon magenta" aria-hidden="true"><svg class="icon"><use href="#i-pin"/></svg></span>
-        <div><h2 id="loc-title">Location &amp; distance</h2><p>United States only for now. Adds local context and never changes your odds.</p></div>
+        <div><h2 id="loc-title">Location &amp; distance</h2><p>United States only. Picking a city or state narrows your census odds to that area.</p></div>
       </div>
       <fieldset class="field">
         <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>How far would you go?</legend>
@@ -923,10 +923,10 @@
           <select id="us-city" aria-describedby="loc-msg" disabled><option value="">Pick your state first</option></select>
           <svg class="icon" aria-hidden="true"><use href="#i-chev"/></svg>
         </div>
-        <input type="text" id="custom-city" class="text-input" placeholder="Enter your city name" autocomplete="address-level2" hidden aria-label="Your city name">
+        <p class="hint">Don't see your town? Pick the nearest metro, or choose "Same state".</p>
       </div>
       <p class="loc-msg" id="loc-msg" aria-live="polite"></p>
-      <p class="hint">Only used to estimate how many matches may live near you.</p>
+      <p class="hint">"Anywhere in the US" uses national figures.</p>
     </section>
 
     <section class="panel" aria-labelledby="tone-title">
@@ -1131,13 +1131,14 @@
       <button type="button" class="btn-primary" id="edit-filters">Edit my filters<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </section>
 
-    <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 and CDC NHANES 2021–2023. <a href="#methodology">How this is calculated</a></p>
+    <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 (national) and 2020–2024 (states and cities), CDC NHANES 2021–2023. <a href="#methodology">How this is calculated</a></p>
 
     <section class="panel method" id="methodology" aria-labelledby="method-title">
       <h2 class="panel-title" id="method-title">How this is calculated</h2>
       <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. Nothing is sent anywhere: the data ships with the page and the maths runs on your device.</p>
       <ul>
         <li><strong>Sex, age, relationship status, ethnicity, income, children:</strong> U.S. Census Bureau, American Community Survey 2024 1-year Public Use Microdata Sample (about 2.8 million adult respondents, representing 267 million US adults).</li>
+        <li><strong>States and cities:</strong> the same survey's larger 2020–2024 5-year sample, so smaller places still have enough respondents. The census can't identify towns, only areas of 100,000+ people, so a city means its metro area, built from the census areas where most residents live inside it. A few small capitals (Juneau, Pierre, Helena, Carson City, Montpelier, Laramie) are smaller than any census area, so they use the surrounding region, and the page says so. Height and obesity use national figures for every location.</li>
         <li><strong>Height and obesity:</strong> CDC / NCHS National Health and Nutrition Examination Survey, August 2021–August 2023 (measured, not self-reported). Applied by sex, age band and ethnicity. Some smaller groups are pooled across age bands.</li>
       </ul>
       <h3>Definitions</h3>
@@ -1199,9 +1200,8 @@
     excludeObese: false,
     region: "us",               // US only for now
     usState: null,              // e.g. "GA"
-    city: null,                 // city id from US_STATES (e.g. "atlanta"), or "other"
+    city: null,                 // city id from US_STATES (e.g. "atlanta")
     cityName: null,             // display name of the picked city
-    customCity: "",             // typed name when city === "other"
     distance: "country",
     resultTone: "stats",
     // Step 2 – preferences (strictness only)
@@ -1435,7 +1435,7 @@
 
   /* ---- Location: US states and their main cities / metro areas ("*" = state capital) ---- */
   var US_STATES = [{"code": "AL", "name": "Alabama", "cities": ["Birmingham", "Huntsville", "Mobile", "Montgomery*", "Tuscaloosa"]}, {"code": "AK", "name": "Alaska", "cities": ["Anchorage", "Fairbanks", "Juneau*"]}, {"code": "AZ", "name": "Arizona", "cities": ["Phoenix*", "Tucson", "Flagstaff", "Yuma", "Prescott"]}, {"code": "AR", "name": "Arkansas", "cities": ["Little Rock*", "Northwest Arkansas (Fayetteville / Rogers)", "Fort Smith", "Jonesboro"]}, {"code": "CA", "name": "California", "cities": ["Los Angeles", "San Francisco Bay Area (SF / Oakland)", "San Jose / Silicon Valley", "San Diego", "Orange County (Anaheim / Irvine)", "Inland Empire (Riverside / San Bernardino)", "Sacramento*", "Fresno", "Bakersfield"]}, {"code": "CO", "name": "Colorado", "cities": ["Denver*", "Colorado Springs", "Fort Collins", "Boulder", "Pueblo"]}, {"code": "CT", "name": "Connecticut", "cities": ["Hartford*", "Bridgeport / Stamford", "New Haven", "Waterbury"]}, {"code": "DE", "name": "Delaware", "cities": ["Wilmington", "Dover*"]}, {"code": "DC", "name": "District of Columbia", "cities": ["Washington, DC*"]}, {"code": "FL", "name": "Florida", "cities": ["Miami / Fort Lauderdale", "Tampa / St. Petersburg", "Orlando", "Jacksonville", "West Palm Beach", "Fort Myers / Cape Coral", "Sarasota", "Tallahassee*", "Pensacola", "Gainesville"]}, {"code": "GA", "name": "Georgia", "cities": ["Atlanta*", "Augusta", "Savannah", "Columbus", "Macon", "Athens"]}, {"code": "HI", "name": "Hawaii", "cities": ["Honolulu*", "Kahului (Maui)", "Hilo (Hawaii Island)"]}, {"code": "ID", "name": "Idaho", "cities": ["Boise*", "Coeur d'Alene", "Idaho Falls", "Pocatello"]}, {"code": "IL", "name": "Illinois", "cities": ["Chicago", "Rockford", "Peoria", "Champaign-Urbana", "Springfield*"]}, {"code": "IN", "name": "Indiana", "cities": ["Indianapolis*", "Fort Wayne", "Evansville", "South Bend", "Bloomington"]}, {"code": "IA", "name": "Iowa", "cities": ["Des Moines*", "Cedar Rapids", "Davenport (Quad Cities)", "Iowa City"]}, {"code": "KS", "name": "Kansas", "cities": ["Kansas City area (Overland Park / Olathe)", "Wichita", "Topeka*", "Lawrence"]}, {"code": "KY", "name": "Kentucky", "cities": ["Louisville", "Lexington", "Bowling Green", "Frankfort*"]}, {"code": "LA", "name": "Louisiana", "cities": ["New Orleans", "Baton Rouge*", "Shreveport", "Lafayette"]}, {"code": "ME", "name": "Maine", "cities": ["Portland", "Bangor", "Augusta*"]}, {"code": "MD", "name": "Maryland", "cities": ["Baltimore", "DC suburbs (Silver Spring / Bethesda)", "Annapolis*", "Frederick", "Salisbury"]}, {"code": "MA", "name": "Massachusetts", "cities": ["Boston*", "Worcester", "Springfield", "Cape Cod"]}, {"code": "MI", "name": "Michigan", "cities": ["Detroit", "Grand Rapids", "Lansing*", "Ann Arbor", "Flint", "Kalamazoo"]}, {"code": "MN", "name": "Minnesota", "cities": ["Minneapolis / St. Paul*", "Rochester", "Duluth", "St. Cloud"]}, {"code": "MS", "name": "Mississippi", "cities": ["Jackson*", "Gulfport / Biloxi", "Hattiesburg", "Tupelo"]}, {"code": "MO", "name": "Missouri", "cities": ["St. Louis", "Kansas City", "Springfield", "Columbia", "Jefferson City*"]}, {"code": "MT", "name": "Montana", "cities": ["Billings", "Missoula", "Bozeman", "Great Falls", "Helena*"]}, {"code": "NE", "name": "Nebraska", "cities": ["Omaha", "Lincoln*", "Grand Island"]}, {"code": "NV", "name": "Nevada", "cities": ["Las Vegas", "Reno", "Carson City*"]}, {"code": "NH", "name": "New Hampshire", "cities": ["Manchester", "Nashua", "Portsmouth", "Concord*"]}, {"code": "NJ", "name": "New Jersey", "cities": ["Newark / Jersey City (NYC area)", "Camden / Cherry Hill (Philadelphia area)", "New Brunswick", "Atlantic City", "Trenton*"]}, {"code": "NM", "name": "New Mexico", "cities": ["Albuquerque", "Santa Fe*", "Las Cruces"]}, {"code": "NY", "name": "New York", "cities": ["New York City", "Long Island", "Buffalo", "Rochester", "Albany*", "Syracuse", "Ithaca"]}, {"code": "NC", "name": "North Carolina", "cities": ["Charlotte", "Raleigh*", "Durham / Chapel Hill", "Greensboro", "Winston-Salem", "Asheville", "Wilmington"]}, {"code": "ND", "name": "North Dakota", "cities": ["Fargo", "Bismarck*", "Grand Forks"]}, {"code": "OH", "name": "Ohio", "cities": ["Columbus*", "Cleveland", "Cincinnati", "Dayton", "Toledo", "Akron"]}, {"code": "OK", "name": "Oklahoma", "cities": ["Oklahoma City*", "Tulsa", "Norman"]}, {"code": "OR", "name": "Oregon", "cities": ["Portland", "Salem*", "Eugene", "Bend", "Medford"]}, {"code": "PA", "name": "Pennsylvania", "cities": ["Philadelphia", "Pittsburgh", "Allentown / Bethlehem", "Harrisburg*", "Lancaster", "Scranton / Wilkes-Barre", "State College"]}, {"code": "RI", "name": "Rhode Island", "cities": ["Providence*", "Newport"]}, {"code": "SC", "name": "South Carolina", "cities": ["Charleston", "Greenville / Spartanburg", "Columbia*", "Myrtle Beach"]}, {"code": "SD", "name": "South Dakota", "cities": ["Sioux Falls", "Rapid City", "Pierre*"]}, {"code": "TN", "name": "Tennessee", "cities": ["Nashville*", "Memphis", "Knoxville", "Chattanooga", "Clarksville"]}, {"code": "TX", "name": "Texas", "cities": ["Houston", "Dallas / Fort Worth", "San Antonio", "Austin*", "El Paso", "McAllen", "Corpus Christi", "Lubbock"]}, {"code": "UT", "name": "Utah", "cities": ["Salt Lake City*", "Provo / Orem", "Ogden", "St. George"]}, {"code": "VT", "name": "Vermont", "cities": ["Burlington", "Montpelier*"]}, {"code": "VA", "name": "Virginia", "cities": ["Northern Virginia (DC area)", "Virginia Beach / Norfolk", "Richmond*", "Roanoke", "Charlottesville"]}, {"code": "WA", "name": "Washington", "cities": ["Seattle", "Tacoma", "Spokane", "Vancouver (Portland area)", "Bellingham", "Olympia*"]}, {"code": "WV", "name": "West Virginia", "cities": ["Charleston*", "Huntington", "Morgantown"]}, {"code": "WI", "name": "Wisconsin", "cities": ["Milwaukee", "Madison*", "Green Bay", "Appleton"]}, {"code": "WY", "name": "Wyoming", "cities": ["Cheyenne*", "Casper", "Laramie"]}];
-  var stateSel = $("us-state"), citySel = $("us-city"), customCity = $("custom-city");
+  var stateSel = $("us-state"), citySel = $("us-city");
   US_STATES.forEach(function (st) {
     var o = document.createElement("option"); o.value = st.code; o.textContent = st.name; stateSel.appendChild(o);
   });
@@ -1455,36 +1455,30 @@
       o.setAttribute("data-name", name);
       citySel.appendChild(o);
     });
-    var other = document.createElement("option"); other.value = "other"; other.textContent = "Other city…"; citySel.appendChild(other);
   }
   function locMessage() {
     var msg = "";
-    if (state.distance === "metro" && !state.usState) msg = "Pick your state, then your city, to see local estimates.";
-    else if (state.distance === "metro" && !state.city) msg = "Pick a city to see local estimates.";
-    else if (state.distance === "metro" && state.city === "other" && !state.customCity) msg = "Type your city name to see local estimates.";
-    else if (state.distance === "state" && !state.usState) msg = "Pick your state to see local estimates.";
+    if (state.distance === "metro" && !state.usState) msg = "Pick your state, then your city, to see local odds. Until then, results are national.";
+    else if (state.distance === "metro" && !state.city) msg = "Pick a city to see local odds. Until then, results use your whole state.";
+    else if (state.distance === "state" && !state.usState) msg = "Pick your state to see local odds. Until then, results are national.";
     $("loc-msg").textContent = msg;
     stateSel.setAttribute("aria-invalid", (state.distance !== "country" && !state.usState) ? "true" : "false");
     citySel.setAttribute("aria-invalid", (state.distance === "metro" && state.usState && !state.city) ? "true" : "false");
   }
   function syncLocationUI() {
     $("city-field").hidden = state.distance !== "metro";
-    customCity.hidden = !(state.distance === "metro" && state.city === "other");
     locMessage();
   }
   stateSel.addEventListener("change", function () {
-    state.usState = this.value || null; state.city = null; state.cityName = null; state.customCity = "";
-    customCity.value = ""; fillCities(); syncLocationUI(); render();
+    state.usState = this.value || null; state.city = null; state.cityName = null;
+    fillCities(); syncLocationUI(); render();
   });
   citySel.addEventListener("change", function () {
     var opt = citySel.options[citySel.selectedIndex];
     state.city = this.value || null;
-    state.cityName = this.value && this.value !== "other" ? opt.getAttribute("data-name") : null;
-    if (state.city !== "other") { state.customCity = ""; customCity.value = ""; }
+    state.cityName = this.value ? opt.getAttribute("data-name") : null;
     syncLocationUI(); render();
-    if (state.city === "other") customCity.focus();
   });
-  customCity.addEventListener("input", function () { state.customCity = this.value.trim(); locMessage(); render(); });
   fillCities(); syncLocationUI();
 
   all('#view-1 .seg[data-key]').forEach(function (g) {
@@ -1722,7 +1716,9 @@
   }
   function countPicked(obj) { return Object.keys(obj).filter(function (k) { return obj[k] !== "any" && obj[k] !== false; }).length; }
   /* ================= Real-data model =================
-     ACS 2024 PUMS cube (site/data/acs_2024_cube.json) gives weighted adults by
+     National odds: ACS 2024 1-year PUMS cube (site/data/acs_2024_cube.json). State and
+     metro searches load that area's cube from site/data/state/ or site/data/metro/ (ACS
+     2020–2024 5-year PUMS) on demand; the maths is the same. Each cube gives weighted adults by
      sex × age × single × ethnicity × income bucket × kids. We count the cells that match
      every filter at once, so correlated filters are never multiplied together.
      Height and obesity come from NHANES 2021–23 tables by sex × age band × race group,
@@ -1731,6 +1727,33 @@
   var SEX_IDX = { men: 0, women: 1 }, NH_SEX = { men: "male", women: "female" };
   var LOW_N = 30;
   var AGE_TOP = 90;   // the cube pools everyone 90+ (Census top-codes the oldest ages)
+  var LOCAL = {};      // "state/GA" or "metro/GA-atlanta" -> { status, D, info, error }
+
+  // Which cube file an area uses (metro ids repeat across states, so they carry the state)
+  function areaKey(area, s) {
+    if (area.level === "metro") return "metro/" + s.usState + "-" + area.id;
+    if (area.level === "state") return "state/" + area.id;
+    return null;
+  }
+  function loadLocal(key) {
+    var e = LOCAL[key];
+    if (!DATA || (e && (e.status === "loading" || e.status === "ready"))) return;
+    LOCAL[key] = { status: "loading" };
+    fetch("data/" + key + ".json").then(function (r) { if (!r.ok) throw new Error(key + ": HTTP " + r.status); return r.json(); })
+      .then(function (cube) { LOCAL[key] = { status: "ready", D: prepare(cube, DATA.nh, DATA.dims), info: cube.area }; })
+      .catch(function (err) {
+        LOCAL[key] = { status: "error", error: err };
+        if (window.console) console.error("Standards Calc: could not load " + key, err);
+      })
+      .then(function () { if (current === 4) renderResults(); });
+  }
+  // The dataset for a filter state: the national cube, or a local one once it has loaded
+  function datasetFor(s) {
+    var area = searchArea(s), key = areaKey(area, s);
+    if (!key) return { D: DATA, area: area, key: null, entry: null };
+    var e = LOCAL[key];
+    return { D: e && e.status === "ready" ? e.D : null, area: area, key: key, entry: e || null };
+  }
 
   function loadData() {
     if (DATA || dataLoading) return;
@@ -1749,7 +1772,16 @@
     });
   }
 
+  var statusRetry = null;
+  function showStatus(msg, isError, retry) {
+    var box = $("data-status");
+    box.hidden = false; box.classList.toggle("error", !!isError);
+    $("data-status-text").textContent = msg;
+    statusRetry = retry || null; $("data-retry").hidden = !isError;
+  }
+  function hideStatusIfReady() { if (DATA) $("data-status").hidden = true; }
   function paintDataStatus() {
+    statusRetry = loadData;
     var box = $("data-status"), txt = $("data-status-text"), retry = $("data-retry");
     box.classList.toggle("error", !!dataError);
     if (DATA) { box.hidden = true; return; }
@@ -1761,11 +1793,12 @@
       : "Loading population data…";
   }
 
-  function prepare(cube, nh) {
+  function prepare(cube, nh, dims) {
+    dims = cube.dims || dims;   // local cubes share the national cube's dimension codes
     var d = cube.data, len = d.w.length;
-    var ethIdx = {}; cube.dims.eth.forEach(function (k, i) { ethIdx[k] = i; });
+    var ethIdx = {}; dims.eth.forEach(function (k, i) { ethIdx[k] = i; });
     var starts = nh.age_band_starts, groups = ["white", "black", "asian", "hispanic", "other"];
-    var raceOfEth = cube.dims.eth.map(function (k) { return groups.indexOf(nh.eth_map[k]); });
+    var raceOfEth = dims.eth.map(function (k) { return groups.indexOf(nh.eth_map[k]); });
     var bandOfAge = []; for (var a = 0; a <= 120; a++) { var b = 0; while (b + 1 < starts.length && a >= starts[b + 1]) b++; bandOfAge[a] = b; }
     var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], inc: [], kids: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
     for (var i = 0; i < len; i++) {
@@ -1780,7 +1813,7 @@
       var above = 0; t.incomeAtLeast = [];
       for (var k = INCOME_STEPS.length - 1; k >= 0; k--) { above += t.incW[k] || 0; t.incomeAtLeast[k] = above / t.total; }
     });
-    return { sex: bySex, ethIdx: ethIdx, nh: nh, groups: groups, nBands: starts.length };
+    return { sex: bySex, ethIdx: ethIdx, nh: nh, groups: groups, nBands: starts.length, dims: dims };
   }
 
   // P(height in range [, and not obese]) for every NHANES cell, for one sex
@@ -1804,11 +1837,11 @@
   var FILTER_KEYS = ["age", "ethnicity", "single", "height", "income", "kids", "obesity"];
 
   /* One pass over the cube: weighted matches with all filters, and with each filter removed. */
-  function computeFor(s, sex) {
-    var t = DATA.sex[SEX_IDX[sex]];
+  function computeFor(s, sex, D) {
+    var t = D.sex[SEX_IDX[sex]];
     var ethOk = [];
     for (var e = 0; e < 7; e++) ethOk[e] = s.ethnicities === "any";
-    if (s.ethnicities !== "any") s.ethnicities.forEach(function (k) { if (k in DATA.ethIdx) ethOk[DATA.ethIdx[k]] = true; });
+    if (s.ethnicities !== "any") s.ethnicities.forEach(function (k) { if (k in D.ethIdx) ethOk[D.ethIdx[k]] = true; });
     var incMin = INCOME_STEPS.indexOf(s.minIncome); if (incMin < 0) incMin = 0;
     var incPref = Math.max(incMin, INCOME_STEPS.indexOf(s.preferredIncome));
     var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
@@ -1862,10 +1895,11 @@
     });
   }
 
-  function incomeAtLeast(s, step) {
+  function incomeAtLeast(s, step, D) {
+    D = D || DATA;
     var k = INCOME_STEPS.indexOf(step), sexes = s.seeking === "either" ? [0, 1] : [SEX_IDX[s.seeking]];
     var num = 0, den = 0;
-    sexes.forEach(function (x) { var t = DATA.sex[x]; num += t.incomeAtLeast[k] * t.total; den += t.total; });
+    sexes.forEach(function (x) { var t = D.sex[x]; num += t.incomeAtLeast[k] * t.total; den += t.total; });
     return num / den;
   }
 
@@ -1939,8 +1973,10 @@
       return { p: NaN, N: NaN, people: NaN, factors: [], std: standardsRarity(s), Nadj: NaN, pAdj: NaN, peopleAdj: NaN, censusPts: NaN, total: NaN, score: NaN, n: 0, lowConfidence: false,
                unavailable: "Not available for ages above " + AGE_TOP + ": the census groups everyone " + AGE_TOP + " and over together. Set the youngest age to " + AGE_TOP + " or below." };
     }
+    var ds = datasetFor(s);
+    if (!ds.D) return { pending: true, area: ds.area, key: ds.key, entry: ds.entry };
     var sexes = s.seeking === "either" ? ["women", "men"] : [s.seeking];
-    var parts = sexes.map(function (x) { return computeFor(s, x); });
+    var parts = sexes.map(function (x) { return computeFor(s, x, ds.D); });
     var sum = function (f) { return parts.reduce(function (t, r) { return t + f(r); }, 0); };
     var people = sum(function (r) { return r.people; });
     var pool = sum(function (r) { return r.pool; });
@@ -1958,7 +1994,8 @@
     var total = censusPts + std.pts;                         // = 2.1 × log10(Nadj)
     var score = Math.max(0, Math.min(10, Math.round(total)));
     return { p: p, N: N, people: people, factors: factors, std: std, Nadj: Nadj, pAdj: p / std.R, peopleAdj: people / std.R,
-             censusPts: censusPts, total: total, score: score, n: n, lowConfidence: n < LOW_N };
+             censusPts: censusPts, total: total, score: score, n: n, lowConfidence: n < LOW_N,
+             area: ds.area, areaInfo: ds.entry ? ds.entry.info : null };
   }
 
   /* ================= Results rendering ================= */
@@ -1979,6 +2016,13 @@
   var cardTheme = "dark", cardShape = "square";
   var lastResult = null;
 
+  /* Which population the census odds are for: a metro, a state, or the whole US */
+  function searchArea(s) {
+    var st = s.usState ? US_STATES.filter(function (x) { return x.code === s.usState; })[0] : null;
+    if (s.distance === "metro" && st && s.city) return { level: "metro", id: s.city, name: s.cityName + " (" + st.code + ")" };
+    if (s.distance !== "country" && st) return { level: "state", id: st.code, name: st.name };
+    return { level: "us", id: "us", name: "the United States" };
+  }
   function fmtPct(p) {
     var v = p * 100;
     if (!isFinite(v) || v <= 0) return "0%";
@@ -2039,7 +2083,18 @@
     $("result-panel").hidden = !ready;
     all("#view-4 > section, #view-4 > .sources-line").forEach(function (el) { el.hidden = !ready; });
     if (!ready) { if (!dataError) loadData(); paintDataStatus(); return; }
-    var s = state, res = compute(s); lastResult = res;
+    var s = state, res = compute(s);
+    if (res.pending) {   // this area's cube hasn't arrived yet
+      all("#view-4 > section, #view-4 > .sources-line").forEach(function (el) { el.hidden = true; });
+      var failed = res.entry && res.entry.status === "error";
+      if (!failed) loadLocal(res.key);
+      showStatus(failed ? "Couldn't load the census data for " + res.area.name + ". Check your connection and try again."
+                        : "Loading census data for " + res.area.name + "…", failed, function () { delete LOCAL[res.key]; renderResults(); });
+      return;
+    }
+    hideStatusIfReady();
+    lastResult = res;
+    if (res.area.level === "metro") loadLocal("state/" + s.usState);   // for "Search your whole state"
     var heroSide = $("result-panel").querySelector(".hero-side");
     var pair = $("result-panel").querySelector(".odds-pair");
     heroSide.hidden = pair.hidden = !!res.unavailable;
@@ -2063,14 +2118,20 @@
     var adjTxt = fmtOdds(res.Nadj);
     $("r-odds-adj").textContent = adjTxt;
     $("r-odds-adj").className = "op-num" + (adjTxt.length > 11 ? " xlong" : adjTxt.length > 9 ? " long" : "");
-    $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
+    $("r-pct-adj").textContent = fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
     $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
-    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in the United States. Census odds use your Step 1 filters; your standards come from Steps 2 and 3.";
-    var place = null;
-    if (s.distance === "metro") place = s.city === "other" ? (s.customCity || null) : s.cityName;
-    else if (s.distance === "state" && s.usState) place = US_STATES.filter(function (x) { return x.code === s.usState; })[0].name;
-    $("r-local").hidden = !place;
-    if (place) $("r-local").textContent = "Local estimate for " + place + " appears once local population data is connected.";
+    var area = searchArea(s);
+    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters; your standards come from Steps 2 and 3.";
+    var local = area.level !== "us", thin = res.lowConfidence && res.people > 0;
+    $("r-local").hidden = !local;
+    if (local) {
+      var info = res.areaInfo || {};
+      $("r-local").textContent = thin
+        ? "Very rare: estimate is rough. Only " + res.n + " survey respondent" + (res.n === 1 ? "" : "s") + " in " + area.name + " match."
+        : info.approximate ? info.note
+        : "Census odds for " + (info.level === "metro" ? "the " + info.area + " area" : area.name) + " (ACS 2020–2024).";
+    }
+    if (local) $("r-flag").hidden = true;   // the local line carries the thin-sample note
     $("r-score").textContent = res.score;
     var m = $("r-meter"); m.innerHTML = "";
     for (var i = 0; i < 10; i++) { var seg = document.createElement("span"); if (i < res.score) seg.className = "on" + (i >= 7 ? " hot" : ""); m.appendChild(seg); }
@@ -2155,6 +2216,7 @@
     function trial(label, detail, patch) {
       var copy = JSON.parse(JSON.stringify(s)); patch(copy);
       var r = compute(copy);
+      if (r.pending || r.unavailable) return;
       if (r.Nadj < res.Nadj * 0.97) ideas.push({ label: label, detail: detail, N: r.Nadj, gain: res.Nadj / r.Nadj });
     }
     trial("Widen your age range by 5 years", (Math.max(18, s.ageMin - 5)) + "–" + Math.min(99, s.ageMax + 5),
@@ -2175,6 +2237,10 @@
     if (hasReq) trial("Make your Required items Preferred", "Softer standards", function (c) {
       ["behavior", "skills"].forEach(function (g) { Object.keys(c[g]).forEach(function (k) { if (c[g][k] === "required") c[g][k] = "preferred"; }); });
     });
+    if (res.area && res.area.level === "metro") {
+      var stName = US_STATES.filter(function (x) { return x.code === s.usState; })[0].name;
+      trial("Search your whole state", "All of " + stName, function (c) { c.distance = "state"; });
+    }
     ideas.sort(function (a, b) { return b.gain - a.gain; });
     var ul = $("r-whatif"); ul.innerHTML = "";
     ideas.slice(0, 3).forEach(function (idea) {
@@ -2244,7 +2310,7 @@
     } catch (e) { fail(); }
   });
 
-  $("data-retry").addEventListener("click", loadData);
+  $("data-retry").addEventListener("click", function () { if (statusRetry) statusRetry(); });
   paintHeight(); paintIncome();
   loadData();
   goTo(1);

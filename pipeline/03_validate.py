@@ -153,6 +153,47 @@ def site_checks(raw_total):
           "ok", not bad, "; ".join(bad[:3]))
 
 
+def local_checks():
+    """State and metro cubes (05_local_cubes.py) against the ACS 2020–2024 5-year S0101."""
+    path = OFFICIAL / "S0101_5y_states.json"
+    if not path.exists():
+        url = "https://data.census.gov/api/access/data/table?id=ACSST5Y2024.S0101&g=010XX00US$0400000"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (standards-calc validation)"})
+        with urllib.request.urlopen(req, timeout=90) as r:
+            path.write_bytes(r.read())
+    rows = json.loads(path.read_text())["response"]["data"]
+    h = rows[0]; pub = {r[h.index("NAME")]: int(r[h.index("S0101_C01_026E")]) for r in rows[1:]}
+    meta = json.loads((SITE / "data" / "meta.json").read_text())["local"]
+    html = (SITE / "index.html").read_text()
+    states = json.loads(re.search(r"var US_STATES = (\[.*?\]);\n", html).group(1))
+    worst, missing = (None, 0.0), []
+    for st in states:
+        f = SITE / "data" / "state" / f"{st['code']}.json"
+        if not f.exists():
+            missing.append(st["code"]); continue
+        ours = meta["states"][st["code"]]["adults"]
+        diff = abs(ours / pub[st["name"]] - 1)
+        if diff > worst[1]:
+            worst = (f"{st['code']} {ours:,} vs {pub[st['name']]:,}", diff)
+    check("State cubes: adults 18+ vs ACS 5-year S0101 (51)", f"worst {100 * worst[1]:.2f}%", "each within 1%",
+          not missing and worst[1] < 0.01, worst[0] + (f"; missing {missing}" if missing else ""))
+
+    slug = lambda t: re.sub(r"^-|-$", "", re.sub(r"[^a-z0-9]+", "-", t.lower().replace("*", "")))
+    keys = [f"{st['code']}-{slug(c)}" for st in states for c in st["cities"]]
+    nofile = [k for k in keys if not (SITE / "data" / "metro" / f"{k}.json").exists()]
+    check("Metro cube for every city in US_STATES", f"{len(keys) - len(nofile)}/{len(keys)}", f"{len(keys)}/{len(keys)}",
+          not nofile, ", ".join(nofile[:5]))
+    m = meta["metros"]
+    thin = sorted(m.items(), key=lambda kv: kv[1]["rows"])[0]
+    check("Smallest metro sample", f"{thin[1]['rows']:,} adults surveyed", "≥ 1,000", thin[1]["rows"] >= 1000, thin[0])
+    sizes = [v["bytes_gzip"] for v in list(meta["states"].values()) + list(m.values())]
+    check("Local files under 500 KB gzipped", f"max {max(sizes) / 1024:.0f} KB", "< 500 KB", max(sizes) < 500 * 1024)
+    weak = [k for k, v in m.items() if not v["approximate"] and (v["area_covered_pct"] < 50 or v["pumas_inside_pct"] < 50)]
+    approx = [k for k, v in m.items() if v["approximate"]]
+    check("Metro areas: PUMAs cover the area (non-approximate)", f"{len(weak)} weak", "0", not weak,
+          f"{len(approx)} approximate, flagged on the site: " + ", ".join(approx))
+
+
 def nhanes_checks():
     demo = pd.read_sas(RAW / "nhanes" / "DEMO_L.xpt", format="xport")
     bmx = pd.read_sas(RAW / "nhanes" / "BMX_L.xpt", format="xport")
@@ -170,6 +211,7 @@ def nhanes_checks():
 def main():
     raw_total = acs_checks()
     site_checks(raw_total)
+    local_checks()
     nhanes_checks()
 
     w = [max(len(str(r[i])) for r in results) for i in range(3)]
