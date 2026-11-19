@@ -45,9 +45,9 @@ acs = importlib.util.module_from_spec(spec); spec.loader.exec_module(acs)
 cw = importlib.util.spec_from_file_location("cw", ROOT / "pipeline" / "04_crosswalk.py")
 crosswalk = importlib.util.module_from_spec(cw); cw.loader.exec_module(crosswalk)
 
-COLS = ["SERIALNO", "PUMA", "PWGTP", "AGEP", "SEX", "MAR", "RAC1P", "HISP", "ANC1P", "ANC2P",
+COLS = ["SERIALNO", "PUMA", "PWGTP", "AGEP", "SEX", "MAR", "RAC1P", "RACBLK", "HISP", "ANC1P", "ANC2P",
         "PINCP", "ADJINC", "RELSHIPP", "SFN", "SFR"]
-DIMS = ["sex", "age", "single", "eth", "inc", "kids"]
+DIMS = ["sex", "age", "single", "eth", "black", "inc", "kids"]
 
 
 def check_dictionary():
@@ -84,6 +84,7 @@ def aggregate_state(st: str, fips: str) -> Path:
     a = df[df.AGEP >= 18].copy()
     a["single"] = a.MAR.isin([2, 3, 5]).astype(np.int8)
     a["eth"] = acs.ethnicity(a)
+    a["black"] = acs.black_flag(a)
     a["inc"] = acs.income_bucket((a.PINCP * a.ADJINC / 1e6).to_numpy())
     a["sex"] = (a.SEX - 1).astype(np.int8)
     a["age"] = a.AGEP.clip(upper=acs.AGE_TOP)
@@ -101,7 +102,7 @@ def write_cube(path: Path, g: pd.DataFrame, info: dict) -> dict:
     doc = {
         "source": "ACS 2020–2024 5-year PUMS, person file",
         "area": info,
-        "columns": ["sex", "age", "single", "eth", "inc", "kids", "w", "n"],
+        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "w", "n"],
         "data": {c: cube[c].astype(int).tolist() for c in DIMS + ["w", "n"]},
     }
     path.parent.mkdir(parents=True, exist_ok=True)

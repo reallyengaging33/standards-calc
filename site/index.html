@@ -691,6 +691,9 @@
     border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--bg-raise); color: var(--text-2); font-size: 15px; font-weight: 600;
     transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out);
   }
+  .rr-text { display: grid; gap: 1px; }
+  .rr-text small { font-size: 12.5px; font-weight: 500; color: var(--text-3); }
+  .radio-row[aria-checked="true"] .rr-text small { color: var(--text-2); }
   .radio-row:hover { border-color: var(--border-strong); color: var(--text); }
   .radio-row .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--magenta); flex: none; display: grid; place-items: center; }
   .radio-row .dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--magenta); transform: scale(0); transition: transform 180ms var(--ease-out); }
@@ -797,16 +800,10 @@
 
       <fieldset class="field">
         <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Ethnicity <span class="opt">(optional)</span></legend>
-        <button type="button" class="any-btn" id="eth-any" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Doesn't matter</button>
-        <div class="chips" id="eth-chips">
-          <button type="button" class="chip" data-value="white" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>White</button>
-          <button type="button" class="chip" data-value="black" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Black</button>
-          <button type="button" class="chip" data-value="hispanic" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Hispanic/Latino</button>
-          <button type="button" class="chip" data-value="asian" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Asian</button>
-          <button type="button" class="chip" data-value="middle_eastern" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Middle Eastern</button>
-          <button type="button" class="chip" data-value="mixed" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Mixed</button>
+        <div class="seg cols-2" role="radiogroup" aria-label="Ethnicity" id="eth-group">
+          <button type="button" role="radio" data-value="any">Doesn't matter</button>
+          <button type="button" role="radio" data-value="black">Black</button>
         </div>
-        <p class="hint">Pick more than one to widen your pool.</p>
       </fieldset>
 
       <fieldset class="field">
@@ -1005,7 +1002,7 @@
 
       <fieldset class="field">
         <legend class="label" id="body-label">Body types you're into</legend>
-        <p class="group-sub">Select all that apply. Rarer builds make your match rarer.</p>
+        <p class="group-sub">Select all that apply.</p>
         <div class="bodies" id="bodies"></div>
       </fieldset>
 
@@ -1021,6 +1018,16 @@
 
       <h3 class="group-title">Skills &amp; habits</h3>
       <div id="skills"></div>
+
+      <fieldset class="field" style="margin-top:26px">
+        <legend class="label">Their debt</legend>
+        <div class="radio-list" role="radiogroup" aria-label="Their debt" id="debt-pref">
+          <button type="button" class="radio-row" role="radio" data-value="any"><span class="dot" aria-hidden="true"></span><span class="rr-text">Doesn't matter<small>I've got debt too</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="after_marriage"><span class="dot" aria-hidden="true"></span><span class="rr-text">Only matters if we get married<small>Not a dealbreaker for dating</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="has_plan"><span class="dot" aria-hidden="true"></span><span class="rr-text">Fine if they have a plan<small>Earning and paying it down</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="debt_free"><span class="dot" aria-hidden="true"></span><span class="rr-text">Debt-free with great credit<small>Like me</small></span></button>
+        </div>
+      </fieldset>
     </section>
   </div>
 
@@ -1146,7 +1153,7 @@
         <li><strong>Single:</strong> never married, divorced or widowed. Separated people are still legally married, so they count as not single. Unmarried couples who live together count as single, because the census records marital status, not relationships.</li>
         <li><strong>Children:</strong> their own children under 18 living in the same home. Children who live elsewhere aren't recorded.</li>
         <li><strong>Income:</strong> total personal income from all sources, in 2024 dollars.</li>
-        <li><strong>Ethnicity:</strong> each person has exactly one group. Hispanic/Latino (any race) first, then Middle Eastern / North African (from reported ancestry, since the census has no such race box), then White, Black, Asian or Mixed race. Other groups appear only under “Doesn't matter”.</li>
+        <li><strong>Ethnicity:</strong> the filter is “Doesn't matter” or Black. Black means Black or African American alone or in combination with other races, of any Hispanic origin (the census RACBLK recode). Height and obesity use each person's NHANES race and Hispanic-origin group.</li>
         <li><strong>Obesity:</strong> BMI of 30 or more.</li>
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
@@ -1206,13 +1213,14 @@
     resultTone: "stats",
     // Step 2 – preferences (strictness only)
     looksImportance: 5,
-    behavior: { mentalHealth: "any", lowSubstanceUse: "any", healthyCoping: "any", communication: "any" },
+    behavior: { mentalHealth: "any", lowSubstanceUse: "any", communication: "any" },
     emotionalRegulation: 5,
     dealbreakers: { heavyPartying: false, unreliable: false },
     // Step 3 – physical & lifestyle (strictness only)
     bodyTypes: "any",
     sizePreference: "any",       // only asked when looking for men
-    skills: { cooking: "any", active: "any", cleanliness: "any" }
+    skills: { cooking: "any", active: "any", cleanliness: "any" },
+    debt: "any"                 // any / after_marriage / has_plan / debt_free
   };
 
   /* ---------------- Helpers ---------------- */
@@ -1317,16 +1325,8 @@
     });
   });
 
-  // Ethnicity
-  var anyBtn = $("eth-any"), chips = all("#eth-chips .chip");
-  function syncEthnicity() {
-    var picked = chips.filter(function (c) { return c.getAttribute("aria-pressed") === "true"; }).map(function (c) { return c.getAttribute("data-value"); });
-    state.ethnicities = picked.length ? picked : "any";
-    anyBtn.setAttribute("aria-pressed", picked.length ? "false" : "true");
-    render();
-  }
-  anyBtn.addEventListener("click", function () { chips.forEach(function (c) { c.setAttribute("aria-pressed", "false"); }); syncEthnicity(); });
-  chips.forEach(function (c) { c.addEventListener("click", function () { c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true"); syncEthnicity(); }); });
+  // Ethnicity: "Doesn't matter" or Black (single choice). State keeps the array shape: "any" or ["black"].
+  bindRadioGroup($("eth-group"), "any", function (v) { state.ethnicities = v === "any" ? "any" : [v]; render(); });
 
   // Age
   var minN = $("age-min-num"), maxN = $("age-max-num"), ageErr = $("age-error");
@@ -1503,7 +1503,6 @@
   var BEHAVIOR = [
     { key: "mentalHealth", title: "Actively works on themselves", desc: "Therapy, coaching or self-improvement" },
     { key: "lowSubstanceUse", title: "Low substance use", desc: "No active addiction issues" },
-    { key: "healthyCoping", title: "Healthy routines", desc: "Sleep, exercise, steady habits" },
     { key: "communication", title: "Good communicator", desc: "Can talk through issues calmly" }
   ];
   BEHAVIOR.forEach(function (b) {
@@ -1550,13 +1549,13 @@
      Assumed values (no survey measures body type); tune freely. */
   var BODY_SETS = {
     women: [
-      ["w01", "Skinny", 1], ["w02", "Slim", 1], ["w03", "Slim Thick", 2], ["w04", "Slim Thick Athletic", 2],
+      ["w01", "Skinny", 1], ["w02", "Slim", 1], ["w03", "Slim Thick", 3], ["w04", "Slim Thick Athletic", 3],
       ["w05", "Average", 1], ["w06", "Average Toned", 1], ["w07", "Average Plus", 1], ["w08", "Round", 1],
-      ["w09", "BBW", 1], ["w10", "Thick", 1], ["w11", "Busty", 2], ["w12", "BBL", 3], ["w13", "IG Model", 4]
+      ["w09", "BBW", 1], ["w10", "Thick", 1], ["w11", "Busty", 3], ["w12", "BBL", 5], ["w13", "IG Model", 7]
     ],
     men: [
       ["m01", "Slim Slim", 1], ["m02", "Slim Average", 1], ["m03", "Slim Chubby", 1], ["m04", "Slim Fit", 1],
-      ["m05", "Average", 1], ["m06", "Average Thick", 1], ["m07", "Athletic", 3], ["m08", "Solid Athletic", 3],
+      ["m05", "Average", 1], ["m06", "Average Thick", 1], ["m07", "Athletic", 5], ["m08", "Solid Athletic", 5],
       ["m09", "Solid", 1], ["m10", "Fat Belly", 1], ["m11", "Fat All Around", 1]
     ]
   };
@@ -1582,12 +1581,6 @@
       } else {
         c.innerHTML = tick + '<span class="art"><img alt="" loading="lazy" decoding="async"></span>';
         c.querySelector("img").src = BODY_IMG[id];
-        if (rarity > 1) {
-          var rb = document.createElement("span");
-          rb.className = "rarity r" + rarity; rb.textContent = rarity + "\u00d7 rarer";
-          c.appendChild(rb);
-          c.setAttribute("aria-description", rarity + " times rarer than a common build");
-        }
       }
       var n = document.createElement("span"); n.className = "bc-name"; n.textContent = name; c.appendChild(n);
       if (sub) { var sm = document.createElement("span"); sm.className = "bc-sub"; sm.textContent = sub; c.appendChild(sm); }
@@ -1645,7 +1638,7 @@
   buildBodies();
 
   var SKILLS = [
-    { key: "cooking", title: "Cooks", desc: "Can put a real meal together" },
+    { key: "cooking", title: "Cooks", desc: "Willing to cook 3x a week minimum" },
     { key: "active", title: "Active", desc: "Works out or plays sport regularly" },
     { key: "cleanliness", title: "Tidy", desc: "Keeps a clean, organised home" }
   ];
@@ -1658,6 +1651,8 @@
     d.appendChild(triSeg(s.title, state.skills[s.key], function (v) { state.skills[s.key] = v; render(); }));
     $("skills").appendChild(d);
   });
+
+  bindRadioGroup($("debt-pref"), state.debt, function (v) { state.debt = v; render(); });
 
   /* ================= Navigation ================= */
   var STEPS = {
@@ -1707,7 +1702,7 @@
   all("[data-skip]").forEach(function (b) { b.addEventListener("click", function () { goTo(current + 1); }); });
 
   /* ================= Summary / results ================= */
-  var LABELS = { white: "White", black: "Black", hispanic: "Hispanic/Latino", asian: "Asian", middle_eastern: "Middle Eastern", mixed: "Mixed" };
+  var LABELS = { white: "White", black: "Black", asian: "Asian", middle_eastern: "Middle Eastern", mixed: "Mixed" };
   function heightText() {
     if (state.heightMinIn === null && state.heightMaxIn === null) return "Any height";
     var lo = state.heightMinIn === null ? "any" : fmtHeight(state.heightMinIn);
@@ -1780,7 +1775,16 @@
     statusRetry = retry || null; $("data-retry").hidden = !isError;
   }
   function hideStatusIfReady() { if (DATA) $("data-status").hidden = true; }
+  var statusRetry = null;
+  function showStatus(msg, isError, retry) {
+    var box = $("data-status");
+    box.hidden = false; box.classList.toggle("error", !!isError);
+    $("data-status-text").textContent = msg;
+    statusRetry = retry || null; $("data-retry").hidden = !isError;
+  }
+  function hideStatusIfReady() { if (DATA) $("data-status").hidden = true; }
   function paintDataStatus() {
+    statusRetry = loadData;
     statusRetry = loadData;
     var box = $("data-status"), txt = $("data-status-text"), retry = $("data-retry");
     box.classList.toggle("error", !!dataError);
@@ -1800,10 +1804,10 @@
     var starts = nh.age_band_starts, groups = ["white", "black", "asian", "hispanic", "other"];
     var raceOfEth = dims.eth.map(function (k) { return groups.indexOf(nh.eth_map[k]); });
     var bandOfAge = []; for (var a = 0; a <= 120; a++) { var b = 0; while (b + 1 < starts.length && a >= starts[b + 1]) b++; bandOfAge[a] = b; }
-    var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], inc: [], kids: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
+    var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], black: [], inc: [], kids: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
     for (var i = 0; i < len; i++) {
       var t = bySex[d.sex[i]];
-      t.age.push(d.age[i]); t.single.push(d.single[i]); t.eth.push(d.eth[i]); t.inc.push(d.inc[i]);
+      t.age.push(d.age[i]); t.single.push(d.single[i]); t.eth.push(d.eth[i]); t.black.push(d.black[i]); t.inc.push(d.inc[i]);
       t.kids.push(d.kids[i]); t.w.push(d.w[i]); t.n.push(d.n[i]);
       t.cell.push(bandOfAge[d.age[i]] * groups.length + raceOfEth[d.eth[i]]);   // NHANES cell index
       t.total += d.w[i];
@@ -1839,9 +1843,8 @@
   /* One pass over the cube: weighted matches with all filters, and with each filter removed. */
   function computeFor(s, sex, D) {
     var t = D.sex[SEX_IDX[sex]];
-    var ethOk = [];
-    for (var e = 0; e < 7; e++) ethOk[e] = s.ethnicities === "any";
-    if (s.ethnicities !== "any") s.ethnicities.forEach(function (k) { if (k in D.ethIdx) ethOk[D.ethIdx[k]] = true; });
+    // The only ethnicity filter is "Black": alone or in combination, of any Hispanic origin
+    var wantBlack = s.ethnicities !== "any" && s.ethnicities.indexOf("black") > -1;
     var incMin = INCOME_STEPS.indexOf(s.minIncome); if (incMin < 0) incMin = 0;
     var incPref = Math.max(incMin, INCOME_STEPS.indexOf(s.preferredIncome));
     var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
@@ -1849,7 +1852,7 @@
     var matched = 0, matchedPref = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0];
     for (var i = 0; i < t.w.length; i++) {
       var f0 = t.age[i] === AGE_TOP ? s.ageMax >= AGE_TOP : (t.age[i] >= s.ageMin && t.age[i] <= s.ageMax);
-      var f1 = ethOk[t.eth[i]];
+      var f1 = !wantBlack || t.black[i] === 1;
       var f2 = !s.excludeMarried || t.single[i] === 1;
       var f4 = t.inc[i] >= incMin;
       var f5 = t.kids[i] >= s.kidsMin && t.kids[i] <= s.kidsMax;
@@ -1917,15 +1920,16 @@
   var RARITY = {
     scale: 2.1,                 // delusion points per 10× rarer
     preferredPower: 0.5,        // Preferred = pass rate ^ 0.5
-    character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, healthyCoping: 0.50, communication: 0.50 },
+    character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, communication: 0.50 },
     lifestyle: { cooking: 0.60, active: 0.50, cleanliness: 0.60 },
     dealbreakers: { heavyPartying: 0.85, unreliable: 0.70 },
-    size: { average_plus: 0.69, above_average: 0.50 }   // from Veale et al. 2015 distribution
+    size: { average_plus: 0.69, above_average: 0.50 },  // from Veale et al. 2015 distribution
+    debt: { after_marriage: 0.90, has_plan: 0.75, debt_free: 0.25 }   // share of people who'd pass
   };
 
   // incomeKeep: share of the matching group earning >= preferred, from the cube (see compute()).
   function standardsRarity(s, incomeKeep) {
-    var names = { mentalHealth: "Works on themselves", lowSubstanceUse: "Low substance use", healthyCoping: "Healthy routines", communication: "Good communicator", cooking: "Cooks", active: "Active", cleanliness: "Tidy" };
+    var names = { mentalHealth: "Works on themselves", lowSubstanceUse: "Low substance use", communication: "Good communicator", cooking: "Cooks", active: "Active", cleanliness: "Tidy" };
     function item(label, keep) { return { label: label, keep: keep, R: 1 / keep }; }
     function triItems(obj, rates) {
       var out = [];
@@ -1941,7 +1945,7 @@
       var all = bodyOptionsFor(s.seeking), tot = 0, sel = 0;
       all.forEach(function (b) { var w = 1 / b[2]; tot += w; if (s.bodyTypes.indexOf(b[0]) > -1) sel += w; });
       var n = s.bodyTypes.length;
-      phys.push(item(n + " of " + all.length + " body types (rarity-weighted)", sel / tot));
+      phys.push(item(n + " of " + all.length + " body types", sel / tot));
     }
     if (RARITY.size[s.sizePreference]) phys.push(item(s.sizePreference === "above_average" ? "Size: above average only" : "Size: average or above", RARITY.size[s.sizePreference]));
     // Character
@@ -1950,6 +1954,8 @@
     if (s.dealbreakers.unreliable) chr.push(item("No unreliable behaviour", RARITY.dealbreakers.unreliable));
     // Lifestyle
     var life = triItems(s.skills, RARITY.lifestyle);
+    var DEBT_LABEL = { after_marriage: "Debt: only matters if married", has_plan: "Debt: fine with a plan", debt_free: "Debt-free with great credit" };
+    if (RARITY.debt[s.debt]) life.push(item(DEBT_LABEL[s.debt], RARITY.debt[s.debt]));
     if (s.preferredIncome > s.minIncome) {
       var ratio = incomeKeep != null ? incomeKeep : incomeAtLeast(s, s.preferredIncome) / incomeAtLeast(s, s.minIncome);
       life.push(item("Prefers " + fmtMoney(s.preferredIncome) + "+ income (preferred)", Math.pow(ratio, RARITY.preferredPower)));
@@ -2294,7 +2300,7 @@
     if (state.heightMinIn !== null || state.heightMaxIn !== null) bits.push(heightText());
     if (state.minIncome) bits.push(incomeFloor(state.minIncome));
     if (state.kidsMin !== 0 || state.kidsMax !== 4) bits.push("Kids: " + kidsText().toLowerCase());
-    if (state.ethnicities !== "any") bits.push(state.ethnicities.length + " ethnicit" + (state.ethnicities.length > 1 ? "ies" : "y"));
+    if (state.ethnicities !== "any") bits.push("Black");
     $("summary-main").textContent = who + ", " + state.ageMin + "–" + state.ageMax;
     $("summary-sub").textContent = bits.join(" · ");
     $("state-json").textContent = JSON.stringify(state, null, 2);

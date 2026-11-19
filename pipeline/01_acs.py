@@ -23,6 +23,8 @@ Variables, checked against PUMS_Data_Dictionary_2024:
   MAR       1 married, 2 widowed, 3 divorced, 4 separated, 5 never married
             single = 2,3,5. Separated (4) is still legally married -> not single.
   RAC1P     1 White alone, 2 Black alone, 6 Asian alone, 9 Two or more; others -> other
+  RACBLK    1 = Black alone or in combination (any Hispanic origin) -> `black` flag, the
+            site's ethnicity filter ("Doesn't matter" or "Black")
   HISP      01 = not Hispanic; 02-24 = Hispanic (any race)
   ANC1P/ANC2P  detailed ancestry, first/second entry (same code list)
   PINCP     total personal income; multiplied by ADJINC / 1e6 (2024 factor 1.015250)
@@ -83,7 +85,7 @@ ETH = {k: i for i, k in enumerate(ETHNICITIES)}
 MENA_CODES = [400, 402, 404, 406, 408, 411, 416, 417, 419, 421, 425, 427, 429, 431,
               434, 435, 442, 465, 483, 484, 490, 495, 496, 499]
 
-COLS = ["SERIALNO", "PWGTP", "AGEP", "SEX", "MAR", "RAC1P", "HISP", "ANC1P", "ANC2P",
+COLS = ["SERIALNO", "PWGTP", "AGEP", "SEX", "MAR", "RAC1P", "RACBLK", "HISP", "ANC1P", "ANC2P",
         "PINCP", "ADJINC", "RELSHIPP", "SFN", "SFR", "STATE", "PAOC"]
 
 
@@ -142,6 +144,13 @@ def ethnicity(df: pd.DataFrame) -> np.ndarray:
     return out.astype(np.int8)
 
 
+def black_flag(df: pd.DataFrame) -> np.ndarray:
+    """The site's only ethnicity filter: Black alone or in combination, of any Hispanic origin.
+    RACBLK (2024 dictionary): 1 = Black or African American alone or in combination. Kept as
+    its own flag, separate from the mutually exclusive `eth` group used for NHANES lookups."""
+    return (df.RACBLK == 1).astype(np.int8).to_numpy()
+
+
 def income_bucket(inc: np.ndarray) -> np.ndarray:
     # highest step the income is >= ; zero/negative -> bucket 0
     b = np.searchsorted(np.array(INCOME_STEPS), inc, side="right") - 1
@@ -164,13 +173,14 @@ def main():
     a = df[df.AGEP >= 18].copy()
     a["single"] = a.MAR.isin([2, 3, 5]).astype(np.int8)
     a["eth"] = ethnicity(a)
+    a["black"] = black_flag(a)
     a["income"] = a.PINCP * a.ADJINC / 1e6
     a["inc"] = income_bucket(a.income.to_numpy())
     a["sex"] = (a.SEX - 1).astype(np.int8)  # 0 male, 1 female
     a["AGEP"] = a.AGEP.clip(upper=AGE_TOP)   # top-coded ages -> one 90+ group (cube only)
 
     # ---- cube ----------------------------------------------------------------------
-    dims = ["sex", "AGEP", "single", "eth", "inc", "kids"]
+    dims = ["sex", "AGEP", "single", "eth", "black", "inc", "kids"]
     cube = (a.groupby(dims, sort=True)
               .agg(w=("PWGTP", "sum"), n=("PWGTP", "size"))
               .reset_index())
@@ -182,15 +192,16 @@ def main():
             "age_top": AGE_TOP,
             "single": ["not single (married or separated)", "single (never married, divorced, widowed)"],
             "eth": ETHNICITIES,
+            "black": "1 = Black alone or in combination with other races, any Hispanic origin (RACBLK = 1)",
             "inc": INCOME_STEPS,
             "kids": "own children under 18 in household, 0-4 (4 = 4+)",
         },
-        "columns": ["sex", "age", "single", "eth", "inc", "kids", "w", "n"],
+        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "w", "n"],
         "w": "sum of PWGTP (weighted people)",
         "n": "unweighted respondent rows",
         "data": {
             "sex": cube.sex.tolist(), "age": cube.AGEP.tolist(), "single": cube.single.tolist(),
-            "eth": cube.eth.tolist(), "inc": cube.inc.tolist(), "kids": cube.kids.tolist(),
+            "eth": cube.eth.tolist(), "black": cube.black.tolist(), "inc": cube.inc.tolist(), "kids": cube.kids.tolist(),
             "w": cube.w.tolist(), "n": cube.n.tolist(),
         },
     }

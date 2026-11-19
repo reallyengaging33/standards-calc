@@ -1,5 +1,5 @@
 {
-  "built": "2026-11-19T00:01:19+00:00",
+  "built": "2026-11-19T18:50:00+00:00",
   "acs": {
     "source": "U.S. Census Bureau, American Community Survey 2024 1-year PUMS (person file, US)",
     "url": "https://www2.census.gov/programs-surveys/acs/data/pums/2024/1-Year/csv_pus.zip",
@@ -9,9 +9,9 @@
       "cube": "acs_2024_cube.json",
       "states": "state_adults.json"
     },
-    "cube_cells": 70917,
-    "cube_bytes": 1426313,
-    "cube_bytes_gzip": 223540,
+    "cube_cells": 81350,
+    "cube_bytes": 1785915,
+    "cube_bytes_gzip": 254132,
     "ethnicity_order": [
       "white",
       "black",
