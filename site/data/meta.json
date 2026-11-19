@@ -144,8 +144,8 @@
     }
   },
   "validation": {
-    "passed": 23,
-    "total": 23,
+    "passed": 24,
+    "total": 24,
     "checks": [
       {
         "check": "Weighted US adults 18+",
@@ -167,6 +167,13 @@
         "expected": "136,242,963 (S0101)",
         "pass": true,
         "note": "+0.05%"
+      },
+      {
+        "check": "Black alone or in combination, all ages (RACBLK)",
+        "ours": "49,233,466",
+        "expected": "49,204,745 (B02009)",
+        "pass": true,
+        "note": "+0.06%"
       },
       {
         "check": "Never married 25\u201334, men",
@@ -239,9 +246,9 @@
         "note": ""
       },
       {
-        "check": "Every ethnicity chip has a cube group",
-        "ours": "asian, black, hispanic, middle_eastern, mixed, white",
-        "expected": "asian, black, hispanic, middle_eastern, mixed, white",
+        "check": "Ethnicity options = Doesn't matter / Black; cube has `black`",
+        "ours": "any, black",
+        "expected": "any, black",
         "pass": true,
         "note": ""
       },
@@ -275,7 +282,7 @@
       },
       {
         "check": "Local files under 500 KB gzipped",
-        "ours": "max 173 KB",
+        "ours": "max 191 KB",
         "expected": "< 500 KB",
         "pass": true,
         "note": ""
@@ -311,428 +318,428 @@
     ]
   },
   "local": {
-    "built": "2026-11-19T00:02:53+00:00",
+    "built": "2026-11-19T18:56:14+00:00",
     "source": "U.S. Census Bureau, ACS 2020\u20132024 5-year PUMS (person files by state)",
     "url": "https://www2.census.gov/programs-surveys/acs/data/pums/2024/5-Year/",
     "crosswalk": "2020 tract\u2192PUMA relationship file + 2020 Census tract populations + OMB July 2023 CBSA delineation (2020 for Connecticut); a PUMA is in an area when most of its people are",
     "states": {
       "AL": {
         "file": "state/AL.json",
-        "cells": 24539,
+        "cells": 25362,
         "rows": 201311,
         "adults": 3956049,
-        "bytes": 455854,
-        "bytes_gzip": 64706
+        "bytes": 521034,
+        "bytes_gzip": 67859
       },
       "AK": {
         "file": "state/AK.json",
-        "cells": 11727,
+        "cells": 11816,
         "rows": 25508,
         "adults": 558559,
-        "bytes": 211654,
-        "bytes_gzip": 29443
+        "bytes": 236866,
+        "bytes_gzip": 30447
       },
       "AZ": {
         "file": "state/AZ.json",
-        "cells": 35949,
+        "cells": 37538,
         "rows": 285663,
         "adults": 5784477,
-        "bytes": 670075,
-        "bytes_gzip": 91028
+        "bytes": 773474,
+        "bytes_gzip": 96409
       },
       "AR": {
         "file": "state/AR.json",
-        "cells": 20769,
+        "cells": 21270,
         "rows": 120271,
         "adults": 2344404,
-        "bytes": 382726,
-        "bytes_gzip": 53813
+        "bytes": 434075,
+        "bytes_gzip": 56275
       },
       "CA": {
         "file": "state/CA.json",
-        "cells": 65373,
+        "cells": 72354,
         "rows": 1514829,
         "adults": 30656707,
-        "bytes": 1260731,
-        "bytes_gzip": 177270
+        "bytes": 1531589,
+        "bytes_gzip": 195527
       },
       "CO": {
         "file": "state/CO.json",
-        "cells": 30665,
+        "cells": 31988,
         "rows": 235480,
         "adults": 4630907,
-        "bytes": 571781,
-        "bytes_gzip": 78180
+        "bytes": 659276,
+        "bytes_gzip": 82761
       },
       "CT": {
         "file": "state/CT.json",
-        "cells": 26219,
+        "cells": 27548,
         "rows": 146626,
         "adults": 2892987,
-        "bytes": 486461,
-        "bytes_gzip": 66353
+        "bytes": 565182,
+        "bytes_gzip": 70645
       },
       "DE": {
         "file": "state/DE.json",
-        "cells": 12880,
+        "cells": 13061,
         "rows": 39257,
         "adults": 809220,
-        "bytes": 235412,
-        "bytes_gzip": 33010
+        "bytes": 264727,
+        "bytes_gzip": 34609
       },
       "DC": {
         "file": "state/DC.json",
-        "cells": 11431,
+        "cells": 11618,
         "rows": 28112,
         "adults": 554079,
-        "bytes": 210017,
-        "bytes_gzip": 28471
+        "bytes": 236605,
+        "bytes_gzip": 30070
       },
       "FL": {
         "file": "state/FL.json",
-        "cells": 49242,
+        "cells": 55364,
         "rows": 826897,
         "adults": 18041995,
-        "bytes": 936976,
-        "bytes_gzip": 131222
+        "bytes": 1157739,
+        "bytes_gzip": 146109
       },
       "GA": {
         "file": "state/GA.json",
-        "cells": 38570,
+        "cells": 41378,
         "rows": 397352,
         "adults": 8399055,
-        "bytes": 724628,
-        "bytes_gzip": 100308
+        "bytes": 857172,
+        "bytes_gzip": 107947
       },
       "HI": {
         "file": "state/HI.json",
-        "cells": 21076,
+        "cells": 21549,
         "rows": 61170,
         "adults": 1146583,
-        "bytes": 383985,
-        "bytes_gzip": 50780
+        "bytes": 435427,
+        "bytes_gzip": 52963
       },
       "ID": {
         "file": "state/ID.json",
-        "cells": 15242,
+        "cells": 15390,
         "rows": 72847,
         "adults": 1468279,
-        "bytes": 280483,
-        "bytes_gzip": 39946
+        "bytes": 313877,
+        "bytes_gzip": 41096
       },
       "IL": {
         "file": "state/IL.json",
-        "cells": 40805,
+        "cells": 43137,
         "rows": 506555,
         "adults": 9921482,
-        "bytes": 769844,
-        "bytes_gzip": 106764
+        "bytes": 897524,
+        "bytes_gzip": 113568
       },
       "IN": {
         "file": "state/IN.json",
-        "cells": 27625,
+        "cells": 28695,
         "rows": 268003,
         "adults": 5256958,
-        "bytes": 514628,
-        "bytes_gzip": 72133
+        "bytes": 590875,
+        "bytes_gzip": 75883
       },
       "IA": {
         "file": "state/IA.json",
-        "cells": 17129,
+        "cells": 17435,
         "rows": 132606,
         "adults": 2475597,
-        "bytes": 317405,
-        "bytes_gzip": 46207
+        "bytes": 357641,
+        "bytes_gzip": 47994
       },
       "KS": {
         "file": "state/KS.json",
-        "cells": 20403,
+        "cells": 20874,
         "rows": 118197,
         "adults": 2247196,
-        "bytes": 375992,
-        "bytes_gzip": 52652
+        "bytes": 426049,
+        "bytes_gzip": 55090
       },
       "KY": {
         "file": "state/KY.json",
-        "cells": 21926,
+        "cells": 22583,
         "rows": 181371,
         "adults": 3510158,
-        "bytes": 406454,
-        "bytes_gzip": 57905
+        "bytes": 463148,
+        "bytes_gzip": 60889
       },
       "LA": {
         "file": "state/LA.json",
-        "cells": 25866,
+        "cells": 26828,
         "rows": 170856,
         "adults": 3529110,
-        "bytes": 478769,
-        "bytes_gzip": 66525
+        "bytes": 549300,
+        "bytes_gzip": 70047
       },
       "ME": {
         "file": "state/ME.json",
-        "cells": 10803,
+        "cells": 10889,
         "rows": 60185,
         "adults": 1137320,
-        "bytes": 199286,
-        "bytes_gzip": 29822
+        "bytes": 222586,
+        "bytes_gzip": 30733
       },
       "MD": {
         "file": "state/MD.json",
-        "cells": 35300,
+        "cells": 37217,
         "rows": 241686,
         "adults": 4829497,
-        "bytes": 659385,
-        "bytes_gzip": 88698
+        "bytes": 767914,
+        "bytes_gzip": 94756
       },
       "MA": {
         "file": "state/MA.json",
-        "cells": 35174,
+        "cells": 37874,
         "rows": 290698,
         "adults": 5680192,
-        "bytes": 657586,
-        "bytes_gzip": 89009
+        "bytes": 781459,
+        "bytes_gzip": 96559
       },
       "MI": {
         "file": "state/MI.json",
-        "cells": 35978,
+        "cells": 37729,
         "rows": 412550,
         "adults": 7937977,
-        "bytes": 672267,
-        "bytes_gzip": 92768
+        "bytes": 778721,
+        "bytes_gzip": 98371
       },
       "MN": {
         "file": "state/MN.json",
-        "cells": 25157,
+        "cells": 25754,
         "rows": 231353,
         "adults": 4427560,
-        "bytes": 467687,
-        "bytes_gzip": 66222
+        "bytes": 529753,
+        "bytes_gzip": 68785
       },
       "MS": {
         "file": "state/MS.json",
-        "cells": 18322,
+        "cells": 18693,
         "rows": 111762,
         "adults": 2260065,
-        "bytes": 338780,
-        "bytes_gzip": 48697
+        "bytes": 382661,
+        "bytes_gzip": 50853
       },
       "MO": {
         "file": "state/MO.json",
-        "cells": 27360,
+        "cells": 28378,
         "rows": 251988,
         "adults": 4808880,
-        "bytes": 508402,
-        "bytes_gzip": 71036
+        "bytes": 583101,
+        "bytes_gzip": 74585
       },
       "MT": {
         "file": "state/MT.json",
-        "cells": 11153,
+        "cells": 11233,
         "rows": 44422,
         "adults": 882536,
-        "bytes": 204178,
-        "bytes_gzip": 29561
+        "bytes": 228061,
+        "bytes_gzip": 30267
       },
       "NE": {
         "file": "state/NE.json",
-        "cells": 15338,
+        "cells": 15546,
         "rows": 78124,
         "adults": 1493869,
-        "bytes": 282524,
-        "bytes_gzip": 40551
+        "bytes": 317295,
+        "bytes_gzip": 42160
       },
       "NV": {
         "file": "state/NV.json",
-        "cells": 27282,
+        "cells": 28332,
         "rows": 118852,
         "adults": 2492226,
-        "bytes": 502637,
-        "bytes_gzip": 67425
+        "bytes": 577962,
+        "bytes_gzip": 71085
       },
       "NH": {
         "file": "state/NH.json",
-        "cells": 11630,
+        "cells": 11767,
         "rows": 58092,
         "adults": 1140383,
-        "bytes": 215111,
-        "bytes_gzip": 31603
+        "bytes": 241082,
+        "bytes_gzip": 32819
       },
       "NJ": {
         "file": "state/NJ.json",
-        "cells": 40717,
+        "cells": 44031,
         "rows": 359731,
         "adults": 7305398,
-        "bytes": 766169,
-        "bytes_gzip": 104217
+        "bytes": 913454,
+        "bytes_gzip": 112634
       },
       "NM": {
         "file": "state/NM.json",
-        "cells": 19701,
+        "cells": 20082,
         "rows": 79142,
         "adults": 1659120,
-        "bytes": 361527,
-        "bytes_gzip": 49873
+        "bytes": 408447,
+        "bytes_gzip": 52120
       },
       "NY": {
         "file": "state/NY.json",
-        "cells": 52327,
+        "cells": 58951,
         "rows": 811458,
         "adults": 15787761,
-        "bytes": 994906,
-        "bytes_gzip": 137800
+        "bytes": 1231957,
+        "bytes_gzip": 153644
       },
       "NC": {
         "file": "state/NC.json",
-        "cells": 38370,
+        "cells": 40973,
         "rows": 421729,
         "adults": 8395546,
-        "bytes": 719268,
-        "bytes_gzip": 99206
+        "bytes": 847275,
+        "bytes_gzip": 106393
       },
       "ND": {
         "file": "state/ND.json",
-        "cells": 8999,
+        "cells": 9042,
         "rows": 31718,
         "adults": 600492,
-        "bytes": 163940,
-        "bytes_gzip": 24034
+        "bytes": 182790,
+        "bytes_gzip": 24705
       },
       "OH": {
         "file": "state/OH.json",
-        "cells": 34978,
+        "cells": 37192,
         "rows": 473810,
         "adults": 9210301,
-        "bytes": 656282,
-        "bytes_gzip": 91690
+        "bytes": 769840,
+        "bytes_gzip": 98125
       },
       "OK": {
         "file": "state/OK.json",
-        "cells": 27635,
+        "cells": 28870,
         "rows": 151726,
         "adults": 3063732,
-        "bytes": 508249,
-        "bytes_gzip": 68878
+        "bytes": 587758,
+        "bytes_gzip": 72778
       },
       "OR": {
         "file": "state/OR.json",
-        "cells": 26114,
+        "cells": 26962,
         "rows": 172194,
         "adults": 3407349,
-        "bytes": 484057,
-        "bytes_gzip": 66577
+        "bytes": 553011,
+        "bytes_gzip": 69744
       },
       "PA": {
         "file": "state/PA.json",
-        "cells": 36383,
+        "cells": 39064,
         "rows": 543170,
         "adults": 10357197,
-        "bytes": 684583,
-        "bytes_gzip": 96099
+        "bytes": 810285,
+        "bytes_gzip": 103661
       },
       "RI": {
         "file": "state/RI.json",
-        "cells": 12303,
+        "cells": 12644,
         "rows": 42156,
         "adults": 894367,
-        "bytes": 226161,
-        "bytes_gzip": 32191
+        "bytes": 257499,
+        "bytes_gzip": 34120
       },
       "SC": {
         "file": "state/SC.json",
-        "cells": 26287,
+        "cells": 27324,
         "rows": 209837,
         "adults": 4160780,
-        "bytes": 488701,
-        "bytes_gzip": 68598
+        "bytes": 561584,
+        "bytes_gzip": 72362
       },
       "SD": {
         "file": "state/SD.json",
-        "cells": 9768,
+        "cells": 9817,
         "rows": 35767,
         "adults": 687512,
-        "bytes": 178174,
-        "bytes_gzip": 26032
+        "bytes": 198680,
+        "bytes_gzip": 26733
       },
       "TN": {
         "file": "state/TN.json",
-        "cells": 29221,
+        "cells": 30432,
         "rows": 276158,
         "adults": 5499315,
-        "bytes": 544819,
-        "bytes_gzip": 75780
+        "bytes": 627003,
+        "bytes_gzip": 80061
       },
       "TX": {
         "file": "state/TX.json",
-        "cells": 53929,
+        "cells": 59182,
         "rows": 1048662,
         "adults": 22644235,
-        "bytes": 1031872,
-        "bytes_gzip": 145524
+        "bytes": 1244406,
+        "bytes_gzip": 158687
       },
       "UT": {
         "file": "state/UT.json",
-        "cells": 20321,
+        "cells": 20712,
         "rows": 126553,
         "adults": 2449412,
-        "bytes": 376654,
-        "bytes_gzip": 53019
+        "bytes": 425006,
+        "bytes_gzip": 55222
       },
       "VT": {
         "file": "state/VT.json",
-        "cells": 7827,
+        "cells": 7871,
         "rows": 28348,
         "adults": 531129,
-        "bytes": 143097,
-        "bytes_gzip": 21253
+        "bytes": 159624,
+        "bytes_gzip": 21854
       },
       "VA": {
         "file": "state/VA.json",
-        "cells": 39122,
+        "cells": 41566,
         "rows": 342009,
         "adults": 6814337,
-        "bytes": 733707,
-        "bytes_gzip": 99475
+        "bytes": 860355,
+        "bytes_gzip": 106476
       },
       "WA": {
         "file": "state/WA.json",
-        "cells": 38415,
+        "cells": 40344,
         "rows": 314153,
         "adults": 6145247,
-        "bytes": 717443,
-        "bytes_gzip": 96701
+        "bytes": 832503,
+        "bytes_gzip": 102696
       },
       "WV": {
         "file": "state/WV.json",
-        "cells": 12288,
+        "cells": 12471,
         "rows": 71427,
         "adults": 1422291,
-        "bytes": 226620,
-        "bytes_gzip": 33428
+        "bytes": 254779,
+        "bytes_gzip": 34793
       },
       "WI": {
         "file": "state/WI.json",
-        "cells": 24015,
+        "cells": 24680,
         "rows": 248901,
         "adults": 4650774,
-        "bytes": 446863,
-        "bytes_gzip": 63826
+        "bytes": 507965,
+        "bytes_gzip": 66750
       },
       "WY": {
         "file": "state/WY.json",
-        "cells": 8408,
+        "cells": 8440,
         "rows": 23066,
         "adults": 451078,
-        "bytes": 152595,
-        "bytes_gzip": 21958
+        "bytes": 170056,
+        "bytes_gzip": 22487
       }
     },
     "metros": {
       "AL-birmingham": {
         "file": "metro/AL-birmingham.json",
-        "cells": 12429,
+        "cells": 12533,
         "rows": 41910,
         "adults": 895436,
-        "bytes": 228011,
-        "bytes_gzip": 32540,
+        "bytes": 254907,
+        "bytes_gzip": 33806,
         "area": "Birmingham, AL",
         "pumas_list": [
           "0100900",
@@ -750,11 +757,11 @@
       },
       "AL-huntsville": {
         "file": "metro/AL-huntsville.json",
-        "cells": 7566,
+        "cells": 7620,
         "rows": 16416,
         "adults": 395185,
-        "bytes": 138099,
-        "bytes_gzip": 20042,
+        "bytes": 154312,
+        "bytes_gzip": 20981,
         "area": "Huntsville, AL",
         "pumas_list": [
           "0100200",
@@ -768,11 +775,11 @@
       },
       "AL-mobile": {
         "file": "metro/AL-mobile.json",
-        "cells": 6845,
+        "cells": 6863,
         "rows": 14462,
         "adults": 316596,
-        "bytes": 124146,
-        "bytes_gzip": 17962,
+        "bytes": 138206,
+        "bytes_gzip": 18769,
         "area": "Mobile, AL",
         "pumas_list": [
           "0102801",
@@ -785,11 +792,11 @@
       },
       "AL-montgomery": {
         "file": "metro/AL-montgomery.json",
-        "cells": 7003,
+        "cells": 7029,
         "rows": 15263,
         "adults": 330901,
-        "bytes": 126907,
-        "bytes_gzip": 18371,
+        "bytes": 141438,
+        "bytes_gzip": 19199,
         "area": "Montgomery, AL",
         "pumas_list": [
           "0101700",
@@ -803,11 +810,11 @@
       },
       "AL-tuscaloosa": {
         "file": "metro/AL-tuscaloosa.json",
-        "cells": 4267,
+        "cells": 4278,
         "rows": 7696,
         "adults": 189130,
-        "bytes": 77358,
-        "bytes_gzip": 11705,
+        "bytes": 86126,
+        "bytes_gzip": 12268,
         "area": "Tuscaloosa, AL",
         "pumas_list": [
           "0101201",
@@ -819,11 +826,11 @@
       },
       "AK-anchorage": {
         "file": "metro/AK-anchorage.json",
-        "cells": 6844,
+        "cells": 6886,
         "rows": 12371,
         "adults": 352402,
-        "bytes": 124640,
-        "bytes_gzip": 18381,
+        "bytes": 139175,
+        "bytes_gzip": 19131,
         "area": "Anchorage, AK",
         "pumas_list": [
           "0200101",
@@ -836,11 +843,11 @@
       },
       "AK-fairbanks": {
         "file": "metro/AK-fairbanks.json",
-        "cells": 3407,
+        "cells": 3416,
         "rows": 4822,
         "adults": 126251,
-        "bytes": 61496,
-        "bytes_gzip": 9576,
+        "bytes": 68503,
+        "bytes_gzip": 9830,
         "area": "Fairbanks-College, AK",
         "pumas_list": [
           "0200300"
@@ -851,11 +858,11 @@
       },
       "AK-juneau": {
         "file": "metro/AK-juneau.json",
-        "cells": 3407,
+        "cells": 3416,
         "rows": 4822,
         "adults": 126251,
-        "bytes": 61617,
-        "bytes_gzip": 9674,
+        "bytes": 68624,
+        "bytes_gzip": 9928,
         "area": "Juneau, AK",
         "pumas_list": [
           "0200300"
@@ -866,11 +873,11 @@
       },
       "AZ-phoenix": {
         "file": "metro/AZ-phoenix.json",
-        "cells": 30059,
+        "cells": 31179,
         "rows": 181658,
         "adults": 3892353,
-        "bytes": 558962,
-        "bytes_gzip": 75761,
+        "bytes": 641269,
+        "bytes_gzip": 80083,
         "area": "Phoenix-Mesa-Chandler, AZ",
         "pumas_list": [
           "0400101",
@@ -918,11 +925,11 @@
       },
       "AZ-tucson": {
         "file": "metro/AZ-tucson.json",
-        "cells": 14086,
+        "cells": 14298,
         "rows": 44367,
         "adults": 863719,
-        "bytes": 257746,
-        "bytes_gzip": 35733,
+        "bytes": 290102,
+        "bytes_gzip": 37405,
         "area": "Tucson, AZ",
         "pumas_list": [
           "0401901",
@@ -941,11 +948,11 @@
       },
       "AZ-flagstaff": {
         "file": "metro/AZ-flagstaff.json",
-        "cells": 4451,
+        "cells": 4460,
         "rows": 7638,
         "adults": 116525,
-        "bytes": 79615,
-        "bytes_gzip": 11566,
+        "bytes": 88712,
+        "bytes_gzip": 11826,
         "area": "Flagstaff, AZ",
         "pumas_list": [
           "0400500"
@@ -956,11 +963,11 @@
       },
       "AZ-yuma": {
         "file": "metro/AZ-yuma.json",
-        "cells": 4986,
+        "cells": 5013,
         "rows": 8970,
         "adults": 173859,
-        "bytes": 89653,
-        "bytes_gzip": 13159,
+        "bytes": 100177,
+        "bytes_gzip": 13567,
         "area": "Yuma, AZ",
         "pumas_list": [
           "0400701",
@@ -972,11 +979,11 @@
       },
       "AZ-prescott": {
         "file": "metro/AZ-prescott.json",
-        "cells": 4914,
+        "cells": 4931,
         "rows": 10969,
         "adults": 207777,
-        "bytes": 89056,
-        "bytes_gzip": 13246,
+        "bytes": 99231,
+        "bytes_gzip": 13561,
         "area": "Prescott Valley-Prescott, AZ",
         "pumas_list": [
           "0402502",
@@ -988,11 +995,11 @@
       },
       "AR-little-rock": {
         "file": "metro/AR-little-rock.json",
-        "cells": 9571,
+        "cells": 9628,
         "rows": 24636,
         "adults": 582539,
-        "bytes": 174659,
-        "bytes_gzip": 25197,
+        "bytes": 194928,
+        "bytes_gzip": 26233,
         "area": "Little Rock-North Little Rock-Conway, AR",
         "pumas_list": [
           "0500900",
@@ -1006,11 +1013,11 @@
       },
       "AR-northwest-arkansas-fayetteville-rogers": {
         "file": "metro/AR-northwest-arkansas-fayetteville-rogers.json",
-        "cells": 8524,
+        "cells": 8574,
         "rows": 18091,
         "adults": 423133,
-        "bytes": 155245,
-        "bytes_gzip": 22351,
+        "bytes": 173303,
+        "bytes_gzip": 23039,
         "area": "Fayetteville-Springdale-Rogers, AR",
         "pumas_list": [
           "0500101",
@@ -1024,11 +1031,11 @@
       },
       "AR-fort-smith": {
         "file": "metro/AR-fort-smith.json",
-        "cells": 4526,
+        "cells": 4542,
         "rows": 7702,
         "adults": 158273,
-        "bytes": 81515,
-        "bytes_gzip": 12143,
+        "bytes": 90898,
+        "bytes_gzip": 12612,
         "area": "Fort Smith, AR-OK",
         "pumas_list": [
           "0501100"
@@ -1039,11 +1046,11 @@
       },
       "AR-jonesboro": {
         "file": "metro/AR-jonesboro.json",
-        "cells": 3160,
+        "cells": 3169,
         "rows": 5087,
         "adults": 102007,
-        "bytes": 56846,
-        "bytes_gzip": 8858,
+        "bytes": 63361,
+        "bytes_gzip": 9248,
         "area": "Jonesboro, AR",
         "pumas_list": [
           "0500700"
@@ -1054,11 +1061,11 @@
       },
       "CA-los-angeles": {
         "file": "metro/CA-los-angeles.json",
-        "cells": 42645,
+        "cells": 45149,
         "rows": 394468,
         "adults": 7788946,
-        "bytes": 804615,
-        "bytes_gzip": 109135,
+        "bytes": 939679,
+        "bytes_gzip": 116277,
         "area": "Los Angeles-Long Beach-Glendale, CA",
         "pumas_list": [
           "0603703",
@@ -1139,11 +1146,11 @@
       },
       "CA-san-francisco-bay-area-sf-oakland": {
         "file": "metro/CA-san-francisco-bay-area-sf-oakland.json",
-        "cells": 34561,
+        "cells": 35892,
         "rows": 185243,
         "adults": 3753743,
-        "bytes": 647485,
-        "bytes_gzip": 85747,
+        "bytes": 743112,
+        "bytes_gzip": 90611,
         "area": "San Francisco-Oakland-Fremont, CA",
         "pumas_list": [
           "0600101",
@@ -1192,11 +1199,11 @@
       },
       "CA-san-jose-silicon-valley": {
         "file": "metro/CA-san-jose-silicon-valley.json",
-        "cells": 22294,
+        "cells": 22603,
         "rows": 79798,
         "adults": 1512594,
-        "bytes": 413328,
-        "bytes_gzip": 54777,
+        "bytes": 464075,
+        "bytes_gzip": 56708,
         "area": "San Jose-Sunnyvale-Santa Clara, CA",
         "pumas_list": [
           "0608505",
@@ -1221,11 +1228,11 @@
       },
       "CA-san-diego": {
         "file": "metro/CA-san-diego.json",
-        "cells": 28016,
+        "cells": 28915,
         "rows": 126614,
         "adults": 2603144,
-        "bytes": 519405,
-        "bytes_gzip": 69413,
+        "bytes": 593246,
+        "bytes_gzip": 72654,
         "area": "San Diego-Chula Vista-Carlsbad, CA",
         "pumas_list": [
           "0607301",
@@ -1257,11 +1264,11 @@
       },
       "CA-orange-county-anaheim-irvine": {
         "file": "metro/CA-orange-county-anaheim-irvine.json",
-        "cells": 26171,
+        "cells": 26693,
         "rows": 119448,
         "adults": 2500820,
-        "bytes": 486851,
-        "bytes_gzip": 65754,
+        "bytes": 549575,
+        "bytes_gzip": 68212,
         "area": "Anaheim-Santa Ana-Irvine, CA",
         "pumas_list": [
           "0605906",
@@ -1291,11 +1298,11 @@
       },
       "CA-inland-empire-riverside-san-bernardino": {
         "file": "metro/CA-inland-empire-riverside-san-bernardino.json",
-        "cells": 29256,
+        "cells": 30402,
         "rows": 162343,
         "adults": 3519024,
-        "bytes": 543225,
-        "bytes_gzip": 73534,
+        "bytes": 624451,
+        "bytes_gzip": 77707,
         "area": "Riverside-San Bernardino-Ontario, CA",
         "pumas_list": [
           "0606501",
@@ -1337,11 +1344,11 @@
       },
       "CA-sacramento": {
         "file": "metro/CA-sacramento.json",
-        "cells": 24896,
+        "cells": 25632,
         "rows": 92712,
         "adults": 1888115,
-        "bytes": 458831,
-        "bytes_gzip": 61310,
+        "bytes": 523210,
+        "bytes_gzip": 64259,
         "area": "Sacramento-Roseville-Folsom, CA",
         "pumas_list": [
           "0601700",
@@ -1370,11 +1377,11 @@
       },
       "CA-fresno": {
         "file": "metro/CA-fresno.json",
-        "cells": 14865,
+        "cells": 15070,
         "rows": 38735,
         "adults": 850955,
-        "bytes": 270731,
-        "bytes_gzip": 37325,
+        "bytes": 304520,
+        "bytes_gzip": 38801,
         "area": "Fresno, CA",
         "pumas_list": [
           "0601901",
@@ -1392,11 +1399,11 @@
       },
       "CA-bakersfield": {
         "file": "metro/CA-bakersfield.json",
-        "cells": 12319,
+        "cells": 12473,
         "rows": 30873,
         "adults": 653344,
-        "bytes": 223855,
-        "bytes_gzip": 31221,
+        "bytes": 251538,
+        "bytes_gzip": 32523,
         "area": "Bakersfield-Delano, CA",
         "pumas_list": [
           "0602903",
@@ -1412,11 +1419,11 @@
       },
       "CO-denver": {
         "file": "metro/CO-denver.json",
-        "cells": 23959,
+        "cells": 24682,
         "rows": 115888,
         "adults": 2394818,
-        "bytes": 444317,
-        "bytes_gzip": 60822,
+        "bytes": 506550,
+        "bytes_gzip": 63745,
         "area": "Denver-Aurora-Centennial, CO",
         "pumas_list": [
           "0800401",
@@ -1448,11 +1455,11 @@
       },
       "CO-colorado-springs": {
         "file": "metro/CO-colorado-springs.json",
-        "cells": 10808,
+        "cells": 10968,
         "rows": 28669,
         "adults": 592744,
-        "bytes": 197542,
-        "bytes_gzip": 27885,
+        "bytes": 222319,
+        "bytes_gzip": 29253,
         "area": "Colorado Springs, CO",
         "pumas_list": [
           "0802001",
@@ -1468,11 +1475,11 @@
       },
       "CO-fort-collins": {
         "file": "metro/CO-fort-collins.json",
-        "cells": 6230,
+        "cells": 6269,
         "rows": 14614,
         "adults": 300118,
-        "bytes": 113699,
-        "bytes_gzip": 16662,
+        "bytes": 126941,
+        "bytes_gzip": 17109,
         "area": "Fort Collins-Loveland, CO",
         "pumas_list": [
           "0800301",
@@ -1485,11 +1492,11 @@
       },
       "CO-boulder": {
         "file": "metro/CO-boulder.json",
-        "cells": 5519,
+        "cells": 5542,
         "rows": 11073,
         "adults": 209752,
-        "bytes": 100653,
-        "bytes_gzip": 14363,
+        "bytes": 112165,
+        "bytes_gzip": 14712,
         "area": "Boulder, CO",
         "pumas_list": [
           "0800501",
@@ -1501,11 +1508,11 @@
       },
       "CO-pueblo": {
         "file": "metro/CO-pueblo.json",
-        "cells": 4287,
+        "cells": 4302,
         "rows": 7190,
         "adults": 122867,
-        "bytes": 77133,
-        "bytes_gzip": 11238,
+        "bytes": 86020,
+        "bytes_gzip": 11593,
         "area": "Pueblo, CO",
         "pumas_list": [
           "0802301"
@@ -1516,11 +1523,11 @@
       },
       "CT-hartford": {
         "file": "metro/CT-hartford.json",
-        "cells": 14337,
+        "cells": 14751,
         "rows": 47459,
         "adults": 917780,
-        "bytes": 263606,
-        "bytes_gzip": 36535,
+        "bytes": 300480,
+        "bytes_gzip": 38950,
         "area": "Hartford-East Hartford-Middletown, CT",
         "pumas_list": [
           "0920201",
@@ -1538,11 +1545,11 @@
       },
       "CT-bridgeport-stamford": {
         "file": "metro/CT-bridgeport-stamford.json",
-        "cells": 14209,
+        "cells": 14483,
         "rows": 37236,
         "adults": 746822,
-        "bytes": 260818,
-        "bytes_gzip": 35551,
+        "bytes": 294682,
+        "bytes_gzip": 37503,
         "area": "Bridgeport-Stamford-Norwalk, CT",
         "pumas_list": [
           "0920801",
@@ -1558,11 +1565,11 @@
       },
       "CT-new-haven": {
         "file": "metro/CT-new-haven.json",
-        "cells": 9405,
+        "cells": 9520,
         "rows": 21903,
         "adults": 457977,
-        "bytes": 171626,
-        "bytes_gzip": 24208,
+        "bytes": 192714,
+        "bytes_gzip": 25470,
         "area": "New Haven-Milford, CT",
         "pumas_list": [
           "0920601",
@@ -1576,11 +1583,11 @@
       },
       "CT-waterbury": {
         "file": "metro/CT-waterbury.json",
-        "cells": 7210,
+        "cells": 7302,
         "rows": 15633,
         "adults": 363833,
-        "bytes": 131717,
-        "bytes_gzip": 19306,
+        "bytes": 147972,
+        "bytes_gzip": 20363,
         "area": "Naugatuck Valley (Waterbury-Shelton)",
         "pumas_list": [
           "0920701",
@@ -1593,11 +1600,11 @@
       },
       "DE-wilmington": {
         "file": "metro/DE-wilmington.json",
-        "cells": 29992,
+        "cells": 31436,
         "rows": 207587,
         "adults": 4963886,
-        "bytes": 560828,
-        "bytes_gzip": 77654,
+        "bytes": 649393,
+        "bytes_gzip": 82728,
         "area": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
         "pumas_list": [
           "1000101",
@@ -1655,11 +1662,11 @@
       },
       "DE-dover": {
         "file": "metro/DE-dover.json",
-        "cells": 4188,
+        "cells": 4207,
         "rows": 6284,
         "adults": 144845,
-        "bytes": 75292,
-        "bytes_gzip": 11270,
+        "bytes": 84054,
+        "bytes_gzip": 11911,
         "area": "Dover, DE",
         "pumas_list": [
           "1000200"
@@ -1670,11 +1677,11 @@
       },
       "DC-washington-dc": {
         "file": "metro/DC-washington-dc.json",
-        "cells": 38589,
+        "cells": 40816,
         "rows": 242680,
         "adults": 4879569,
-        "bytes": 722962,
-        "bytes_gzip": 96146,
+        "bytes": 844499,
+        "bytes_gzip": 102761,
         "area": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
         "pumas_list": [
           "1100101",
@@ -1730,11 +1737,11 @@
       },
       "FL-miami-fort-lauderdale": {
         "file": "metro/FL-miami-fort-lauderdale.json",
-        "cells": 32197,
+        "cells": 34912,
         "rows": 220244,
         "adults": 4976148,
-        "bytes": 602788,
-        "bytes_gzip": 82687,
+        "bytes": 721182,
+        "bytes_gzip": 90352,
         "area": "Miami-Fort Lauderdale-West Palm Beach, FL",
         "pumas_list": [
           "1201101",
@@ -1796,11 +1803,11 @@
       },
       "FL-tampa-st-petersburg": {
         "file": "metro/FL-tampa-st-petersburg.json",
-        "cells": 24635,
+        "cells": 25884,
         "rows": 129764,
         "adults": 2664061,
-        "bytes": 456094,
-        "bytes_gzip": 62794,
+        "bytes": 530021,
+        "bytes_gzip": 66790,
         "area": "Tampa-St. Petersburg-Clearwater, FL",
         "pumas_list": [
           "1205300",
@@ -1834,11 +1841,11 @@
       },
       "FL-orlando": {
         "file": "metro/FL-orlando.json",
-        "cells": 21930,
+        "cells": 23150,
         "rows": 85824,
         "adults": 2199527,
-        "bytes": 405515,
-        "bytes_gzip": 56152,
+        "bytes": 473628,
+        "bytes_gzip": 60399,
         "area": "Orlando-Kissimmee-Sanford, FL",
         "pumas_list": [
           "1206901",
@@ -1868,11 +1875,11 @@
       },
       "FL-jacksonville": {
         "file": "metro/FL-jacksonville.json",
-        "cells": 16463,
+        "cells": 16772,
         "rows": 53404,
         "adults": 1281187,
-        "bytes": 302888,
-        "bytes_gzip": 42290,
+        "bytes": 341906,
+        "bytes_gzip": 44343,
         "area": "Jacksonville, FL",
         "pumas_list": [
           "1200398",
@@ -1894,11 +1901,11 @@
       },
       "FL-west-palm-beach": {
         "file": "metro/FL-west-palm-beach.json",
-        "cells": 32197,
+        "cells": 34912,
         "rows": 220244,
         "adults": 4976148,
-        "bytes": 602774,
-        "bytes_gzip": 82687,
+        "bytes": 721168,
+        "bytes_gzip": 90349,
         "area": "Miami-Fort Lauderdale-West Palm Beach, FL",
         "pumas_list": [
           "1201101",
@@ -1960,11 +1967,11 @@
       },
       "FL-fort-myers-cape-coral": {
         "file": "metro/FL-fort-myers-cape-coral.json",
-        "cells": 10637,
+        "cells": 10807,
         "rows": 32815,
         "adults": 677473,
-        "bytes": 194833,
-        "bytes_gzip": 27692,
+        "bytes": 219463,
+        "bytes_gzip": 29157,
         "area": "Cape Coral-Fort Myers, FL",
         "pumas_list": [
           "1207101",
@@ -1980,11 +1987,11 @@
       },
       "FL-sarasota": {
         "file": "metro/FL-sarasota.json",
-        "cells": 10518,
+        "cells": 10604,
         "rows": 36778,
         "adults": 749517,
-        "bytes": 193570,
-        "bytes_gzip": 27764,
+        "bytes": 216321,
+        "bytes_gzip": 28943,
         "area": "North Port-Bradenton-Sarasota, FL",
         "pumas_list": [
           "1208101",
@@ -2000,11 +2007,11 @@
       },
       "FL-tallahassee": {
         "file": "metro/FL-tallahassee.json",
-        "cells": 6376,
+        "cells": 6422,
         "rows": 12732,
         "adults": 242061,
-        "bytes": 115355,
-        "bytes_gzip": 16281,
+        "bytes": 129026,
+        "bytes_gzip": 17123,
         "area": "Tallahassee, FL",
         "pumas_list": [
           "1207301",
@@ -2016,11 +2023,11 @@
       },
       "FL-pensacola": {
         "file": "metro/FL-pensacola.json",
-        "cells": 8555,
+        "cells": 8647,
         "rows": 20253,
         "adults": 414333,
-        "bytes": 155332,
-        "bytes_gzip": 22299,
+        "bytes": 174241,
+        "bytes_gzip": 23460,
         "area": "Pensacola-Ferry Pass-Brent, FL",
         "pumas_list": [
           "1203301",
@@ -2034,11 +2041,11 @@
       },
       "FL-gainesville": {
         "file": "metro/FL-gainesville.json",
-        "cells": 5367,
+        "cells": 5410,
         "rows": 10302,
         "adults": 234312,
-        "bytes": 97264,
-        "bytes_gzip": 14273,
+        "bytes": 108858,
+        "bytes_gzip": 15053,
         "area": "Gainesville, FL",
         "pumas_list": [
           "1200101",
@@ -2050,11 +2057,11 @@
       },
       "GA-atlanta": {
         "file": "metro/GA-atlanta.json",
-        "cells": 32520,
+        "cells": 34249,
         "rows": 205750,
         "adults": 4752927,
-        "bytes": 607542,
-        "bytes_gzip": 82853,
+        "bytes": 706702,
+        "bytes_gzip": 88446,
         "area": "Atlanta-Sandy Springs-Roswell, GA",
         "pumas_list": [
           "1300701",
@@ -2108,11 +2115,11 @@
       },
       "GA-augusta": {
         "file": "metro/GA-augusta.json",
-        "cells": 8392,
+        "cells": 8468,
         "rows": 18045,
         "adults": 418498,
-        "bytes": 152513,
-        "bytes_gzip": 21802,
+        "bytes": 170796,
+        "bytes_gzip": 22931,
         "area": "Augusta-Richmond County, GA-SC",
         "pumas_list": [
           "1303200",
@@ -2126,11 +2133,11 @@
       },
       "GA-savannah": {
         "file": "metro/GA-savannah.json",
-        "cells": 6349,
+        "cells": 6381,
         "rows": 11833,
         "adults": 238426,
-        "bytes": 114707,
-        "bytes_gzip": 16308,
+        "bytes": 128047,
+        "bytes_gzip": 17128,
         "area": "Savannah, GA",
         "pumas_list": [
           "1304701",
@@ -2142,11 +2149,11 @@
       },
       "GA-columbus": {
         "file": "metro/GA-columbus.json",
-        "cells": 6046,
+        "cells": 6083,
         "rows": 10869,
         "adults": 243017,
-        "bytes": 109357,
-        "bytes_gzip": 15833,
+        "bytes": 122188,
+        "bytes_gzip": 16697,
         "area": "Columbus, GA-AL",
         "pumas_list": [
           "0102201",
@@ -2158,11 +2165,11 @@
       },
       "GA-macon": {
         "file": "metro/GA-macon.json",
-        "cells": 3507,
+        "cells": 3511,
         "rows": 5597,
         "adults": 118365,
-        "bytes": 63365,
-        "bytes_gzip": 9696,
+        "bytes": 70476,
+        "bytes_gzip": 10224,
         "area": "Macon-Bibb County, GA",
         "pumas_list": [
           "1303000"
@@ -2173,11 +2180,11 @@
       },
       "GA-athens": {
         "file": "metro/GA-athens.json",
-        "cells": 5745,
+        "cells": 5766,
         "rows": 11776,
         "adults": 208860,
-        "bytes": 103495,
-        "bytes_gzip": 14951,
+        "bytes": 115413,
+        "bytes_gzip": 15657,
         "area": "Athens-Clarke County, GA",
         "pumas_list": [
           "1301800",
@@ -2189,11 +2196,11 @@
       },
       "HI-honolulu": {
         "file": "metro/HI-honolulu.json",
-        "cells": 17296,
+        "cells": 17648,
         "rows": 43853,
         "adults": 795094,
-        "bytes": 314348,
-        "bytes_gzip": 41615,
+        "bytes": 355867,
+        "bytes_gzip": 43512,
         "area": "Urban Honolulu, HI",
         "pumas_list": [
           "1500301",
@@ -2211,11 +2218,11 @@
       },
       "HI-kahului-maui": {
         "file": "metro/HI-kahului-maui.json",
-        "cells": 6834,
+        "cells": 6860,
         "rows": 9597,
         "adults": 188096,
-        "bytes": 122306,
-        "bytes_gzip": 16819,
+        "bytes": 136493,
+        "bytes_gzip": 17226,
         "area": "Kahului-Wailuku, HI",
         "pumas_list": [
           "1500100"
@@ -2226,11 +2233,11 @@
       },
       "HI-hilo-hawaii-island": {
         "file": "metro/HI-hilo-hawaii-island.json",
-        "cells": 5589,
+        "cells": 5606,
         "rows": 7720,
         "adults": 163393,
-        "bytes": 100058,
-        "bytes_gzip": 14198,
+        "bytes": 111584,
+        "bytes_gzip": 14485,
         "area": "Hilo-Kailua, HI",
         "pumas_list": [
           "1500200"
@@ -2241,11 +2248,11 @@
       },
       "ID-boise": {
         "file": "metro/ID-boise.json",
-        "cells": 9682,
+        "cells": 9734,
         "rows": 27997,
         "adults": 643575,
-        "bytes": 177527,
-        "bytes_gzip": 25757,
+        "bytes": 197932,
+        "bytes_gzip": 26440,
         "area": "Boise City, ID",
         "pumas_list": [
           "1600400",
@@ -2261,11 +2268,11 @@
       },
       "ID-coeur-d-alene": {
         "file": "metro/ID-coeur-d-alene.json",
-        "cells": 3269,
+        "cells": 3273,
         "rows": 5462,
         "adults": 136540,
-        "bytes": 59485,
-        "bytes_gzip": 9198,
+        "bytes": 66119,
+        "bytes_gzip": 9317,
         "area": "Coeur d'Alene, ID",
         "pumas_list": [
           "1600200"
@@ -2276,11 +2283,11 @@
       },
       "ID-idaho-falls": {
         "file": "metro/ID-idaho-falls.json",
-        "cells": 2781,
+        "cells": 2783,
         "rows": 4164,
         "adults": 90848,
-        "bytes": 50357,
-        "bytes_gzip": 7865,
+        "bytes": 55976,
+        "bytes_gzip": 7991,
         "area": "Idaho Falls, ID",
         "pumas_list": [
           "1601200"
@@ -2291,11 +2298,11 @@
       },
       "ID-pocatello": {
         "file": "metro/ID-pocatello.json",
-        "cells": 3514,
+        "cells": 3517,
         "rows": 6175,
         "adults": 98551,
-        "bytes": 63096,
-        "bytes_gzip": 9534,
+        "bytes": 70202,
+        "bytes_gzip": 9653,
         "area": "Pocatello, ID",
         "pumas_list": [
           "1601300"
@@ -2306,11 +2313,11 @@
       },
       "IL-chicago": {
         "file": "metro/IL-chicago.json",
-        "cells": 36759,
+        "cells": 38511,
         "rows": 311325,
         "adults": 7274141,
-        "bytes": 692329,
-        "bytes_gzip": 95775,
+        "bytes": 800596,
+        "bytes_gzip": 101412,
         "area": "Chicago-Naperville-Elgin, IL-IN",
         "pumas_list": [
           "1703101",
@@ -2386,11 +2393,11 @@
       },
       "IL-rockford": {
         "file": "metro/IL-rockford.json",
-        "cells": 6155,
+        "cells": 6196,
         "rows": 12281,
         "adults": 257406,
-        "bytes": 111612,
-        "bytes_gzip": 16313,
+        "bytes": 124746,
+        "bytes_gzip": 17106,
         "area": "Rockford, IL",
         "pumas_list": [
           "1700701",
@@ -2402,11 +2409,11 @@
       },
       "IL-peoria": {
         "file": "metro/IL-peoria.json",
-        "cells": 5969,
+        "cells": 5988,
         "rows": 13741,
         "adults": 238237,
-        "bytes": 107992,
-        "bytes_gzip": 15831,
+        "bytes": 120317,
+        "bytes_gzip": 16555,
         "area": "Peoria, IL",
         "pumas_list": [
           "1714300",
@@ -2418,11 +2425,11 @@
       },
       "IL-champaign-urbana": {
         "file": "metro/IL-champaign-urbana.json",
-        "cells": 3752,
+        "cells": 3764,
         "rows": 6903,
         "adults": 143407,
-        "bytes": 67829,
-        "bytes_gzip": 10282,
+        "bytes": 75583,
+        "bytes_gzip": 10733,
         "area": "Champaign-Urbana, IL",
         "pumas_list": [
           "1701901"
@@ -2433,11 +2440,11 @@
       },
       "IL-springfield": {
         "file": "metro/IL-springfield.json",
-        "cells": 4533,
+        "cells": 4550,
         "rows": 8696,
         "adults": 152035,
-        "bytes": 81848,
-        "bytes_gzip": 12145,
+        "bytes": 91264,
+        "bytes_gzip": 12730,
         "area": "Springfield, IL",
         "pumas_list": [
           "1716700"
@@ -2448,11 +2455,11 @@
       },
       "IN-indianapolis": {
         "file": "metro/IN-indianapolis.json",
-        "cells": 16411,
+        "cells": 16634,
         "rows": 67575,
         "adults": 1626455,
-        "bytes": 303458,
-        "bytes_gzip": 43341,
+        "bytes": 340664,
+        "bytes_gzip": 45087,
         "area": "Indianapolis-Carmel-Greenwood, IN",
         "pumas_list": [
           "1801801",
@@ -2477,11 +2484,11 @@
       },
       "IN-fort-wayne": {
         "file": "metro/IN-fort-wayne.json",
-        "cells": 6724,
+        "cells": 6752,
         "rows": 14001,
         "adults": 292901,
-        "bytes": 122072,
-        "bytes_gzip": 17791,
+        "bytes": 136090,
+        "bytes_gzip": 18536,
         "area": "Fort Wayne, IN",
         "pumas_list": [
           "1801001",
@@ -2494,11 +2501,11 @@
       },
       "IN-evansville": {
         "file": "metro/IN-evansville.json",
-        "cells": 5412,
+        "cells": 5426,
         "rows": 12851,
         "adults": 236284,
-        "bytes": 98138,
-        "bytes_gzip": 14607,
+        "bytes": 109250,
+        "bytes_gzip": 15188,
         "area": "Evansville, IN",
         "pumas_list": [
           "1803300",
@@ -2510,11 +2517,11 @@
       },
       "IN-south-bend": {
         "file": "metro/IN-south-bend.json",
-        "cells": 5734,
+        "cells": 5757,
         "rows": 11731,
         "adults": 209929,
-        "bytes": 103639,
-        "bytes_gzip": 15117,
+        "bytes": 115571,
+        "bytes_gzip": 15831,
         "area": "South Bend-Mishawaka, IN-MI",
         "pumas_list": [
           "1800401",
@@ -2526,11 +2533,11 @@
       },
       "IN-bloomington": {
         "file": "metro/IN-bloomington.json",
-        "cells": 2887,
+        "cells": 2901,
         "rows": 5448,
         "adults": 118784,
-        "bytes": 52423,
-        "bytes_gzip": 8231,
+        "bytes": 58491,
+        "bytes_gzip": 8497,
         "area": "Bloomington, IN",
         "pumas_list": [
           "1802900"
@@ -2541,11 +2548,11 @@
       },
       "IA-des-moines": {
         "file": "metro/IA-des-moines.json",
-        "cells": 7756,
+        "cells": 7787,
         "rows": 21245,
         "adults": 568922,
-        "bytes": 142350,
-        "bytes_gzip": 21315,
+        "bytes": 158480,
+        "bytes_gzip": 22091,
         "area": "Des Moines-West Des Moines, IA",
         "pumas_list": [
           "1901400",
@@ -2560,11 +2567,11 @@
       },
       "IA-cedar-rapids": {
         "file": "metro/IA-cedar-rapids.json",
-        "cells": 3607,
+        "cells": 3615,
         "rows": 6605,
         "adults": 178289,
-        "bytes": 65674,
-        "bytes_gzip": 10280,
+        "bytes": 73062,
+        "bytes_gzip": 10665,
         "area": "Cedar Rapids, IA",
         "pumas_list": [
           "1900301",
@@ -2576,11 +2583,11 @@
       },
       "IA-davenport-quad-cities": {
         "file": "metro/IA-davenport-quad-cities.json",
-        "cells": 5603,
+        "cells": 5627,
         "rows": 11706,
         "adults": 244765,
-        "bytes": 101599,
-        "bytes_gzip": 15171,
+        "bytes": 113292,
+        "bytes_gzip": 15853,
         "area": "Davenport-Moline-Rock Island, IA-IL",
         "pumas_list": [
           "1716100",
@@ -2592,11 +2599,11 @@
       },
       "IA-iowa-city": {
         "file": "metro/IA-iowa-city.json",
-        "cells": 2746,
+        "cells": 2754,
         "rows": 4702,
         "adults": 126485,
-        "bytes": 49977,
-        "bytes_gzip": 8014,
+        "bytes": 55646,
+        "bytes_gzip": 8301,
         "area": "Iowa City, IA",
         "pumas_list": [
           "1901100"
@@ -2607,11 +2614,11 @@
       },
       "KS-kansas-city-area-overland-park-olathe": {
         "file": "metro/KS-kansas-city-area-overland-park-olathe.json",
-        "cells": 10998,
+        "cells": 11082,
         "rows": 28363,
         "adults": 694533,
-        "bytes": 201742,
-        "bytes_gzip": 28897,
+        "bytes": 225413,
+        "bytes_gzip": 30063,
         "area": "Kansas City, MO-KS (part in KS)",
         "pumas_list": [
           "2000400",
@@ -2627,11 +2634,11 @@
       },
       "KS-wichita": {
         "file": "metro/KS-wichita.json",
-        "cells": 8577,
+        "cells": 8650,
         "rows": 20299,
         "adults": 473842,
-        "bytes": 156053,
-        "bytes_gzip": 22718,
+        "bytes": 174649,
+        "bytes_gzip": 23748,
         "area": "Wichita, KS",
         "pumas_list": [
           "2001201",
@@ -2645,11 +2652,11 @@
       },
       "KS-topeka": {
         "file": "metro/KS-topeka.json",
-        "cells": 5450,
+        "cells": 5472,
         "rows": 11793,
         "adults": 204673,
-        "bytes": 97967,
-        "bytes_gzip": 14442,
+        "bytes": 109307,
+        "bytes_gzip": 15017,
         "area": "Topeka, KS",
         "pumas_list": [
           "2000501",
@@ -2661,11 +2668,11 @@
       },
       "KS-lawrence": {
         "file": "metro/KS-lawrence.json",
-        "cells": 2192,
+        "cells": 2201,
         "rows": 3582,
         "adults": 99456,
-        "bytes": 39961,
-        "bytes_gzip": 6537,
+        "bytes": 44542,
+        "bytes_gzip": 6748,
         "area": "Lawrence, KS",
         "pumas_list": [
           "2000700"
@@ -2676,11 +2683,11 @@
       },
       "KY-louisville": {
         "file": "metro/KY-louisville.json",
-        "cells": 13919,
+        "cells": 14126,
         "rows": 54025,
         "adults": 1012381,
-        "bytes": 255194,
-        "bytes_gzip": 36164,
+        "bytes": 287081,
+        "bytes_gzip": 37871,
         "area": "Louisville/Jefferson County, KY-IN",
         "pumas_list": [
           "1803600",
@@ -2700,11 +2707,11 @@
       },
       "KY-lexington": {
         "file": "metro/KY-lexington.json",
-        "cells": 7447,
+        "cells": 7489,
         "rows": 17534,
         "adults": 365828,
-        "bytes": 135530,
-        "bytes_gzip": 19741,
+        "bytes": 151260,
+        "bytes_gzip": 20620,
         "area": "Lexington-Fayette, KY",
         "pumas_list": [
           "2101901",
@@ -2718,11 +2725,11 @@
       },
       "KY-bowling-green": {
         "file": "metro/KY-bowling-green.json",
-        "cells": 2702,
+        "cells": 2710,
         "rows": 4116,
         "adults": 107534,
-        "bytes": 48996,
-        "bytes_gzip": 7840,
+        "bytes": 54572,
+        "bytes_gzip": 8171,
         "area": "Bowling Green, KY",
         "pumas_list": [
           "2100500"
@@ -2733,11 +2740,11 @@
       },
       "KY-frankfort": {
         "file": "metro/KY-frankfort.json",
-        "cells": 3011,
+        "cells": 3013,
         "rows": 5107,
         "adults": 99344,
-        "bytes": 54476,
-        "bytes_gzip": 8358,
+        "bytes": 60554,
+        "bytes_gzip": 8676,
         "area": "Frankfort, KY",
         "pumas_list": [
           "2102000"
@@ -2748,11 +2755,11 @@
       },
       "LA-new-orleans": {
         "file": "metro/LA-new-orleans.json",
-        "cells": 13828,
+        "cells": 14052,
         "rows": 37889,
         "adults": 767347,
-        "bytes": 251954,
-        "bytes_gzip": 34658,
+        "bytes": 284012,
+        "bytes_gzip": 36434,
         "area": "New Orleans-Metairie, LA",
         "pumas_list": [
           "2201900",
@@ -2770,11 +2777,11 @@
       },
       "LA-baton-rouge": {
         "file": "metro/LA-baton-rouge.json",
-        "cells": 9984,
+        "cells": 10025,
         "rows": 25780,
         "adults": 654237,
-        "bytes": 182479,
-        "bytes_gzip": 26199,
+        "bytes": 203265,
+        "bytes_gzip": 27246,
         "area": "Baton Rouge, LA",
         "pumas_list": [
           "2201400",
@@ -2791,11 +2798,11 @@
       },
       "LA-shreveport": {
         "file": "metro/LA-shreveport.json",
-        "cells": 6896,
+        "cells": 6919,
         "rows": 14201,
         "adults": 301517,
-        "bytes": 124828,
-        "bytes_gzip": 17945,
+        "bytes": 139082,
+        "bytes_gzip": 18772,
         "area": "Shreveport-Bossier City, LA",
         "pumas_list": [
           "2200101",
@@ -2808,11 +2815,11 @@
       },
       "LA-lafayette": {
         "file": "metro/LA-lafayette.json",
-        "cells": 5993,
+        "cells": 6013,
         "rows": 11742,
         "adults": 273188,
-        "bytes": 108685,
-        "bytes_gzip": 15975,
+        "bytes": 121079,
+        "bytes_gzip": 16751,
         "area": "Lafayette, LA",
         "pumas_list": [
           "2201100",
@@ -2825,11 +2832,11 @@
       },
       "ME-portland": {
         "file": "metro/ME-portland.json",
-        "cells": 6171,
+        "cells": 6191,
         "rows": 17678,
         "adults": 462132,
-        "bytes": 113833,
-        "bytes_gzip": 17302,
+        "bytes": 126586,
+        "bytes_gzip": 17783,
         "area": "Portland-South Portland, ME",
         "pumas_list": [
           "2300700",
@@ -2843,11 +2850,11 @@
       },
       "ME-bangor": {
         "file": "metro/ME-bangor.json",
-        "cells": 2997,
+        "cells": 3002,
         "rows": 5692,
         "adults": 109088,
-        "bytes": 53933,
-        "bytes_gzip": 8350,
+        "bytes": 60043,
+        "bytes_gzip": 8520,
         "area": "Bangor, ME",
         "pumas_list": [
           "2300300"
@@ -2858,11 +2865,11 @@
       },
       "ME-augusta": {
         "file": "metro/ME-augusta.json",
-        "cells": 2599,
+        "cells": 2601,
         "rows": 4644,
         "adults": 103101,
-        "bytes": 47170,
-        "bytes_gzip": 7390,
+        "bytes": 52425,
+        "bytes_gzip": 7522,
         "area": "Augusta-Waterville, ME",
         "pumas_list": [
           "2300400"
@@ -2873,11 +2880,11 @@
       },
       "MD-baltimore": {
         "file": "metro/MD-baltimore.json",
-        "cells": 23142,
+        "cells": 23751,
         "rows": 104750,
         "adults": 2180851,
-        "bytes": 429007,
-        "bytes_gzip": 58738,
+        "bytes": 487331,
+        "bytes_gzip": 61731,
         "area": "Baltimore-Columbia-Towson, MD",
         "pumas_list": [
           "2400400",
@@ -2910,11 +2917,11 @@
       },
       "MD-dc-suburbs-silver-spring-bethesda": {
         "file": "metro/MD-dc-suburbs-silver-spring-bethesda.json",
-        "cells": 26015,
+        "cells": 26836,
         "rows": 95748,
         "adults": 1920111,
-        "bytes": 480759,
-        "bytes_gzip": 63622,
+        "bytes": 549045,
+        "bytes_gzip": 66920,
         "area": "Washington-Arlington-Alexandria, DC-VA-MD-WV (part in MD)",
         "pumas_list": [
           "2400301",
@@ -2942,11 +2949,11 @@
       },
       "MD-annapolis": {
         "file": "metro/MD-annapolis.json",
-        "cells": 9822,
+        "cells": 9904,
         "rows": 21587,
         "adults": 463490,
-        "bytes": 179677,
-        "bytes_gzip": 25127,
+        "bytes": 200951,
+        "bytes_gzip": 26311,
         "area": "Anne Arundel County, MD",
         "pumas_list": [
           "2401201",
@@ -2961,11 +2968,11 @@
       },
       "MD-frederick": {
         "file": "metro/MD-frederick.json",
-        "cells": 38589,
+        "cells": 40816,
         "rows": 242680,
         "adults": 4879569,
-        "bytes": 722953,
-        "bytes_gzip": 96150,
+        "bytes": 844490,
+        "bytes_gzip": 102763,
         "area": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
         "pumas_list": [
           "1100101",
@@ -3021,11 +3028,11 @@
       },
       "MD-salisbury": {
         "file": "metro/MD-salisbury.json",
-        "cells": 4361,
+        "cells": 4376,
         "rows": 7966,
         "adults": 146514,
-        "bytes": 78733,
-        "bytes_gzip": 11662,
+        "bytes": 87763,
+        "bytes_gzip": 12271,
         "area": "Salisbury, MD",
         "pumas_list": [
           "2401400"
@@ -3036,11 +3043,11 @@
       },
       "MA-boston": {
         "file": "metro/MA-boston.json",
-        "cells": 30773,
+        "cells": 32676,
         "rows": 200135,
         "adults": 4055490,
-        "bytes": 573952,
-        "bytes_gzip": 77295,
+        "bytes": 673225,
+        "bytes_gzip": 83258,
         "area": "Boston-Cambridge-Newton, MA-NH",
         "pumas_list": [
           "2500601",
@@ -3088,11 +3095,11 @@
       },
       "MA-worcester": {
         "file": "metro/MA-worcester.json",
-        "cells": 12353,
+        "cells": 12562,
         "rows": 41091,
         "adults": 777760,
-        "bytes": 226689,
-        "bytes_gzip": 32069,
+        "bytes": 255516,
+        "bytes_gzip": 33657,
         "area": "Worcester, MA",
         "pumas_list": [
           "0920301",
@@ -3110,11 +3117,11 @@
       },
       "MA-springfield": {
         "file": "metro/MA-springfield.json",
-        "cells": 7585,
+        "cells": 7733,
         "rows": 17631,
         "adults": 366608,
-        "bytes": 137995,
-        "bytes_gzip": 20020,
+        "bytes": 156100,
+        "bytes_gzip": 21263,
         "area": "Springfield, MA",
         "pumas_list": [
           "2500401",
@@ -3127,11 +3134,11 @@
       },
       "MA-cape-cod": {
         "file": "metro/MA-cape-cod.json",
-        "cells": 4660,
+        "cells": 4666,
         "rows": 10723,
         "adults": 227943,
-        "bytes": 85415,
-        "bytes_gzip": 12956,
+        "bytes": 94870,
+        "bytes_gzip": 13396,
         "area": "Barnstable Town, MA",
         "pumas_list": [
           "2501201",
@@ -3143,11 +3150,11 @@
       },
       "MI-detroit": {
         "file": "metro/MI-detroit.json",
-        "cells": 25651,
+        "cells": 26294,
         "rows": 141279,
         "adults": 3469209,
-        "bytes": 476899,
-        "bytes_gzip": 66152,
+        "bytes": 540896,
+        "bytes_gzip": 69090,
         "area": "Detroit-Warren-Dearborn, MI",
         "pumas_list": [
           "2601701",
@@ -3187,11 +3194,11 @@
       },
       "MI-grand-rapids": {
         "file": "metro/MI-grand-rapids.json",
-        "cells": 10913,
+        "cells": 11021,
         "rows": 40908,
         "adults": 896948,
-        "bytes": 200630,
-        "bytes_gzip": 29565,
+        "bytes": 224599,
+        "bytes_gzip": 30738,
         "area": "Grand Rapids-Wyoming-Kentwood, MI",
         "pumas_list": [
           "2600801",
@@ -3208,11 +3215,11 @@
       },
       "MI-lansing": {
         "file": "metro/MI-lansing.json",
-        "cells": 7456,
+        "cells": 7502,
         "rows": 19537,
         "adults": 377531,
-        "bytes": 135542,
-        "bytes_gzip": 19830,
+        "bytes": 151380,
+        "bytes_gzip": 20703,
         "area": "Lansing-East Lansing, MI",
         "pumas_list": [
           "2601801",
@@ -3225,11 +3232,11 @@
       },
       "MI-ann-arbor": {
         "file": "metro/MI-ann-arbor.json",
-        "cells": 7054,
+        "cells": 7107,
         "rows": 14461,
         "adults": 302513,
-        "bytes": 128478,
-        "bytes_gzip": 18444,
+        "bytes": 143636,
+        "bytes_gzip": 19304,
         "area": "Ann Arbor, MI",
         "pumas_list": [
           "2602701",
@@ -3242,11 +3249,11 @@
       },
       "MI-flint": {
         "file": "metro/MI-flint.json",
-        "cells": 6303,
+        "cells": 6321,
         "rows": 14497,
         "adults": 326094,
-        "bytes": 114462,
-        "bytes_gzip": 16898,
+        "bytes": 127434,
+        "bytes_gzip": 17672,
         "area": "Flint, MI",
         "pumas_list": [
           "2601702",
@@ -3259,11 +3266,11 @@
       },
       "MI-kalamazoo": {
         "file": "metro/MI-kalamazoo.json",
-        "cells": 4506,
+        "cells": 4522,
         "rows": 8797,
         "adults": 206999,
-        "bytes": 81878,
-        "bytes_gzip": 12533,
+        "bytes": 91223,
+        "bytes_gzip": 13089,
         "area": "Kalamazoo-Portage, MI",
         "pumas_list": [
           "2602101",
@@ -3275,11 +3282,11 @@
       },
       "MN-minneapolis-st-paul": {
         "file": "metro/MN-minneapolis-st-paul.json",
-        "cells": 18955,
+        "cells": 19259,
         "rows": 97207,
         "adults": 2824594,
-        "bytes": 353314,
-        "bytes_gzip": 51183,
+        "bytes": 397265,
+        "bytes_gzip": 53190,
         "area": "Minneapolis-St. Paul-Bloomington, MN-WI",
         "pumas_list": [
           "2701101",
@@ -3320,11 +3327,11 @@
       },
       "MN-rochester": {
         "file": "metro/MN-rochester.json",
-        "cells": 3088,
+        "cells": 3090,
         "rows": 4917,
         "adults": 125228,
-        "bytes": 56017,
-        "bytes_gzip": 8796,
+        "bytes": 62251,
+        "bytes_gzip": 9032,
         "area": "Rochester, MN",
         "pumas_list": [
           "2702700"
@@ -3335,11 +3342,11 @@
       },
       "MN-duluth": {
         "file": "metro/MN-duluth.json",
-        "cells": 4323,
+        "cells": 4330,
         "rows": 9856,
         "adults": 169181,
-        "bytes": 77852,
-        "bytes_gzip": 11650,
+        "bytes": 86651,
+        "bytes_gzip": 11910,
         "area": "Duluth, MN-WI",
         "pumas_list": [
           "2700301",
@@ -3351,11 +3358,11 @@
       },
       "MN-st-cloud": {
         "file": "metro/MN-st-cloud.json",
-        "cells": 4115,
+        "cells": 4122,
         "rows": 9126,
         "adults": 162525,
-        "bytes": 74042,
-        "bytes_gzip": 11111,
+        "bytes": 82426,
+        "bytes_gzip": 11434,
         "area": "St. Cloud, MN",
         "pumas_list": [
           "2700901",
@@ -3367,11 +3374,11 @@
       },
       "MS-jackson": {
         "file": "metro/MS-jackson.json",
-        "cells": 8595,
+        "cells": 8625,
         "rows": 21791,
         "adults": 467922,
-        "bytes": 156285,
-        "bytes_gzip": 22444,
+        "bytes": 174075,
+        "bytes_gzip": 23345,
         "area": "Jackson, MS",
         "pumas_list": [
           "2800900",
@@ -3385,11 +3392,11 @@
       },
       "MS-gulfport-biloxi": {
         "file": "metro/MS-gulfport-biloxi.json",
-        "cells": 6679,
+        "cells": 6712,
         "rows": 13056,
         "adults": 273644,
-        "bytes": 120796,
-        "bytes_gzip": 17353,
+        "bytes": 134814,
+        "bytes_gzip": 18226,
         "area": "Gulfport-Biloxi, MS",
         "pumas_list": [
           "2802001",
@@ -3402,11 +3409,11 @@
       },
       "MS-hattiesburg": {
         "file": "metro/MS-hattiesburg.json",
-        "cells": 3773,
+        "cells": 3778,
         "rows": 6147,
         "adults": 137888,
-        "bytes": 68105,
-        "bytes_gzip": 10296,
+        "bytes": 75768,
+        "bytes_gzip": 10803,
         "area": "Hattiesburg, MS",
         "pumas_list": [
           "2801800"
@@ -3417,11 +3424,11 @@
       },
       "MS-tupelo": {
         "file": "metro/MS-tupelo.json",
-        "cells": 3451,
+        "cells": 3456,
         "rows": 5359,
         "adults": 106744,
-        "bytes": 62019,
-        "bytes_gzip": 9349,
+        "bytes": 69036,
+        "bytes_gzip": 9820,
         "area": "Tupelo, MS",
         "pumas_list": [
           "2800500"
@@ -3432,11 +3439,11 @@
       },
       "MO-st-louis": {
         "file": "metro/MO-st-louis.json",
-        "cells": 19321,
+        "cells": 19721,
         "rows": 106643,
         "adults": 2265509,
-        "bytes": 357955,
-        "bytes_gzip": 50675,
+        "bytes": 404474,
+        "bytes_gzip": 53027,
         "area": "St. Louis, MO-IL",
         "pumas_list": [
           "1711700",
@@ -3468,11 +3475,11 @@
       },
       "MO-kansas-city": {
         "file": "metro/MO-kansas-city.json",
-        "cells": 18209,
+        "cells": 18546,
         "rows": 78192,
         "adults": 1735201,
-        "bytes": 335972,
-        "bytes_gzip": 47162,
+        "bytes": 379019,
+        "bytes_gzip": 49270,
         "area": "Kansas City, MO-KS",
         "pumas_list": [
           "2000400",
@@ -3498,11 +3505,11 @@
       },
       "MO-springfield": {
         "file": "metro/MO-springfield.json",
-        "cells": 6007,
+        "cells": 6032,
         "rows": 14817,
         "adults": 339294,
-        "bytes": 109329,
-        "bytes_gzip": 16368,
+        "bytes": 121845,
+        "bytes_gzip": 16924,
         "area": "Springfield, MO",
         "pumas_list": [
           "2902701",
@@ -3515,11 +3522,11 @@
       },
       "MO-columbia": {
         "file": "metro/MO-columbia.json",
-        "cells": 2685,
+        "cells": 2694,
         "rows": 4548,
         "adults": 114452,
-        "bytes": 48856,
-        "bytes_gzip": 7825,
+        "bytes": 54423,
+        "bytes_gzip": 8200,
         "area": "Columbia, MO",
         "pumas_list": [
           "2900601"
@@ -3530,11 +3537,11 @@
       },
       "MO-jefferson-city": {
         "file": "metro/MO-jefferson-city.json",
-        "cells": 3706,
+        "cells": 3713,
         "rows": 7120,
         "adults": 131390,
-        "bytes": 66842,
-        "bytes_gzip": 10166,
+        "bytes": 74409,
+        "bytes_gzip": 10578,
         "area": "Jefferson City, MO",
         "pumas_list": [
           "2900501"
@@ -3548,8 +3555,8 @@
         "cells": 2059,
         "rows": 2869,
         "adults": 87405,
-        "bytes": 37618,
-        "bytes_gzip": 6209,
+        "bytes": 41754,
+        "bytes_gzip": 6320,
         "area": "Billings, MT",
         "pumas_list": [
           "3000800"
@@ -3560,11 +3567,11 @@
       },
       "MT-missoula": {
         "file": "metro/MT-missoula.json",
-        "cells": 3656,
+        "cells": 3660,
         "rows": 6334,
         "adults": 139026,
-        "bytes": 66055,
-        "bytes_gzip": 10036,
+        "bytes": 73462,
+        "bytes_gzip": 10184,
         "area": "Missoula, MT",
         "pumas_list": [
           "3000200"
@@ -3575,11 +3582,11 @@
       },
       "MT-bozeman": {
         "file": "metro/MT-bozeman.json",
-        "cells": 2580,
+        "cells": 2581,
         "rows": 4099,
         "adults": 100382,
-        "bytes": 46754,
-        "bytes_gzip": 7340,
+        "bytes": 51952,
+        "bytes_gzip": 7429,
         "area": "Bozeman, MT",
         "pumas_list": [
           "3000400"
@@ -3590,11 +3597,11 @@
       },
       "MT-great-falls": {
         "file": "metro/MT-great-falls.json",
-        "cells": 3521,
+        "cells": 3523,
         "rows": 6142,
         "adults": 124421,
-        "bytes": 63532,
-        "bytes_gzip": 9649,
+        "bytes": 70630,
+        "bytes_gzip": 9806,
         "area": "Great Falls, MT",
         "pumas_list": [
           "3000500"
@@ -3605,11 +3612,11 @@
       },
       "MT-helena": {
         "file": "metro/MT-helena.json",
-        "cells": 3521,
+        "cells": 3523,
         "rows": 6142,
         "adults": 124421,
-        "bytes": 63655,
-        "bytes_gzip": 9751,
+        "bytes": 70753,
+        "bytes_gzip": 9910,
         "area": "Helena, MT",
         "pumas_list": [
           "3000500"
@@ -3620,11 +3627,11 @@
       },
       "NE-omaha": {
         "file": "metro/NE-omaha.json",
-        "cells": 10797,
+        "cells": 10898,
         "rows": 35155,
         "adults": 800852,
-        "bytes": 198310,
-        "bytes_gzip": 29036,
+        "bytes": 221912,
+        "bytes_gzip": 30290,
         "area": "Omaha, NE-IA",
         "pumas_list": [
           "1902100",
@@ -3641,11 +3648,11 @@
       },
       "NE-lincoln": {
         "file": "metro/NE-lincoln.json",
-        "cells": 4783,
+        "cells": 4805,
         "rows": 9735,
         "adults": 253661,
-        "bytes": 87204,
-        "bytes_gzip": 13336,
+        "bytes": 97222,
+        "bytes_gzip": 13818,
         "area": "Lincoln, NE",
         "pumas_list": [
           "3100801",
@@ -3657,11 +3664,11 @@
       },
       "NE-grand-island": {
         "file": "metro/NE-grand-island.json",
-        "cells": 3114,
+        "cells": 3115,
         "rows": 5307,
         "adults": 81302,
-        "bytes": 55639,
-        "bytes_gzip": 8428,
+        "bytes": 61904,
+        "bytes_gzip": 8524,
         "area": "Grand Island, NE",
         "pumas_list": [
           "3100300"
@@ -3672,11 +3679,11 @@
       },
       "NV-las-vegas": {
         "file": "metro/NV-las-vegas.json",
-        "cells": 23548,
+        "cells": 24360,
         "rows": 82938,
         "adults": 1812379,
-        "bytes": 432948,
-        "bytes_gzip": 58542,
+        "bytes": 496097,
+        "bytes_gzip": 61839,
         "area": "Las Vegas-Henderson-North Las Vegas, NV",
         "pumas_list": [
           "3200401",
@@ -3701,11 +3708,11 @@
       },
       "NV-reno": {
         "file": "metro/NV-reno.json",
-        "cells": 9537,
+        "cells": 9588,
         "rows": 20363,
         "adults": 394246,
-        "bytes": 173288,
-        "bytes_gzip": 24140,
+        "bytes": 193382,
+        "bytes_gzip": 24922,
         "area": "Reno, NV",
         "pumas_list": [
           "3200101",
@@ -3718,11 +3725,11 @@
       },
       "NV-carson-city": {
         "file": "metro/NV-carson-city.json",
-        "cells": 4731,
+        "cells": 4743,
         "rows": 8514,
         "adults": 141909,
-        "bytes": 85211,
-        "bytes_gzip": 12529,
+        "bytes": 94924,
+        "bytes_gzip": 12802,
         "area": "Carson City, NV",
         "pumas_list": [
           "3200300"
@@ -3733,11 +3740,11 @@
       },
       "NH-manchester": {
         "file": "metro/NH-manchester.json",
-        "cells": 5479,
+        "cells": 5503,
         "rows": 11321,
         "adults": 270882,
-        "bytes": 100085,
-        "bytes_gzip": 14971,
+        "bytes": 111526,
+        "bytes_gzip": 15524,
         "area": "Manchester-Nashua, NH",
         "pumas_list": [
           "3300601",
@@ -3750,11 +3757,11 @@
       },
       "NH-nashua": {
         "file": "metro/NH-nashua.json",
-        "cells": 5479,
+        "cells": 5503,
         "rows": 11321,
         "adults": 270882,
-        "bytes": 100077,
-        "bytes_gzip": 14972,
+        "bytes": 111518,
+        "bytes_gzip": 15525,
         "area": "Manchester-Nashua, NH",
         "pumas_list": [
           "3300601",
@@ -3767,11 +3774,11 @@
       },
       "NH-portsmouth": {
         "file": "metro/NH-portsmouth.json",
-        "cells": 6387,
+        "cells": 6406,
         "rows": 18312,
         "adults": 427163,
-        "bytes": 117589,
-        "bytes_gzip": 17730,
+        "bytes": 130754,
+        "bytes_gzip": 18134,
         "area": "Rockingham County-Strafford County, NH",
         "pumas_list": [
           "3300301",
@@ -3784,11 +3791,11 @@
       },
       "NH-concord": {
         "file": "metro/NH-concord.json",
-        "cells": 3016,
+        "cells": 3020,
         "rows": 5350,
         "adults": 97184,
-        "bytes": 54618,
-        "bytes_gzip": 8300,
+        "bytes": 60745,
+        "bytes_gzip": 8464,
         "area": "Concord, NH",
         "pumas_list": [
           "3300401"
@@ -3799,11 +3806,11 @@
       },
       "NJ-newark-jersey-city-nyc-area": {
         "file": "metro/NJ-newark-jersey-city-nyc-area.json",
-        "cells": 36823,
+        "cells": 39311,
         "rows": 260255,
         "adults": 5430119,
-        "bytes": 690680,
-        "bytes_gzip": 93502,
+        "bytes": 813823,
+        "bytes_gzip": 100765,
         "area": "New York-Newark-Jersey City, NY-NJ (part in NJ)",
         "pumas_list": [
           "3400301",
@@ -3869,11 +3876,11 @@
       },
       "NJ-camden-cherry-hill-philadelphia-area": {
         "file": "metro/NJ-camden-cherry-hill-philadelphia-area.json",
-        "cells": 17061,
+        "cells": 17490,
         "rows": 59913,
         "adults": 1100692,
-        "bytes": 312802,
-        "bytes_gzip": 42999,
+        "bytes": 355365,
+        "bytes_gzip": 45432,
         "area": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD (part in NJ)",
         "pumas_list": [
           "3402001",
@@ -3893,11 +3900,11 @@
       },
       "NJ-new-brunswick": {
         "file": "metro/NJ-new-brunswick.json",
-        "cells": 52639,
+        "cells": 59310,
         "rows": 702517,
         "adults": 15637620,
-        "bytes": 1004098,
-        "bytes_gzip": 139177,
+        "bytes": 1243354,
+        "bytes_gzip": 155072,
         "area": "New York-Newark-Jersey City, NY-NJ",
         "pumas_list": [
           "3400301",
@@ -4054,11 +4061,11 @@
       },
       "NJ-atlantic-city": {
         "file": "metro/NJ-atlantic-city.json",
-        "cells": 7316,
+        "cells": 7366,
         "rows": 16380,
         "adults": 297699,
-        "bytes": 132639,
-        "bytes_gzip": 18933,
+        "bytes": 148268,
+        "bytes_gzip": 19848,
         "area": "Atlantic City-Hammonton, NJ",
         "pumas_list": [
           "3400101",
@@ -4071,11 +4078,11 @@
       },
       "NJ-trenton": {
         "file": "metro/NJ-trenton.json",
-        "cells": 7425,
+        "cells": 7500,
         "rows": 13332,
         "adults": 301169,
-        "bytes": 135284,
-        "bytes_gzip": 19205,
+        "bytes": 151640,
+        "bytes_gzip": 20258,
         "area": "Trenton-Princeton, NJ",
         "pumas_list": [
           "3402301",
@@ -4088,11 +4095,11 @@
       },
       "NM-albuquerque": {
         "file": "metro/NM-albuquerque.json",
-        "cells": 12413,
+        "cells": 12586,
         "rows": 31679,
         "adults": 738847,
-        "bytes": 226726,
-        "bytes_gzip": 31686,
+        "bytes": 254988,
+        "bytes_gzip": 33070,
         "area": "Albuquerque, NM",
         "pumas_list": [
           "3500600",
@@ -4110,11 +4117,11 @@
       },
       "NM-santa-fe": {
         "file": "metro/NM-santa-fe.json",
-        "cells": 4908,
+        "cells": 4919,
         "rows": 7753,
         "adults": 122614,
-        "bytes": 88061,
-        "bytes_gzip": 12375,
+        "bytes": 98108,
+        "bytes_gzip": 12649,
         "area": "Santa Fe, NM",
         "pumas_list": [
           "3500500"
@@ -4125,11 +4132,11 @@
       },
       "NM-las-cruces": {
         "file": "metro/NM-las-cruces.json",
-        "cells": 3970,
+        "cells": 4003,
         "rows": 6670,
         "adults": 172461,
-        "bytes": 71984,
-        "bytes_gzip": 11009,
+        "bytes": 80591,
+        "bytes_gzip": 11316,
         "area": "Las Cruces, NM",
         "pumas_list": [
           "3501001",
@@ -4141,11 +4148,11 @@
       },
       "NY-new-york-city": {
         "file": "metro/NY-new-york-city.json",
-        "cells": 39292,
+        "cells": 43474,
         "rows": 272543,
         "adults": 6768385,
-        "bytes": 738878,
-        "bytes_gzip": 101019,
+        "bytes": 901071,
+        "bytes_gzip": 111052,
         "area": "New York City (five boroughs)",
         "pumas_list": [
           "3604103",
@@ -4210,11 +4217,11 @@
       },
       "NY-long-island": {
         "file": "metro/NY-long-island.json",
-        "cells": 24788,
+        "cells": 25646,
         "rows": 116491,
         "adults": 2302881,
-        "bytes": 459271,
-        "bytes_gzip": 62267,
+        "bytes": 525825,
+        "bytes_gzip": 65542,
         "area": "Long Island (Nassau and Suffolk counties)",
         "pumas_list": [
           "3603201",
@@ -4249,11 +4256,11 @@
       },
       "NY-buffalo": {
         "file": "metro/NY-buffalo.json",
-        "cells": 12387,
+        "cells": 12534,
         "rows": 47028,
         "adults": 928605,
-        "bytes": 227592,
-        "bytes_gzip": 32701,
+        "bytes": 255273,
+        "bytes_gzip": 34173,
         "area": "Buffalo-Cheektowaga, NY",
         "pumas_list": [
           "3601101",
@@ -4272,11 +4279,11 @@
       },
       "NY-rochester": {
         "file": "metro/NY-rochester.json",
-        "cells": 13229,
+        "cells": 13467,
         "rows": 52982,
         "adults": 859443,
-        "bytes": 242018,
-        "bytes_gzip": 34066,
+        "bytes": 273145,
+        "bytes_gzip": 35801,
         "area": "Rochester, NY",
         "pumas_list": [
           "3600800",
@@ -4294,11 +4301,11 @@
       },
       "NY-albany": {
         "file": "metro/NY-albany.json",
-        "cells": 11057,
+        "cells": 11210,
         "rows": 38032,
         "adults": 708868,
-        "bytes": 202668,
-        "bytes_gzip": 29050,
+        "bytes": 227794,
+        "bytes_gzip": 30490,
         "area": "Albany-Schenectady-Troy, NY",
         "pumas_list": [
           "3601700",
@@ -4314,11 +4321,11 @@
       },
       "NY-syracuse": {
         "file": "metro/NY-syracuse.json",
-        "cells": 10313,
+        "cells": 10431,
         "rows": 37878,
         "adults": 531662,
-        "bytes": 187570,
-        "bytes_gzip": 26728,
+        "bytes": 210515,
+        "bytes_gzip": 27976,
         "area": "Syracuse, NY",
         "pumas_list": [
           "3600600",
@@ -4333,11 +4340,11 @@
       },
       "NY-ithaca": {
         "file": "metro/NY-ithaca.json",
-        "cells": 2799,
+        "cells": 2814,
         "rows": 5396,
         "adults": 90134,
-        "bytes": 50562,
-        "bytes_gzip": 7871,
+        "bytes": 56470,
+        "bytes_gzip": 8164,
         "area": "Ithaca, NY",
         "pumas_list": [
           "3602300"
@@ -4348,11 +4355,11 @@
       },
       "NC-charlotte": {
         "file": "metro/NC-charlotte.json",
-        "cells": 22144,
+        "cells": 22737,
         "rows": 102398,
         "adults": 2161666,
-        "bytes": 409746,
-        "bytes_gzip": 56781,
+        "bytes": 465708,
+        "bytes_gzip": 59584,
         "area": "Charlotte-Concord-Gastonia, NC-SC",
         "pumas_list": [
           "3702700",
@@ -4382,11 +4389,11 @@
       },
       "NC-raleigh": {
         "file": "metro/NC-raleigh.json",
-        "cells": 15658,
+        "cells": 15845,
         "rows": 47918,
         "adults": 1131117,
-        "bytes": 288609,
-        "bytes_gzip": 40140,
+        "bytes": 323626,
+        "bytes_gzip": 41853,
         "area": "Raleigh-Cary, NC",
         "pumas_list": [
           "3700500",
@@ -4406,11 +4413,11 @@
       },
       "NC-durham-chapel-hill": {
         "file": "metro/NC-durham-chapel-hill.json",
-        "cells": 10135,
+        "cells": 10219,
         "rows": 23773,
         "adults": 502857,
-        "bytes": 184911,
-        "bytes_gzip": 25976,
+        "bytes": 206850,
+        "bytes_gzip": 27157,
         "area": "Durham-Chapel Hill, NC",
         "pumas_list": [
           "3701301",
@@ -4424,11 +4431,11 @@
       },
       "NC-greensboro": {
         "file": "metro/NC-greensboro.json",
-        "cells": 10564,
+        "cells": 10650,
         "rows": 29640,
         "adults": 651166,
-        "bytes": 192938,
-        "bytes_gzip": 27737,
+        "bytes": 215772,
+        "bytes_gzip": 29030,
         "area": "Greensboro-High Point, NC",
         "pumas_list": [
           "3700300",
@@ -4444,11 +4451,11 @@
       },
       "NC-winston-salem": {
         "file": "metro/NC-winston-salem.json",
-        "cells": 9090,
+        "cells": 9163,
         "rows": 24127,
         "adults": 522559,
-        "bytes": 165973,
-        "bytes_gzip": 23867,
+        "bytes": 185608,
+        "bytes_gzip": 24942,
         "area": "Winston-Salem, NC",
         "pumas_list": [
           "3701801",
@@ -4463,11 +4470,11 @@
       },
       "NC-asheville": {
         "file": "metro/NC-asheville.json",
-        "cells": 6306,
+        "cells": 6323,
         "rows": 16361,
         "adults": 350021,
-        "bytes": 115220,
-        "bytes_gzip": 17084,
+        "bytes": 128179,
+        "bytes_gzip": 17766,
         "area": "Asheville, NC",
         "pumas_list": [
           "3702201",
@@ -4480,11 +4487,11 @@
       },
       "NC-wilmington": {
         "file": "metro/NC-wilmington.json",
-        "cells": 6929,
+        "cells": 6960,
         "rows": 18165,
         "adults": 375209,
-        "bytes": 126401,
-        "bytes_gzip": 18545,
+        "bytes": 140882,
+        "bytes_gzip": 19378,
         "area": "Wilmington, NC",
         "pumas_list": [
           "3704601",
@@ -4497,11 +4504,11 @@
       },
       "ND-fargo": {
         "file": "metro/ND-fargo.json",
-        "cells": 3113,
+        "cells": 3115,
         "rows": 5255,
         "adults": 150073,
-        "bytes": 56566,
-        "bytes_gzip": 8898,
+        "bytes": 62849,
+        "bytes_gzip": 9119,
         "area": "Fargo, ND-MN",
         "pumas_list": [
           "3800600"
@@ -4512,11 +4519,11 @@
       },
       "ND-bismarck": {
         "file": "metro/ND-bismarck.json",
-        "cells": 2456,
+        "cells": 2460,
         "rows": 3838,
         "adults": 103114,
-        "bytes": 44475,
-        "bytes_gzip": 7125,
+        "bytes": 49482,
+        "bytes_gzip": 7260,
         "area": "Bismarck, ND",
         "pumas_list": [
           "3800300"
@@ -4527,11 +4534,11 @@
       },
       "ND-grand-forks": {
         "file": "metro/ND-grand-forks.json",
-        "cells": 3302,
+        "cells": 3305,
         "rows": 5952,
         "adults": 92436,
-        "bytes": 59053,
-        "bytes_gzip": 8886,
+        "bytes": 65729,
+        "bytes_gzip": 9089,
         "area": "Grand Forks, ND-MN",
         "pumas_list": [
           "3800500"
@@ -4542,11 +4549,11 @@
       },
       "OH-columbus": {
         "file": "metro/OH-columbus.json",
-        "cells": 17720,
+        "cells": 18067,
         "rows": 73809,
         "adults": 1591369,
-        "bytes": 327084,
-        "bytes_gzip": 45931,
+        "bytes": 369363,
+        "bytes_gzip": 47982,
         "area": "Columbus, OH",
         "pumas_list": [
           "3902500",
@@ -4572,11 +4579,11 @@
       },
       "OH-cleveland": {
         "file": "metro/OH-cleveland.json",
-        "cells": 17918,
+        "cells": 18352,
         "rows": 87605,
         "adults": 1721032,
-        "bytes": 330777,
-        "bytes_gzip": 46612,
+        "bytes": 375141,
+        "bytes_gzip": 49055,
         "area": "Cleveland, OH",
         "pumas_list": [
           "3900601",
@@ -4602,11 +4609,11 @@
       },
       "OH-cincinnati": {
         "file": "metro/OH-cincinnati.json",
-        "cells": 16418,
+        "cells": 16678,
         "rows": 81896,
         "adults": 1785724,
-        "bytes": 304140,
-        "bytes_gzip": 43589,
+        "bytes": 342079,
+        "bytes_gzip": 45458,
         "area": "Cincinnati, OH-KY-IN",
         "pumas_list": [
           "1803200",
@@ -4634,11 +4641,11 @@
       },
       "OH-dayton": {
         "file": "metro/OH-dayton.json",
-        "cells": 9813,
+        "cells": 9890,
         "rows": 30229,
         "adults": 637899,
-        "bytes": 179712,
-        "bytes_gzip": 26100,
+        "bytes": 200853,
+        "bytes_gzip": 27275,
         "area": "Dayton-Kettering-Beavercreek, OH",
         "pumas_list": [
           "3902300",
@@ -4654,11 +4661,11 @@
       },
       "OH-toledo": {
         "file": "metro/OH-toledo.json",
-        "cells": 8404,
+        "cells": 8471,
         "rows": 22023,
         "adults": 417224,
-        "bytes": 152804,
-        "bytes_gzip": 22095,
+        "bytes": 170925,
+        "bytes_gzip": 23177,
         "area": "Toledo, OH",
         "pumas_list": [
           "3900301",
@@ -4672,11 +4679,11 @@
       },
       "OH-akron": {
         "file": "metro/OH-akron.json",
-        "cells": 8757,
+        "cells": 8835,
         "rows": 26166,
         "adults": 559121,
-        "bytes": 160338,
-        "bytes_gzip": 23555,
+        "bytes": 179389,
+        "bytes_gzip": 24632,
         "area": "Akron, OH",
         "pumas_list": [
           "3901100",
@@ -4691,11 +4698,11 @@
       },
       "OK-oklahoma-city": {
         "file": "metro/OK-oklahoma-city.json",
-        "cells": 13416,
+        "cells": 13652,
         "rows": 35941,
         "adults": 1063097,
-        "bytes": 245906,
-        "bytes_gzip": 35212,
+        "bytes": 277402,
+        "bytes_gzip": 36923,
         "area": "Oklahoma City, OK",
         "pumas_list": [
           "4021301",
@@ -4715,11 +4722,11 @@
       },
       "OK-tulsa": {
         "file": "metro/OK-tulsa.json",
-        "cells": 15653,
+        "cells": 15975,
         "rows": 43021,
         "adults": 882993,
-        "bytes": 284996,
-        "bytes_gzip": 38940,
+        "bytes": 322652,
+        "bytes_gzip": 40904,
         "area": "Tulsa, OK",
         "pumas_list": [
           "4020300",
@@ -4738,11 +4745,11 @@
       },
       "OK-norman": {
         "file": "metro/OK-norman.json",
-        "cells": 4294,
+        "cells": 4321,
         "rows": 7089,
         "adults": 238534,
-        "bytes": 78308,
-        "bytes_gzip": 12230,
+        "bytes": 87446,
+        "bytes_gzip": 12705,
         "area": "Cleveland County, OK",
         "pumas_list": [
           "4021301",
@@ -4754,11 +4761,11 @@
       },
       "OR-portland": {
         "file": "metro/OR-portland.json",
-        "cells": 21050,
+        "cells": 21557,
         "rows": 93951,
         "adults": 1954480,
-        "bytes": 389663,
-        "bytes_gzip": 53733,
+        "bytes": 441787,
+        "bytes_gzip": 56193,
         "area": "Portland-Vancouver-Hillsboro, OR-WA",
         "pumas_list": [
           "4100501",
@@ -4788,11 +4795,11 @@
       },
       "OR-salem": {
         "file": "metro/OR-salem.json",
-        "cells": 7855,
+        "cells": 7915,
         "rows": 18619,
         "adults": 380923,
-        "bytes": 142609,
-        "bytes_gzip": 20653,
+        "bytes": 159507,
+        "bytes_gzip": 21237,
         "area": "Salem, OR",
         "pumas_list": [
           "4104703",
@@ -4806,11 +4813,11 @@
       },
       "OR-eugene": {
         "file": "metro/OR-eugene.json",
-        "cells": 6721,
+        "cells": 6763,
         "rows": 16519,
         "adults": 316916,
-        "bytes": 122292,
-        "bytes_gzip": 17746,
+        "bytes": 136580,
+        "bytes_gzip": 18252,
         "area": "Eugene-Springfield, OR",
         "pumas_list": [
           "4103903",
@@ -4823,11 +4830,11 @@
       },
       "OR-bend": {
         "file": "metro/OR-bend.json",
-        "cells": 4761,
+        "cells": 4768,
         "rows": 9164,
         "adults": 208318,
-        "bytes": 86687,
-        "bytes_gzip": 12986,
+        "bytes": 96365,
+        "bytes_gzip": 13208,
         "area": "Bend, OR",
         "pumas_list": [
           "4101701",
@@ -4839,11 +4846,11 @@
       },
       "OR-medford": {
         "file": "metro/OR-medford.json",
-        "cells": 4380,
+        "cells": 4386,
         "rows": 8061,
         "adults": 177638,
-        "bytes": 79489,
-        "bytes_gzip": 11938,
+        "bytes": 88383,
+        "bytes_gzip": 12185,
         "area": "Medford, OR",
         "pumas_list": [
           "4102901",
@@ -4855,11 +4862,11 @@
       },
       "PA-philadelphia": {
         "file": "metro/PA-philadelphia.json",
-        "cells": 29992,
+        "cells": 31436,
         "rows": 207587,
         "adults": 4963886,
-        "bytes": 560832,
-        "bytes_gzip": 77650,
+        "bytes": 649397,
+        "bytes_gzip": 82725,
         "area": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
         "pumas_list": [
           "1000101",
@@ -4917,11 +4924,11 @@
       },
       "PA-pittsburgh": {
         "file": "metro/PA-pittsburgh.json",
-        "cells": 16309,
+        "cells": 16642,
         "rows": 104109,
         "adults": 1955755,
-        "bytes": 301981,
-        "bytes_gzip": 43486,
+        "bytes": 341107,
+        "bytes_gzip": 45447,
         "area": "Pittsburgh, PA",
         "pumas_list": [
           "4201511",
@@ -4949,11 +4956,11 @@
       },
       "PA-allentown-bethlehem": {
         "file": "metro/PA-allentown-bethlehem.json",
-        "cells": 9973,
+        "cells": 10139,
         "rows": 30716,
         "adults": 694328,
-        "bytes": 183135,
-        "bytes_gzip": 26715,
+        "bytes": 206368,
+        "bytes_gzip": 28159,
         "area": "Allentown-Bethlehem-Easton, PA-NJ",
         "pumas_list": [
           "3401700",
@@ -4969,11 +4976,11 @@
       },
       "PA-harrisburg": {
         "file": "metro/PA-harrisburg.json",
-        "cells": 8045,
+        "cells": 8117,
         "rows": 22142,
         "adults": 474229,
-        "bytes": 146807,
-        "bytes_gzip": 21740,
+        "bytes": 164319,
+        "bytes_gzip": 22711,
         "area": "Harrisburg-Carlisle, PA",
         "pumas_list": [
           "4202301",
@@ -4987,11 +4994,11 @@
       },
       "PA-lancaster": {
         "file": "metro/PA-lancaster.json",
-        "cells": 6626,
+        "cells": 6664,
         "rows": 17606,
         "adults": 429146,
-        "bytes": 121525,
-        "bytes_gzip": 18295,
+        "bytes": 135543,
+        "bytes_gzip": 18988,
         "area": "Lancaster, PA",
         "pumas_list": [
           "4203501",
@@ -5005,11 +5012,11 @@
       },
       "PA-scranton-wilkes-barre": {
         "file": "metro/PA-scranton-wilkes-barre.json",
-        "cells": 7384,
+        "cells": 7478,
         "rows": 22759,
         "adults": 403726,
-        "bytes": 134291,
-        "bytes_gzip": 19922,
+        "bytes": 150920,
+        "bytes_gzip": 20872,
         "area": "Scranton--Wilkes-Barre, PA",
         "pumas_list": [
           "4200701",
@@ -5023,11 +5030,11 @@
       },
       "PA-state-college": {
         "file": "metro/PA-state-college.json",
-        "cells": 3606,
+        "cells": 3621,
         "rows": 7745,
         "adults": 135405,
-        "bytes": 65046,
-        "bytes_gzip": 9860,
+        "bytes": 72570,
+        "bytes_gzip": 10154,
         "area": "State College, PA",
         "pumas_list": [
           "4201200"
@@ -5038,11 +5045,11 @@
       },
       "RI-providence": {
         "file": "metro/RI-providence.json",
-        "cells": 15405,
+        "cells": 15976,
         "rows": 64038,
         "adults": 1356165,
-        "bytes": 284142,
-        "bytes_gzip": 40287,
+        "bytes": 326221,
+        "bytes_gzip": 42970,
         "area": "Providence-Warwick, RI-MA",
         "pumas_list": [
           "2501001",
@@ -5063,11 +5070,11 @@
       },
       "RI-newport": {
         "file": "metro/RI-newport.json",
-        "cells": 3469,
+        "cells": 3472,
         "rows": 6174,
         "adults": 113105,
-        "bytes": 63095,
-        "bytes_gzip": 9459,
+        "bytes": 70109,
+        "bytes_gzip": 9768,
         "area": "Newport County, RI",
         "pumas_list": [
           "4400300"
@@ -5078,11 +5085,11 @@
       },
       "SC-charleston": {
         "file": "metro/SC-charleston.json",
-        "cells": 10986,
+        "cells": 11072,
         "rows": 30084,
         "adults": 654125,
-        "bytes": 200683,
-        "bytes_gzip": 28488,
+        "bytes": 224352,
+        "bytes_gzip": 29722,
         "area": "Charleston-North Charleston, SC",
         "pumas_list": [
           "4502100",
@@ -5098,11 +5105,11 @@
       },
       "SC-greenville-spartanburg": {
         "file": "metro/SC-greenville-spartanburg.json",
-        "cells": 11932,
+        "cells": 12037,
         "rows": 40664,
         "adults": 798949,
-        "bytes": 218515,
-        "bytes_gzip": 31234,
+        "bytes": 244446,
+        "bytes_gzip": 32535,
         "area": "Greenville-Anderson-Greer, SC",
         "pumas_list": [
           "4500201",
@@ -5121,11 +5128,11 @@
       },
       "SC-columbia": {
         "file": "metro/SC-columbia.json",
-        "cells": 11114,
+        "cells": 11234,
         "rows": 32043,
         "adults": 618820,
-        "bytes": 202415,
-        "bytes_gzip": 28607,
+        "bytes": 226988,
+        "bytes_gzip": 30001,
         "area": "Columbia, SC",
         "pumas_list": [
           "4501301",
@@ -5141,11 +5148,11 @@
       },
       "SC-myrtle-beach": {
         "file": "metro/SC-myrtle-beach.json",
-        "cells": 5150,
+        "cells": 5168,
         "rows": 12250,
         "adults": 275378,
-        "bytes": 93977,
-        "bytes_gzip": 14209,
+        "bytes": 104649,
+        "bytes_gzip": 14847,
         "area": "Myrtle Beach-Conway-North Myrtle Beach, SC",
         "pumas_list": [
           "4502701",
@@ -5157,11 +5164,11 @@
       },
       "SD-sioux-falls": {
         "file": "metro/SD-sioux-falls.json",
-        "cells": 4874,
+        "cells": 4887,
         "rows": 10482,
         "adults": 257950,
-        "bytes": 88640,
-        "bytes_gzip": 13546,
+        "bytes": 98659,
+        "bytes_gzip": 13947,
         "area": "Sioux Falls, SD-MN",
         "pumas_list": [
           "4600501",
@@ -5173,11 +5180,11 @@
       },
       "SD-rapid-city": {
         "file": "metro/SD-rapid-city.json",
-        "cells": 3349,
+        "cells": 3355,
         "rows": 5740,
         "adults": 154434,
-        "bytes": 60797,
-        "bytes_gzip": 9530,
+        "bytes": 67630,
+        "bytes_gzip": 9711,
         "area": "Rapid City, SD",
         "pumas_list": [
           "4600100"
@@ -5191,8 +5198,8 @@
         "cells": 3042,
         "rows": 4609,
         "adults": 70660,
-        "bytes": 54307,
-        "bytes_gzip": 8334,
+        "bytes": 60409,
+        "bytes_gzip": 8430,
         "area": "Pierre, SD",
         "pumas_list": [
           "4600200"
@@ -5203,11 +5210,11 @@
       },
       "TN-nashville": {
         "file": "metro/TN-nashville.json",
-        "cells": 17351,
+        "cells": 17623,
         "rows": 72929,
         "adults": 1629836,
-        "bytes": 320426,
-        "bytes_gzip": 45448,
+        "bytes": 360480,
+        "bytes_gzip": 47361,
         "area": "Nashville-Davidson--Murfreesboro--Franklin, TN",
         "pumas_list": [
           "4700401",
@@ -5234,11 +5241,11 @@
       },
       "TN-memphis": {
         "file": "metro/TN-memphis.json",
-        "cells": 13505,
+        "cells": 13646,
         "rows": 40482,
         "adults": 912247,
-        "bytes": 247334,
-        "bytes_gzip": 34665,
+        "bytes": 277113,
+        "bytes_gzip": 36122,
         "area": "Memphis, TN-MS-AR",
         "pumas_list": [
           "2800100",
@@ -5258,11 +5265,11 @@
       },
       "TN-knoxville": {
         "file": "metro/TN-knoxville.json",
-        "cells": 10274,
+        "cells": 10363,
         "rows": 37051,
         "adults": 711385,
-        "bytes": 188239,
-        "bytes_gzip": 27324,
+        "bytes": 210541,
+        "bytes_gzip": 28439,
         "area": "Knoxville, TN",
         "pumas_list": [
           "4701501",
@@ -5279,11 +5286,11 @@
       },
       "TN-chattanooga": {
         "file": "metro/TN-chattanooga.json",
-        "cells": 8511,
+        "cells": 8568,
         "rows": 22011,
         "adults": 437128,
-        "bytes": 154963,
-        "bytes_gzip": 22279,
+        "bytes": 173110,
+        "bytes_gzip": 23218,
         "area": "Chattanooga, TN-GA",
         "pumas_list": [
           "1300100",
@@ -5297,11 +5304,11 @@
       },
       "TN-clarksville": {
         "file": "metro/TN-clarksville.json",
-        "cells": 5904,
+        "cells": 5937,
         "rows": 11285,
         "adults": 251325,
-        "bytes": 106883,
-        "bytes_gzip": 15761,
+        "bytes": 119353,
+        "bytes_gzip": 16565,
         "area": "Clarksville, TN-KY",
         "pumas_list": [
           "2100300",
@@ -5314,11 +5321,11 @@
       },
       "TX-houston": {
         "file": "metro/TX-houston.json",
-        "cells": 34175,
+        "cells": 35687,
         "rows": 208493,
         "adults": 5423549,
-        "bytes": 640195,
-        "bytes_gzip": 87382,
+        "bytes": 738604,
+        "bytes_gzip": 92665,
         "area": "Houston-Pasadena-The Woodlands, TX",
         "pumas_list": [
           "4804400",
@@ -5383,11 +5390,11 @@
       },
       "TX-dallas-fort-worth": {
         "file": "metro/TX-dallas-fort-worth.json",
-        "cells": 36722,
+        "cells": 38349,
         "rows": 267336,
         "adults": 5928571,
-        "bytes": 688141,
-        "bytes_gzip": 94069,
+        "bytes": 793830,
+        "bytes_gzip": 99440,
         "area": "Dallas-Fort Worth-Arlington, TX",
         "pumas_list": [
           "4800900",
@@ -5454,11 +5461,11 @@
       },
       "TX-san-antonio": {
         "file": "metro/TX-san-antonio.json",
-        "cells": 19707,
+        "cells": 20301,
         "rows": 82280,
         "adults": 1951278,
-        "bytes": 364467,
-        "bytes_gzip": 51058,
+        "bytes": 415671,
+        "bytes_gzip": 53892,
         "area": "San Antonio-New Braunfels, TX",
         "pumas_list": [
           "4805700",
@@ -5487,11 +5494,11 @@
       },
       "TX-austin": {
         "file": "metro/TX-austin.json",
-        "cells": 21358,
+        "cells": 21847,
         "rows": 81633,
         "adults": 1931347,
-        "bytes": 395796,
-        "bytes_gzip": 54477,
+        "bytes": 448227,
+        "bytes_gzip": 57009,
         "area": "Austin-Round Rock-San Marcos, TX",
         "pumas_list": [
           "4805100",
@@ -5517,11 +5524,11 @@
       },
       "TX-el-paso": {
         "file": "metro/TX-el-paso.json",
-        "cells": 9211,
+        "cells": 9358,
         "rows": 28618,
         "adults": 644316,
-        "bytes": 168307,
-        "bytes_gzip": 24395,
+        "bytes": 189644,
+        "bytes_gzip": 25650,
         "area": "El Paso, TX",
         "pumas_list": [
           "4803305",
@@ -5537,11 +5544,11 @@
       },
       "TX-mcallen": {
         "file": "metro/TX-mcallen.json",
-        "cells": 7631,
+        "cells": 7700,
         "rows": 27156,
         "adults": 615696,
-        "bytes": 139650,
-        "bytes_gzip": 20717,
+        "bytes": 156289,
+        "bytes_gzip": 21246,
         "area": "McAllen-Edinburg-Mission, TX",
         "pumas_list": [
           "4806801",
@@ -5558,11 +5565,11 @@
       },
       "TX-corpus-christi": {
         "file": "metro/TX-corpus-christi.json",
-        "cells": 8158,
+        "cells": 8212,
         "rows": 18457,
         "adults": 372632,
-        "bytes": 147881,
-        "bytes_gzip": 20979,
+        "bytes": 165278,
+        "bytes_gzip": 21780,
         "area": "Corpus Christi, TX",
         "pumas_list": [
           "4806500",
@@ -5576,11 +5583,11 @@
       },
       "TX-lubbock": {
         "file": "metro/TX-lubbock.json",
-        "cells": 6967,
+        "cells": 7011,
         "rows": 13438,
         "adults": 243809,
-        "bytes": 125349,
-        "bytes_gzip": 17574,
+        "bytes": 140162,
+        "bytes_gzip": 18348,
         "area": "Lubbock, TX",
         "pumas_list": [
           "4800501",
@@ -5592,11 +5599,11 @@
       },
       "UT-salt-lake-city": {
         "file": "metro/UT-salt-lake-city.json",
-        "cells": 13581,
+        "cells": 13725,
         "rows": 46110,
         "adults": 991623,
-        "bytes": 249819,
-        "bytes_gzip": 35388,
+        "bytes": 279840,
+        "bytes_gzip": 36550,
         "area": "Salt Lake City-Murray, UT",
         "pumas_list": [
           "4903000",
@@ -5616,11 +5623,11 @@
       },
       "UT-provo-orem": {
         "file": "metro/UT-provo-orem.json",
-        "cells": 8764,
+        "cells": 8823,
         "rows": 27900,
         "adults": 481979,
-        "bytes": 159838,
-        "bytes_gzip": 22958,
+        "bytes": 178539,
+        "bytes_gzip": 23539,
         "area": "Provo-Orem-Lehi, UT",
         "pumas_list": [
           "4949001",
@@ -5634,11 +5641,11 @@
       },
       "UT-ogden": {
         "file": "metro/UT-ogden.json",
-        "cells": 8125,
+        "cells": 8160,
         "rows": 21186,
         "adults": 457177,
-        "bytes": 148482,
-        "bytes_gzip": 21650,
+        "bytes": 165435,
+        "bytes_gzip": 22305,
         "area": "Ogden, UT",
         "pumas_list": [
           "4911002",
@@ -5653,11 +5660,11 @@
       },
       "UT-st-george": {
         "file": "metro/UT-st-george.json",
-        "cells": 3338,
+        "cells": 3343,
         "rows": 5956,
         "adults": 148554,
-        "bytes": 60759,
-        "bytes_gzip": 9431,
+        "bytes": 67548,
+        "bytes_gzip": 9591,
         "area": "St. George, UT",
         "pumas_list": [
           "4953000"
@@ -5668,11 +5675,11 @@
       },
       "VT-burlington": {
         "file": "metro/VT-burlington.json",
-        "cells": 2929,
+        "cells": 2939,
         "rows": 4972,
         "adults": 139594,
-        "bytes": 53434,
-        "bytes_gzip": 8486,
+        "bytes": 59508,
+        "bytes_gzip": 8682,
         "area": "Burlington-South Burlington, VT",
         "pumas_list": [
           "5000300"
@@ -5683,11 +5690,11 @@
       },
       "VT-montpelier": {
         "file": "metro/VT-montpelier.json",
-        "cells": 3549,
+        "cells": 3557,
         "rows": 6882,
         "adults": 104308,
-        "bytes": 63859,
-        "bytes_gzip": 9564,
+        "bytes": 71133,
+        "bytes_gzip": 9754,
         "area": "Barre, VT",
         "pumas_list": [
           "5000200"
@@ -5698,11 +5705,11 @@
       },
       "VA-northern-virginia-dc-area": {
         "file": "metro/VA-northern-virginia-dc-area.json",
-        "cells": 28633,
+        "cells": 29577,
         "rows": 118820,
         "adults": 2405379,
-        "bytes": 531653,
-        "bytes_gzip": 69962,
+        "bytes": 607715,
+        "bytes_gzip": 73464,
         "area": "Washington-Arlington-Alexandria, DC-VA-MD-WV (part in VA)",
         "pumas_list": [
           "5101301",
@@ -5734,11 +5741,11 @@
       },
       "VA-virginia-beach-norfolk": {
         "file": "metro/VA-virginia-beach-norfolk.json",
-        "cells": 17751,
+        "cells": 18208,
         "rows": 63529,
         "adults": 1331828,
-        "bytes": 326599,
-        "bytes_gzip": 45199,
+        "bytes": 371113,
+        "bytes_gzip": 47696,
         "area": "Virginia Beach-Chesapeake-Norfolk, VA-NC",
         "pumas_list": [
           "5109500",
@@ -5760,11 +5767,11 @@
       },
       "VA-richmond": {
         "file": "metro/VA-richmond.json",
-        "cells": 15216,
+        "cells": 15465,
         "rows": 48840,
         "adults": 1057561,
-        "bytes": 279524,
-        "bytes_gzip": 38954,
+        "bytes": 314853,
+        "bytes_gzip": 40917,
         "area": "Richmond, VA",
         "pumas_list": [
           "5104101",
@@ -5784,11 +5791,11 @@
       },
       "VA-roanoke": {
         "file": "metro/VA-roanoke.json",
-        "cells": 5887,
+        "cells": 5901,
         "rows": 13308,
         "adults": 267609,
-        "bytes": 106940,
-        "bytes_gzip": 15702,
+        "bytes": 119006,
+        "bytes_gzip": 16445,
         "area": "Roanoke, VA",
         "pumas_list": [
           "5116101",
@@ -5800,11 +5807,11 @@
       },
       "VA-charlottesville": {
         "file": "metro/VA-charlottesville.json",
-        "cells": 5467,
+        "cells": 5486,
         "rows": 10916,
         "adults": 213523,
-        "bytes": 99442,
-        "bytes_gzip": 14527,
+        "bytes": 110765,
+        "bytes_gzip": 15193,
         "area": "Charlottesville, VA",
         "pumas_list": [
           "5110901",
@@ -5816,11 +5823,11 @@
       },
       "WA-seattle": {
         "file": "metro/WA-seattle.json",
-        "cells": 29992,
+        "cells": 31132,
         "rows": 153043,
         "adults": 3215852,
-        "bytes": 558441,
-        "bytes_gzip": 74601,
+        "bytes": 641064,
+        "bytes_gzip": 78848,
         "area": "Seattle-Tacoma-Bellevue, WA",
         "pumas_list": [
           "5323301",
@@ -5862,11 +5869,11 @@
       },
       "WA-tacoma": {
         "file": "metro/WA-tacoma.json",
-        "cells": 29992,
+        "cells": 31132,
         "rows": 153043,
         "adults": 3215852,
-        "bytes": 558439,
-        "bytes_gzip": 74606,
+        "bytes": 641062,
+        "bytes_gzip": 78853,
         "area": "Seattle-Tacoma-Bellevue, WA",
         "pumas_list": [
           "5323301",
@@ -5908,11 +5915,11 @@
       },
       "WA-spokane": {
         "file": "metro/WA-spokane.json",
-        "cells": 8136,
+        "cells": 8189,
         "rows": 21925,
         "adults": 431211,
-        "bytes": 148335,
-        "bytes_gzip": 21642,
+        "bytes": 165664,
+        "bytes_gzip": 22379,
         "area": "Spokane-Spokane Valley, WA",
         "pumas_list": [
           "5326301",
@@ -5926,11 +5933,11 @@
       },
       "WA-vancouver-portland-area": {
         "file": "metro/WA-vancouver-portland-area.json",
-        "cells": 21050,
+        "cells": 21557,
         "rows": 93951,
         "adults": 1954480,
-        "bytes": 389695,
-        "bytes_gzip": 53754,
+        "bytes": 441819,
+        "bytes_gzip": 56215,
         "area": "Portland-Vancouver-Hillsboro, OR-WA",
         "pumas_list": [
           "4100501",
@@ -5960,11 +5967,11 @@
       },
       "WA-bellingham": {
         "file": "metro/WA-bellingham.json",
-        "cells": 5050,
+        "cells": 5072,
         "rows": 9229,
         "adults": 187657,
-        "bytes": 91296,
-        "bytes_gzip": 13527,
+        "bytes": 101844,
+        "bytes_gzip": 13906,
         "area": "Bellingham, WA",
         "pumas_list": [
           "5327301",
@@ -5976,11 +5983,11 @@
       },
       "WA-olympia": {
         "file": "metro/WA-olympia.json",
-        "cells": 5864,
+        "cells": 5888,
         "rows": 10759,
         "adults": 236609,
-        "bytes": 106497,
-        "bytes_gzip": 15678,
+        "bytes": 118714,
+        "bytes_gzip": 16255,
         "area": "Olympia-Lacey-Tumwater, WA",
         "pumas_list": [
           "5326701",
@@ -5992,11 +5999,11 @@
       },
       "WV-charleston": {
         "file": "metro/WV-charleston.json",
-        "cells": 3613,
+        "cells": 3620,
         "rows": 6672,
         "adults": 141789,
-        "bytes": 65487,
-        "bytes_gzip": 10000,
+        "bytes": 72868,
+        "bytes_gzip": 10429,
         "area": "Charleston, WV",
         "pumas_list": [
           "5400900"
@@ -6007,11 +6014,11 @@
       },
       "WV-huntington": {
         "file": "metro/WV-huntington.json",
-        "cells": 4724,
+        "cells": 4744,
         "rows": 12095,
         "adults": 243180,
-        "bytes": 85905,
-        "bytes_gzip": 13047,
+        "bytes": 95760,
+        "bytes_gzip": 13484,
         "area": "Huntington-Ashland, WV-KY-OH",
         "pumas_list": [
           "2102800",
@@ -6023,11 +6030,11 @@
       },
       "WV-morgantown": {
         "file": "metro/WV-morgantown.json",
-        "cells": 4132,
+        "cells": 4149,
         "rows": 8638,
         "adults": 163052,
-        "bytes": 74743,
-        "bytes_gzip": 11219,
+        "bytes": 83357,
+        "bytes_gzip": 11598,
         "area": "Morgantown, WV",
         "pumas_list": [
           "5400300"
@@ -6038,11 +6045,11 @@
       },
       "WI-milwaukee": {
         "file": "metro/WI-milwaukee.json",
-        "cells": 12390,
+        "cells": 12543,
         "rows": 40158,
         "adults": 1215853,
-        "bytes": 229148,
-        "bytes_gzip": 33503,
+        "bytes": 256979,
+        "bytes_gzip": 34949,
         "area": "Milwaukee-Waukesha, WI",
         "pumas_list": [
           "5502501",
@@ -6064,11 +6071,11 @@
       },
       "WI-madison": {
         "file": "metro/WI-madison.json",
-        "cells": 6409,
+        "cells": 6431,
         "rows": 15960,
         "adults": 459823,
-        "bytes": 117582,
-        "bytes_gzip": 17822,
+        "bytes": 130849,
+        "bytes_gzip": 18401,
         "area": "Madison, WI",
         "pumas_list": [
           "5502101",
@@ -6083,11 +6090,11 @@
       },
       "WI-green-bay": {
         "file": "metro/WI-green-bay.json",
-        "cells": 3775,
+        "cells": 3778,
         "rows": 7130,
         "adults": 208960,
-        "bytes": 68802,
-        "bytes_gzip": 10829,
+        "bytes": 76429,
+        "bytes_gzip": 11096,
         "area": "Green Bay, WI",
         "pumas_list": [
           "5500501",
@@ -6099,11 +6106,11 @@
       },
       "WI-appleton": {
         "file": "metro/WI-appleton.json",
-        "cells": 3436,
+        "cells": 3440,
         "rows": 6309,
         "adults": 148720,
-        "bytes": 62373,
-        "bytes_gzip": 9704,
+        "bytes": 69341,
+        "bytes_gzip": 9898,
         "area": "Appleton, WI",
         "pumas_list": [
           "5500400"
@@ -6114,11 +6121,11 @@
       },
       "WY-cheyenne": {
         "file": "metro/WY-cheyenne.json",
-        "cells": 2513,
+        "cells": 2519,
         "rows": 3456,
         "adults": 78735,
-        "bytes": 45519,
-        "bytes_gzip": 7219,
+        "bytes": 50680,
+        "bytes_gzip": 7395,
         "area": "Cheyenne, WY",
         "pumas_list": [
           "5600300"
@@ -6129,11 +6136,11 @@
       },
       "WY-casper": {
         "file": "metro/WY-casper.json",
-        "cells": 3298,
+        "cells": 3301,
         "rows": 5507,
         "adults": 114407,
-        "bytes": 59664,
-        "bytes_gzip": 9134,
+        "bytes": 66338,
+        "bytes_gzip": 9252,
         "area": "Casper, WY",
         "pumas_list": [
           "5600400"
@@ -6144,11 +6151,11 @@
       },
       "WY-laramie": {
         "file": "metro/WY-laramie.json",
-        "cells": 3298,
+        "cells": 3301,
         "rows": 5507,
         "adults": 114407,
-        "bytes": 59807,
-        "bytes_gzip": 9244,
+        "bytes": 66481,
+        "bytes_gzip": 9364,
         "area": "Laramie, WY",
         "pumas_list": [
           "5600400"
