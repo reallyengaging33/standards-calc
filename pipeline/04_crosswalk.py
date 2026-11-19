@@ -63,13 +63,13 @@ MANUAL = {
     ("KY", "Louisville"): {"cbsa": "31140"},
     ("KY", "Lexington"): {"cbsa": "30460"},
     ("MD", "DC suburbs (Silver Spring / Bethesda)"): {"cbsa": "47900", "in_state": True},
-    ("MD", "Annapolis"): {"counties": ["24003"]},                       # Anne Arundel County
+    ("MD", "Annapolis"): {"counties": ["24003"], "label": "Anne Arundel County, MD"},                       # Anne Arundel County
     ("MA", "Cape Cod"): {"cbsa": "12700"},
     ("NH", "Portsmouth"): {"division": "40484"},                       # Rockingham + Strafford (Seacoast)
-    ("NY", "New York City"): {"counties": ["36005", "36047", "36061", "36081", "36085"]},
-    ("NY", "Long Island"): {"counties": ["36059", "36103"]},
-    ("OK", "Norman"): {"counties": ["40027"]},                          # Cleveland County
-    ("RI", "Newport"): {"counties": ["44005"]},                         # Newport County
+    ("NY", "New York City"): {"counties": ["36005", "36047", "36061", "36081", "36085"], "label": "New York City (five boroughs)"},
+    ("NY", "Long Island"): {"counties": ["36059", "36103"], "label": "Long Island (Nassau and Suffolk counties)"},
+    ("OK", "Norman"): {"counties": ["40027"], "label": "Cleveland County, OK"},                          # Cleveland County
+    ("RI", "Newport"): {"counties": ["44005"], "label": "Newport County, RI"},                         # Newport County
     ("TN", "Nashville"): {"cbsa": "34980"},
     ("VT", "Montpelier"): {"cbsa": "12740"},                            # Barre micro area
     ("VA", "Northern Virginia (DC area)"): {"cbsa": "47900", "in_state": True},
@@ -155,7 +155,7 @@ def main():
             elif "pumas" in spec:
                 counties = set(cty[cty.puma.isin(spec["pumas"])].county); label = spec["label"]
             else:
-                counties = set(spec["counties"]); label = "counties " + ", ".join(sorted(counties))
+                counties = set(spec["counties"]); label = spec["label"]
             if spec.get("in_state"):
                 counties = {c for c in counties if c.startswith(sf)}
                 label += f" (part in {st['code']})"
