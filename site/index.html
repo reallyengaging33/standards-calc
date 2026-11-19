@@ -1970,7 +1970,7 @@
 
   function compute(s) {
     if (s.ageMin > AGE_TOP) {   // the data can't tell 91 from 99
-      return { p: NaN, N: NaN, people: NaN, factors: [], std: standardsRarity(s), Nadj: NaN, pAdj: NaN, peopleAdj: NaN, censusPts: NaN, total: NaN, score: NaN, n: 0, lowConfidence: false,
+      return { area: searchArea(s), p: NaN, N: NaN, people: NaN, factors: [], std: standardsRarity(s), Nadj: NaN, pAdj: NaN, peopleAdj: NaN, censusPts: NaN, total: NaN, score: NaN, n: 0, lowConfidence: false,
                unavailable: "Not available for ages above " + AGE_TOP + ": the census groups everyone " + AGE_TOP + " and over together. Set the youngest age to " + AGE_TOP + " or below." };
     }
     var ds = datasetFor(s);
@@ -2118,7 +2118,7 @@
     var adjTxt = fmtOdds(res.Nadj);
     $("r-odds-adj").textContent = adjTxt;
     $("r-odds-adj").className = "op-num" + (adjTxt.length > 11 ? " xlong" : adjTxt.length > 9 ? " long" : "");
-    $("r-pct-adj").textContent = fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
+    $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
     $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
     var area = searchArea(s);
     $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters; your standards come from Steps 2 and 3.";
