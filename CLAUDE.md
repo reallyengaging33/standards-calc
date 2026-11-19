@@ -78,10 +78,12 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 | `preferredIncome` | ≥ `minIncome` | Lifestyle rarity multiplier (uses real income shares) |
 | `excludeObese` | bool (BMI ≥ 30) | **odds** (via NHANES) |
 | `region` | always `us` for now | dataset choice |
-| `distance` | `metro` / `state` / `country` | context line only, never the odds |
-| `usState` | 2-letter code (`GA`) or `null` | local context |
-| `city`, `cityName` | city id and display name from `US_STATES` in index.html (e.g. `atlanta` / `Atlanta`), or `city = "other"` | local context |
-| `customCity` | typed name when `city === "other"` | display only (no data lookup) |
+| `distance` | `metro` / `state` / `country` | **odds**: sets the search area (see `searchArea()` in index.html) |
+| `usState` | 2-letter code (`GA`) or `null` | **odds**: the state for `state`/`metro` searches |
+| `city`, `cityName` | city id and display name from `US_STATES` in index.html (e.g. `atlanta` / `Atlanta`) | **odds**: the metro for `metro` searches |
+
+Search area: `metro` + state + city → that metro area; `metro` or `state` with only a state →
+that state; otherwise the whole US. There is no free-text city: PUMS can't identify towns.
 | `resultTone` | `stats` / `playful` / `brutal` | copy only |
 | `looksImportance` | 0–10 | power on the Physical rarity multiplier (0.5 to 1.5) |
 | `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
@@ -118,7 +120,7 @@ Variables (confirm in the 2024 dictionary):
 | Ancestry | `ANC1P`, `ANC2P` | use to identify Middle Eastern / North African (see below) |
 | Income | `PINCP` × (`ADJINC` / 1,000,000) | total personal income, inflation-adjusted. **Apply ADJINC.** |
 | Own children | see "Children" below | 0, 1, 2, 3, 4+ |
-| State | `STATE` | context table only (2024 file uses `STATE`, not `ST`) |
+| State | `STATE` | state cubes (2024 files use `STATE`, not `ST`) |
 
 **Ethnicity groups must be mutually exclusive.** Assign each person exactly one:
 1. `hispanic` if `HISP` ≠ 01 (any race)
@@ -189,13 +191,28 @@ values:     sum of PWGTP (population), count of rows (sample size)
 - Keep only non-empty cells. Write `site/data/acs_2024_cube.json` (or a compact binary or
   columnar format). **Target under 2 MB gzipped.** Report the actual size.
 - Write `site/data/nhanes_2021_23.json` with the height CDFs and obesity shares.
-- Write `site/data/state_adults.json`: weighted adults by state × sex × single × age, for the
-  local context line.
-- Write `site/data/metro_adults.json`: the same for each city in `US_STATES` (index.html).
-  ACS PUMS only identifies PUMAs, not cities, so map each city to its metro area (CBSA) with
-  a PUMA-to-CBSA crosswalk (Census relationship files or MABLE Geocorr), weighting by
-  population overlap. List the CBSA each city id maps to in `meta.json`. Names like
-  "Northern Virginia (DC area)" map to the part of that metro inside the chosen state.
+- **Local cubes (location filters the odds).** Build the same cube for every state and for
+  every city in `US_STATES` (index.html), as separate files loaded on demand:
+  `site/data/state/GA.json`, `site/data/metro/atlanta.json`, etc.
+  - PUMS identifies only states and PUMAs (areas of 100k+ people), not cities. Map each
+    city id to its metro area (CBSA) with a PUMA-to-CBSA crosswalk (Census relationship
+    files or MABLE Geocorr), assigning PUMAs by majority population overlap. Record the
+    CBSA and PUMAs used for each city id in `meta.json`. Names like
+    "Northern Virginia (DC area)" mean the part of that metro inside the chosen state.
+  - Use the **ACS 5-year PUMS (2020–2024)** for state and metro cubes (bigger sample, so
+    small metros like Pierre or Juneau still work). Keep the national cube on the 1-year file.
+  - Keep every file small (target under 500 KB each, gzipped). The browser only loads the
+  one it needs.
+  - **As built** (`04_crosswalk.py`, `05_local_cubes.py`): metro files are
+    `site/data/metro/<ST>-<city id>.json`, because city ids repeat across states (Portland,
+    Columbus, Springfield…). Areas are whole counties (OMB July 2023 CBSAs, metropolitan
+    divisions such as LA County / Orange County, or explicit counties such as NYC's five
+    boroughs); a PUMA is in the area when most of its 2020 population is (2020 tract
+    populations + the tract→PUMA file). Cities smaller than any PUMA (Juneau, Pierre, Helena,
+    Carson City, Montpelier, Laramie) use the surrounding PUMA and are flagged `approximate`;
+    the site says so. Connecticut uses the 2020 delineation (its 2020 PUMAs use the old
+    counties), with Waterbury = its three Naugatuck Valley PUMAs. The 2020–2024 dictionary has
+    no ancestry code 408 (Tunisian); every other MENA code matches the 1-year file.
 - Write `site/data/meta.json`: sources, years, build date, ancestry codes used, total
   weighted adults (for sanity checks).
 
@@ -230,11 +247,11 @@ with code that:
    - Real-world odds: N_adj = N × Physical × Character × Lifestyle (also shown as a %)
    - Delusion score = 2.1 × log10(N_adj), capped at 10. This splits exactly into census
      points + each pillar's points, which the equation panel shows.
-9. **Local context line** (`#r-local` on the results page): when `distance` is `metro` (with a
-   known city) or `state`, show "In <place>, that's about X people", with X = the local pool
-   × the same match rate (or, better, run the cube logic on the local table). For
-   `city === "other"`, say local data isn't available for custom cities. This never
-   changes N, the odds score or the delusion score.
+9. **Location filters the census odds.** Use `searchArea(state)` to pick the cube: the metro
+   file, the state file, or the national cube. Load it on demand (show a loading state), and
+   run the same calculation on it. Update `#r-local`: remove the "Demo: showing national
+   figures" text, and when the local sample is thin, show the low-confidence note instead.
+   Add a "What if" idea for metro searches: "Search your whole state" (rerun on the state cube).
 10. Remove the "Demo numbers" banner and add a small "Sources" line linking a
    methodology section.
 
