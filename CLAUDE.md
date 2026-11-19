@@ -68,7 +68,7 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 |---|---|---|
 | `gender` | `male` / `female` | the user, not the filter |
 | `seeking` | `men` / `women` / `either` | **odds** (sex) |
-| `ethnicities` | `"any"` or array of `white`, `black`, `asian`, `middle_eastern`, `mixed`, `hispanic` | **odds** (OR logic) |
+| `ethnicities` | `"any"` or `["black"]` (the only option in the UI) | **odds** |
 | `ageMin`, `ageMax` | 18–99 | **odds** |
 | `excludeMarried` | bool | **odds** |
 | `kidsMin`, `kidsMax` | 0–4 (4 means "4 or more") | **odds** |
@@ -89,6 +89,7 @@ that state; otherwise the whole US. There is no free-text city: PUMS can't ident
 | `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
 | `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
 | `dealbreakers.*` | bool | pass-rate multipliers (Character) |
+| `debt` | `any` / `after_marriage` / `has_plan` / `debt_free` | pass-rate multiplier (Lifestyle): 100% / 90% / 75% / 25% |
 | `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Physical multiplier: rarity-weighted share of builds accepted (rarity values in `BODY_SETS`) |
 | `sizePreference` | `any` / `average_plus` / `above_average` | Physical multiplier (69% / 50% pass) |
 
@@ -131,8 +132,13 @@ Variables (confirm in the 2024 dictionary):
 3. else `white`, `black`, `asian`, `mixed` from `RAC1P`
 4. else `other`
 
-> **Decided:** the page has a Hispanic/Latino chip (`hispanic`). About 18% of US adults
-> (ACS 2024), who would otherwise only be counted under "Doesn't matter".
+> **Ethnicity filter in the UI is only "Doesn't matter" or "Black"** (Nick's decision; do not
+> add other chips). For the Black filter, count people who are **Black alone or in combination,
+> of any Hispanic origin** (use `RACBLK` = 1 if present in the dictionary, otherwise `RAC1P` = 2
+> or a multiracial code that includes Black). Store this as its own boolean in the cube
+> (`black`), separate from the mutually exclusive group used for NHANES lookups.
+> **As built:** `RACBLK` exists in both the 2024 and 2020–2024 dictionaries (1 = Black alone
+> or in combination); every cube has a `black` column from it (36.1M adults, 13.5%, in 2024).
 
 **Children:** ACS only knows about children who **live in the same household**. A parent
 whose kids live elsewhere counts as 0. Derive "own children in household" per adult by
@@ -164,8 +170,8 @@ Veale et al., BJU International 2015, erect length mean 13.12 cm, SD 1.66 cm (n 
 **Leave as strictness-only unless Nick says otherwise.**
 
 ### Not from any dataset (rarity multipliers on top of the census odds)
-Body types, all of Step 2 (behaviour, Emotional Intelligence, dealbreakers), skills, looks
-importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
+Body types, all of Step 2 (behaviour, Emotional Intelligence, dealbreakers), skills, debt,
+looks importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
 odds** (real-world odds), never the census odds themselves. Body-type rarity multipliers in `BODY_SETS` are Nick's
 assumptions. Do not invent proxies or replace them with "data".
 Body types could later get a fun stat from the site's own anonymous usage
@@ -180,7 +186,7 @@ Aggregate ACS adults into a **weighted cube** (state dropped, because location n
 the odds):
 
 ```
-dimensions: sex(2) × age(18..90, 90 = 90+) × single(2) × ethnicity group(7) × income bucket(19) × kids(0..4)
+dimensions: sex(2) × age(18..90, 90 = 90+) × single(2) × ethnicity group(7) × black(2) × income bucket(19) × kids(0..4)
 values:     sum of PWGTP (population), count of rows (sample size)
 ```
 - Income bucket = the highest `INCOME_STEPS` value that the person's adjusted income is ≥.
@@ -277,7 +283,7 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
 3. **NHANES pipeline:** download, build the height and obesity lookups.
 4. **Wire up:** replace the demo model in `index.html`, add loading, error and low-confidence states.
 5. **Validate:** run `03_validate.py`, fix anything off, then click through the site.
-6. **Later:** methodology page, other countries,
+6. **Later:** methodology page,
    hosting (Cloudflare Pages / Vercel / Netlify), share-image download.
 
 ## Data credits to show on the site

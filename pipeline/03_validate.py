@@ -34,7 +34,7 @@ RAW = ROOT / "data" / "raw"
 SITE = ROOT / "site"
 OFFICIAL = RAW / "official"
 
-TABLES = {"S0101": "ACSST1Y2024.S0101", "B12002": "ACSDT1Y2024.B12002",
+TABLES = {"B02009": "ACSDT1Y2024.B02009", "S0101": "ACSST1Y2024.S0101", "B12002": "ACSDT1Y2024.B12002",
           "B01001": "ACSDT1Y2024.B01001", "B19326": "ACSDT1Y2024.B19326"}
 
 
@@ -65,7 +65,7 @@ def check(name, ours, target, ok, note=""):
 
 
 def acs_checks():
-    cols = ["AGEP", "SEX", "MAR", "PWGTP", "PINCP", "ADJINC"]
+    cols = ["AGEP", "SEX", "MAR", "PWGTP", "PINCP", "ADJINC", "RACBLK"]
     parts = []
     with zipfile.ZipFile(RAW / "acs2024" / "csv_pus.zip") as z:
         for m in sorted(n for n in z.namelist() if n.startswith("psam_pus") and n.endswith(".csv")):
@@ -84,6 +84,11 @@ def acs_checks():
         off = int(s0101[col])
         check(f"Adults 18+, {label}", f"{ours:,}", f"{off:,} (S0101)", abs(ours / off - 1) < 0.005,
               f"{100 * (ours / off - 1):+.2f}%")
+
+    ours = int(p.PWGTP[p.RACBLK == 1].sum())
+    off = int(official("B02009")["B02009_001E"])
+    check("Black alone or in combination, all ages (RACBLK)", f"{ours:,}", f"{off:,} (B02009)",
+          abs(ours / off - 1) < 0.005, f"{100 * (ours / off - 1):+.2f}%")
 
     b12, b01 = official("B12002"), official("B01001")
     spec = {1: ("men", ["B12002_007E", "B12002_008E"], ["B01001_011E", "B01001_012E"]),
@@ -130,9 +135,10 @@ def site_checks(raw_total):
     steps = [int(x) for x in m.group(1).split(",")]
     check("Cube income steps = INCOME_STEPS in index.html", len(cube["dims"]["inc"]), len(steps),
           cube["dims"]["inc"] == steps)
-    chips = set(re.findall(r'class="chip" data-value="([a-z_]+)"', html))
-    eth = set(cube["dims"]["eth"]) - {"other"}
-    check("Every ethnicity chip has a cube group", ", ".join(sorted(chips)), ", ".join(sorted(eth)), chips == eth)
+    grp = re.search(r'id="eth-group">(.*?)</div>', html, re.S).group(1)
+    opts = re.findall(r'data-value="([a-z_]+)"', grp)
+    check("Ethnicity options = Doesn't matter / Black; cube has `black`", ", ".join(opts), "any, black",
+          opts == ["any", "black"] and "black" in cube["columns"])
 
     nh = json.loads((SITE / "data" / "nhanes_2021_23.json").read_text())
     bad = []
