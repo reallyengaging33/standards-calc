@@ -1,4 +1,4 @@
--- The Delulu Equation: anonymous results table
+-- Your Delulu Number: anonymous results table
 -- Paste this whole file into Supabase > SQL Editor > New query, then click Run.
 
 create table if not exists public.results (

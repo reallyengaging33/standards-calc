@@ -1,4 +1,4 @@
-# The Delulu Equation — project guide for Claude Code
+# Your Delulu Number — project guide for Claude Code
 
 A dating-standards calculator for Black men and women, mostly 25–35. People set filters (age, income, height…) and see how many
 real people match: "1 in N", a delusion score out of 10, a filter breakdown and a share card.
@@ -294,7 +294,7 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
    hosting (Cloudflare Pages / Vercel / Netlify), share-image download.
 
 ## Data credits to show on the site
-(Brand name on the site: **The Delulu Equation**.)
+(Brand name on the site: **Your Delulu Number**. Live at https://yourdelulunumber.app, set in `SITE_URL` in index.html.)
 - U.S. Census Bureau, American Community Survey 2024 1-year PUMS
 - CDC / NCHS, National Health and Nutrition Examination Survey, Aug 2021–Aug 2023
 - Veale et al. (2015), BJU International (only if the size factor is used)

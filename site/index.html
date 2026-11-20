@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Delulu Equation</title>
+<title>Your Delulu Number</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -670,13 +670,19 @@
   .share-card.story { aspect-ratio: 9 / 16; width: 230px; padding: 30px 18px; }
   .share-card.light .sc-odds { color: var(--pink-deep); }
   .share-card.light { background: radial-gradient(120% 90% at 20% 0%, #f5dcea 0%, #fbf1ec 60%, #fdf8f4 100%); color: #2a1520; border-color: #ead3dc; }
-  .sc-tier { font-family: var(--font-display); font-weight: 750; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase; }
-  .sc-odds { font-family: var(--font-display); font-weight: 750; font-size: 56px; line-height: 1; letter-spacing: -0.04em; margin: 12px 0 4px; color: var(--pink); }
-  .sc-sub { font-size: 13px; font-weight: 600; opacity: .85; }
-  .sc-list { margin: 18px 0 0; padding: 0; list-style: none; font-size: 12px; display: grid; gap: 3px; opacity: .9; }
-  .sc-list b { font-weight: 700; }
-  .sc-score { margin-top: 14px; font-size: 12px; font-weight: 700; }
-  .sc-brand { margin-top: 14px; font-size: 12px; font-weight: 700; opacity: .7; }
+  .sc-kicker { font-family: var(--font-display); font-weight: 750; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .sc-odds { font-family: var(--font-display); font-weight: 750; font-size: 60px; line-height: 1; letter-spacing: -0.04em; margin: 10px 0 8px; color: var(--pink); }
+  .sc-line { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+  .sc-hook { margin-top: 6px; font-size: 13px; font-weight: 500; opacity: .85; max-width: 24ch; }
+  .sc-rule { width: 40px; height: 2px; border-radius: 2px; background: currentColor; opacity: .3; margin: 18px 0 14px; }
+  .sc-cta { font-size: 14px; font-weight: 750; }
+  .sc-sub { margin-top: 3px; font-size: 12px; font-weight: 500; opacity: .85; }
+  .sc-sub b { font-weight: 700; }
+  .share-card.story .sc-odds { font-size: 50px; }
+  .share-card.story .sc-line { font-size: 14px; }
+  .share-card.story .sc-cta { font-size: 13px; }
+  .share-card.story .sc-sub { font-size: 11px; }
+  .share-card.story .sc-rule { margin: 26px 0 20px; }
   .share-side h3 { margin: 0 0 4px; font-size: 15px; font-weight: 650; }
   .share-side p { margin: 0 0 14px; font-size: 13px; color: var(--text-2); }
   .share-opts { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
@@ -776,7 +782,7 @@
 <header class="topbar">
   <div class="brand">
     <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
-    The Delulu Equation
+    Your Delulu Number
   </div>
   <div class="privacy"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Anonymous · nothing saved unless you opt in</span></div>
 </header>
@@ -1125,7 +1131,7 @@
           </div>
           <div class="op-mult" id="r-mult"></div>
           <div class="op op-real">
-            <span class="op-label"><i class="key pink"></i>With your standards</span>
+            <span class="op-label"><i class="key pink"></i>Your Delulu Number</span>
             <span class="op-num" id="r-odds-adj"></span>
             <span class="op-pct" id="r-pct-adj"></span>
           </div>
@@ -1185,12 +1191,13 @@
       <p class="panel-sub">Preview of the card your friends will see.</p>
       <div class="share-wrap">
         <div class="share-card" id="share-card">
-          <div class="sc-tier" id="sc-tier"></div>
+          <div class="sc-kicker">Your Delulu Number</div>
           <div class="sc-odds" id="sc-odds"></div>
-          <div class="sc-sub">fit my list</div>
-          <ul class="sc-list" id="sc-list"></ul>
-          <div class="sc-score" id="sc-score"></div>
-          <div class="sc-brand">The Delulu Equation</div>
+          <div class="sc-line">That's how rare my type is.</div>
+          <div class="sc-hook">Think your standards are reasonable? Let's see.</div>
+          <div class="sc-rule" aria-hidden="true"></div>
+          <div class="sc-cta">What's your Delulu Number?</div>
+          <div class="sc-sub">Find yours at <b id="sc-url"></b></div>
         </div>
         <div class="share-side">
           <div class="share-opts">
@@ -1810,6 +1817,8 @@
   var SUPABASE_URL = "https://dxmpzgilhwhobfqpizsw.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Vvip55_DirJ4eF0S-KlUOw_zvSMFZRF";   // publishable (public) key; never the secret key
   var APP_VERSION = "2026-11-19";
+  // Public address of the site, used on the share card and in shared text.
+  var SITE_URL = "https://yourdelulunumber.app/";
   var optIn = false, lastSaveRes = null, lastSavedKey = null, sbClient = null;
 
   function getClient() {
@@ -1885,7 +1894,7 @@
     backBtn.hidden = step === 1;
     skipBtn.hidden = !(step >= 2 && step <= 4);
     nextBtn.hidden = step === 5;
-    $("next-label").textContent = step === 4 ? "Run the equation" : "Continue";
+    $("next-label").textContent = step === 4 ? "Get my number" : "Continue";
     var view = $("view-" + step);
     view.classList.remove("panel-enter"); void view.offsetWidth; view.classList.add("panel-enter");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2451,25 +2460,20 @@
   }
 
   function shareText(res, tier) {
-    return tier + ": only " + fmtOdds(res.Nadj) + " " + NOUN[state.seeking] + " (" + fmtPct(res.pAdj) + ") fit my list. The census alone says " + fmtOdds(res.N) + ". Delulu score " + res.score + "/10. Run your own Delulu Equation.";
+    return "My Delulu Number is " + fmtOdds(res.Nadj) + ". That's how rare my type is.\n\nThink your standards are reasonable? Let's see. What's your Delulu Number? Find yours at " + siteHost();
   }
+  function siteHost() { return SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
   function renderShare(res, tier) {
-    $("sc-tier").textContent = tier;
     $("sc-odds").textContent = fmtOdds(res.Nadj);
     $("sc-odds").className = "sc-odds" + (fmtOdds(res.Nadj).length > 8 ? " long" : "");
-    var top = res.factors.slice().sort(function (a, b) { return a.v - b.v; }).filter(function (f) { return f.v < 0.995; }).slice(0, 2);
-    top.unshift({ label: "Census odds", note: fmtOdds(res.N) });
-    if (res.std.R > 1.005) top.push({ label: "My standards", note: "\u00d7" + fmtMult(res.std.R) + " rarer" });
-    var ul = $("sc-list"); ul.innerHTML = "";
-    top.forEach(function (f) { var li = document.createElement("li"); var b = document.createElement("b"); b.textContent = f.label + ": "; li.appendChild(b); li.appendChild(document.createTextNode(f.note)); ul.appendChild(li); });
-    $("sc-score").textContent = "Delulu score " + res.score + "/10";
+    $("sc-url").textContent = siteHost();
     var card = $("share-card");
     card.classList.toggle("light", cardTheme === "light");
     card.classList.toggle("story", cardShape === "story");
     var txt = encodeURIComponent(shareText(res, tier));
     $("sh-x").href = "https://twitter.com/intent/tweet?text=" + txt;
     $("sh-wa").href = "https://wa.me/?text=" + txt;
-    $("sh-rd").href = "https://www.reddit.com/submit?title=" + txt;
+    $("sh-rd").href = "https://www.reddit.com/submit?url=" + encodeURIComponent(SITE_URL) + "&title=" + encodeURIComponent("My Delulu Number is " + fmtOdds(res.Nadj) + ". That's how rare my type is. What's yours?");
   }
   bindRadioGroup($("sc-theme"), cardTheme, function (v) { cardTheme = v; if (lastResult) renderShare(lastResult, $("r-tier").textContent); });
   bindRadioGroup($("sc-shape"), cardShape, function (v) { cardShape = v; if (lastResult) renderShare(lastResult, $("r-tier").textContent); });
