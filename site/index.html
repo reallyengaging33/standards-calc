@@ -1234,13 +1234,14 @@
       <ul>
         <li><strong>Single:</strong> never married, divorced or widowed. Separated people are still legally married, so they count as not single. Unmarried couples who live together count as single, because the census records marital status, not relationships.</li>
         <li><strong>Children:</strong> their own children under 18 living in the same home. Children who live elsewhere aren't recorded.</li>
+        <li><strong>Living situation:</strong> from who lives in the home. Alone means the only person in the household. With parents means an adult son or daughter of the head of the household. Roommates means a roommate or other non-relative of the head (or a head with no partner who lives with them), plus dorms and similar shared housing. People who live with a partner, their own kids or other relatives are never excluded by this filter.</li>
         <li><strong>Income:</strong> total personal income from all sources, in 2024 dollars.</li>
         <li><strong>Ethnicity:</strong> the filter is “Doesn't matter” or Black. Black means Black or African American alone or in combination with other races, of any Hispanic origin (the census RACBLK recode). Height and obesity use each person's NHANES race and Hispanic-origin group.</li>
         <li><strong>Obesity:</strong> BMI of 30 or more.</li>
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
-      <p><strong>Census odds</strong> use only the step 1 filters above. Everything in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, living situation, body types, size, looks, skills, car, debt, handy) isn't measured by any survey we use, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Census odds</strong> use the step 1 filters above plus living situation. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) isn't measured by any survey we use, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
     </section>
   </div>
 
@@ -2010,11 +2011,11 @@
     var starts = nh.age_band_starts, groups = ["white", "black", "asian", "hispanic", "other"];
     var raceOfEth = dims.eth.map(function (k) { return groups.indexOf(nh.eth_map[k]); });
     var bandOfAge = []; for (var a = 0; a <= 120; a++) { var b = 0; while (b + 1 < starts.length && a >= starts[b + 1]) b++; bandOfAge[a] = b; }
-    var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], black: [], inc: [], kids: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
+    var bySex = [0, 1].map(function () { return { age: [], single: [], eth: [], black: [], inc: [], kids: [], living: [], w: [], n: [], cell: [], total: 0, incW: [] }; });
     for (var i = 0; i < len; i++) {
       var t = bySex[d.sex[i]];
       t.age.push(d.age[i]); t.single.push(d.single[i]); t.eth.push(d.eth[i]); t.black.push(d.black[i]); t.inc.push(d.inc[i]);
-      t.kids.push(d.kids[i]); t.w.push(d.w[i]); t.n.push(d.n[i]);
+      t.kids.push(d.kids[i]); t.living.push(d.living[i]); t.w.push(d.w[i]); t.n.push(d.n[i]);
       t.cell.push(bandOfAge[d.age[i]] * groups.length + raceOfEth[d.eth[i]]);   // NHANES cell index
       t.total += d.w[i];
       t.incW[d.inc[i]] = (t.incW[d.inc[i]] || 0) + d.w[i];
@@ -2044,7 +2045,8 @@
     return out;
   }
 
-  var FILTER_KEYS = ["age", "ethnicity", "single", "height", "income", "kids", "obesity"];
+  var FILTER_KEYS = ["age", "ethnicity", "single", "height", "income", "kids", "obesity", "living"];
+  var LIVING_CODES = ["alone", "roommates", "parents"];   // cube codes 0-2; 3 = any other arrangement, never excluded
 
   /* One pass over the cube: weighted matches with all filters, and with each filter removed. */
   function computeFor(s, sex, D) {
@@ -2055,17 +2057,19 @@
     var incPref = Math.max(incMin, INCOME_STEPS.indexOf(s.preferredIncome));
     var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
     var both = bodyTable(s, sex, hOn, oOn), noH = bodyTable(s, sex, false, oOn), noO = bodyTable(s, sex, hOn, false);
-    var matched = 0, matchedPref = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0];
+    var livOk = LIVING_CODES.map(function (k) { return s.living.indexOf(k) > -1; }).concat([true]);
+    var matched = 0, matchedPref = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0, 0];
     for (var i = 0; i < t.w.length; i++) {
       var f0 = t.age[i] === AGE_TOP ? s.ageMax >= AGE_TOP : (t.age[i] >= s.ageMin && t.age[i] <= s.ageMax);
       var f1 = !wantBlack || t.black[i] === 1;
       var f2 = !s.excludeMarried || t.single[i] === 1;
       var f4 = t.inc[i] >= incMin;
       var f5 = t.kids[i] >= s.kidsMin && t.kids[i] <= s.kidsMax;
-      var miss = (f0 ? 0 : 1) + (f1 ? 0 : 1) + (f2 ? 0 : 1) + (f4 ? 0 : 1) + (f5 ? 0 : 1);
+      var f7 = livOk[t.living[i]];   // living situation (census, from household relationships)
+      var miss = (f0 ? 0 : 1) + (f1 ? 0 : 1) + (f2 ? 0 : 1) + (f4 ? 0 : 1) + (f5 ? 0 : 1) + (f7 ? 0 : 1);
       var w = t.w[i], c = t.cell[i];
       // each filter on its own (used only when removing one filter still leaves nobody)
-      if (f0) alone[0] += w; if (f1) alone[1] += w; if (f2) alone[2] += w; if (f4) alone[4] += w; if (f5) alone[5] += w;
+      if (f0) alone[0] += w; if (f1) alone[1] += w; if (f2) alone[2] += w; if (f4) alone[4] += w; if (f5) alone[5] += w; if (f7) alone[7] += w;
       alone[3] += w * noO[c]; alone[6] += w * noH[c];
       if (miss > 1) continue;
       var pb = both[c];
@@ -2075,9 +2079,9 @@
         if (pb > 0) n += t.n[i];
         without[3] += w * noH[c];   // height removed
         without[6] += w * noO[c];   // obesity removed
-        without[0] += w * pb; without[1] += w * pb; without[2] += w * pb; without[4] += w * pb; without[5] += w * pb;
+        without[0] += w * pb; without[1] += w * pb; without[2] += w * pb; without[4] += w * pb; without[5] += w * pb; without[7] += w * pb;
       } else {
-        var k = !f0 ? 0 : !f1 ? 1 : !f2 ? 2 : !f4 ? 4 : 5;  // the single ACS filter this cell fails
+        var k = !f0 ? 0 : !f1 ? 1 : !f2 ? 2 : !f4 ? 4 : !f5 ? 5 : 7;  // the single ACS filter this cell fails
         without[k] += w * pb;
       }
     }
@@ -2093,6 +2097,7 @@
       height: ["Height", hNote],
       income: ["Minimum income", s.minIncome ? incomeFloor(s.minIncome) : "None"],
       kids: ["Children", kidsText()],
+      living: ["Living situation", s.living.length === 3 ? "Any" : s.living.map(function (k) { return { alone: "Alone", roommates: "Roommates", parents: "With parents" }[k]; }).join(", ")],
       obesity: ["Exclude obesity", s.excludeObese ? "On" : "Off"]
     };
     return FILTER_KEYS.map(function (key, i) {
@@ -2129,7 +2134,7 @@
     character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, communication: 0.50 },
     lifestyle: { cooking: 0.60, active: 0.50, cleanliness: 0.60 },
     dealbreakers: { heavyPartying: 0.85, nightlife: 0.93, unreliable: 0.70, multipleCoParents: 0.85 },
-    living: { alone: 0.35, roommates: 0.35, parents: 0.30 },        // shares among single 25–35s (estimate; ACS can measure this)
+    // living: now measured from the census (see computeFor), so no estimate here
     car: { newer: 1 / 2, luxury: 1 / 4.5, foreign_luxury: 1 / 10 },  // share of people with each ride: 2×, 4.5×, 10× rarer
     size: { average_plus: 0.69, above_average: 0.50 },  // from Veale et al. 2015 distribution
     debt: { after_marriage: 0.90, has_plan: 0.75, debt_free: 0.25 },  // share of people who'd pass
@@ -2165,11 +2170,7 @@
       if (k === "multipleCoParents" && s.kidsMax <= 1) return;   // already covered by the kids filter
       chr.push(item(DB_LABEL[k], RARITY.dealbreakers[k]));
     });
-    if (s.living.length < 3) {
-      var liv = s.living.reduce(function (t, k) { return t + RARITY.living[k]; }, 0);
-      var LIV_LABEL = { alone: "alone", roommates: "roommates", parents: "parents" };
-      chr.push(item("Living: " + s.living.map(function (k) { return LIV_LABEL[k]; }).join(" or "), liv));
-    }
+    // Living situation is counted in the census odds (computeFor), not as an estimate here.
     // Lifestyle
     var life = triItems(s.skills, RARITY.lifestyle);
     var DEBT_LABEL = { after_marriage: "Debt: only matters if married", has_plan: "Debt: fine with a plan", debt_free: "Debt-free with great credit" };
@@ -2353,7 +2354,7 @@
     $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
     $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
     var area = searchArea(s);
-    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters; your standards come from Steps 2 to 4.";
+    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters and living situation; your other standards come from Steps 2 to 4.";
     var local = area.level !== "us", thin = res.lowConfidence && res.people > 0;
     $("r-local").hidden = !local;
     if (local) {
@@ -2418,6 +2419,7 @@
       trial("Lower your income bar", lower ? incomeFloor(lower) : "No minimum", function (c) { c.minIncome = lower; });
     }
     if (s.kidsMin !== 0 || s.kidsMax !== 4) trial("Be open to any number of kids", "0 to 4+", function (c) { c.kidsMin = 0; c.kidsMax = 4; });
+    if (s.living.length < 3) trial("Be open to any living situation", "Alone, roommates or parents", function (c) { c.living = ["alone", "roommates", "parents"]; });
     if (s.excludeObese) trial("Allow any body weight", "Turn off the obesity filter", function (c) { c.excludeObese = false; });
     if (s.excludeMarried) trial("Count people who are married", "Not recommended, but it's math", function (c) { c.excludeMarried = false; });
     if (s.car !== "any") trial("Be fine with any ride", "Getting from A to B is fine", function (c) { c.car = "any"; });

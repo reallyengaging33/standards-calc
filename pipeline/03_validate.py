@@ -34,7 +34,7 @@ RAW = ROOT / "data" / "raw"
 SITE = ROOT / "site"
 OFFICIAL = RAW / "official"
 
-TABLES = {"B02009": "ACSDT1Y2024.B02009", "S0101": "ACSST1Y2024.S0101", "B12002": "ACSDT1Y2024.B12002",
+TABLES = {"B09021": "ACSDT1Y2024.B09021", "B02009": "ACSDT1Y2024.B02009", "S0101": "ACSST1Y2024.S0101", "B12002": "ACSDT1Y2024.B12002",
           "B01001": "ACSDT1Y2024.B01001", "B19326": "ACSDT1Y2024.B19326"}
 
 
@@ -65,12 +65,12 @@ def check(name, ours, target, ok, note=""):
 
 
 def acs_checks():
-    cols = ["AGEP", "SEX", "MAR", "PWGTP", "PINCP", "ADJINC", "RACBLK"]
+    cols = ["AGEP", "SEX", "MAR", "PWGTP", "PINCP", "ADJINC", "RACBLK", "SERIALNO", "RELSHIPP"]
     parts = []
     with zipfile.ZipFile(RAW / "acs2024" / "csv_pus.zip") as z:
         for m in sorted(n for n in z.namelist() if n.startswith("psam_pus") and n.endswith(".csv")):
             with z.open(m) as f:
-                parts.append(pd.read_csv(f, usecols=cols))
+                parts.append(pd.read_csv(f, usecols=cols, dtype={"SERIALNO": str}))
     p = pd.concat(parts, ignore_index=True)
     adults = p[p.AGEP >= 18]
 
@@ -89,6 +89,19 @@ def acs_checks():
     off = int(official("B02009")["B02009_001E"])
     check("Black alone or in combination, all ages (RACBLK)", f"{ours:,}", f"{off:,} (B02009)",
           abs(ours / off - 1) < 0.005, f"{100 * (ours / off - 1):+.2f}%")
+
+    # Living situation (site filter) vs B09021, adults 18-34 in households
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("acs", ROOT / "pipeline" / "01_acs.py")
+    acs = importlib.util.module_from_spec(spec); spec.loader.exec_module(acs)
+    p["living"] = acs.living(p)
+    b09 = official("B09021")
+    y = p[p.AGEP.between(18, 34) & ~p.RELSHIPP.isin([37, 38])]
+    yw = y.PWGTP.sum()
+    for code, var, label in [(0, "B09021_009E", "lives alone"), (2, "B09021_012E", "with parents (child of householder)")]:
+        ours = 100 * y.PWGTP[y.living == code].sum() / yw
+        off = 100 * int(b09[var]) / int(b09["B09021_008E"])
+        check(f"Living 18–34: {label}", f"{ours:.1f}%", f"{off:.1f}% (B09021)", abs(ours - off) <= 1.0, f"{ours - off:+.2f} pts")
 
     b12, b01 = official("B12002"), official("B01001")
     spec = {1: ("men", ["B12002_007E", "B12002_008E"], ["B01001_011E", "B01001_012E"]),
