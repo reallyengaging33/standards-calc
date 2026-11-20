@@ -3,30 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dating Standards Calculator</title>
+<title>The Delulu Equation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0c0a13;
-    --bg-raise: #13101c;
-    --surface: #18141f;
-    --surface-2: #1f1a29;
-    --border: #2c2639;
-    --border-strong: #3d354d;
-    --text: #f5f2fb;
-    --text-2: #b9b1c9;
-    --text-3: #8f87a1;
-    --magenta: #c54ef2;
+    /* Plum-cocoa base: the original magenta + pink pops, warmed with caramel instead of cyan */
+    --bg: #120c0f;
+    --bg-raise: #1a1216;
+    --surface: #20161b;
+    --surface-2: #2b1e24;
+    --border: #3b2a31;
+    --border-strong: #533c45;
+    --text: #f5ece6;
+    --text-2: #cfbab5;
+    --text-3: #a08886;
+    --on-accent: #fff8f3;           /* cream text on deep magenta / pink fills */
+    --magenta: #c54ef2;             /* primary: orchid magenta (borders, sliders, tints) */
+    --magenta-fill: #a83cd6;        /* primary fill under text */
     --magenta-ink: #e3b3fa;
     --magenta-tint: rgba(197, 78, 242, 0.14);
-    --pink: #f0509b;
+    --pink: #f0509b;                /* hot: standards, real-world odds */
+    --pink-deep: #c8357a;           /* pink fill under text */
     --pink-tint: rgba(240, 80, 155, 0.14);
-    --cyan: #1fb3f0;
-    --cyan-ink: #9fdcf8;
-    --cyan-tint: rgba(31, 179, 240, 0.13);
-    --danger: #ff7a8a;
+    --rose: #f0509b;
+    --rose-tint: rgba(240, 80, 155, 0.14);
+    --cyan: #e3a55c;                /* census / info: caramel (the brown note) */
+    --cyan-ink: #f4d2a6;
+    --cyan-tint: rgba(227, 165, 92, 0.13);
+    --danger: #ff8a8a;
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 10px;
@@ -48,7 +54,7 @@
     caret-color: var(--magenta);
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: rgba(197, 78, 242, 0.45); color: #fff; }
+  ::selection { background: rgba(197, 78, 242, 0.5); color: #fff; }
   html { scrollbar-color: var(--border-strong) var(--bg); }
   ::-webkit-scrollbar { width: 10px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -68,7 +74,7 @@
   .brand-mark {
     width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
     background: linear-gradient(140deg, var(--magenta), var(--cyan));
-    color: #0c0a13;
+    color: var(--bg);
   }
   .brand-mark svg { width: 17px; height: 17px; stroke-width: 2.4; }
   .privacy { display: flex; align-items: center; gap: 6px; color: var(--text-3); font-size: 13px; }
@@ -92,12 +98,12 @@
   .track { height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
   .track-fill {
     height: 100%; width: 33%; border-radius: 6px;
-    background: linear-gradient(90deg, var(--magenta), var(--cyan));
+    background: linear-gradient(90deg, var(--magenta), var(--pink) 60%, var(--cyan));
     transition: width 600ms var(--ease-out);
   }
 
   /* Steps */
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; padding: 0; list-style: none; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; padding: 0; list-style: none; }
   .step {
     display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 52px;
     border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-raise);
@@ -114,9 +120,9 @@
   .step-title .short { display: none; }
   .step-sub { font-size: 12px; color: var(--text-3); display: block; }
   .step[aria-current="step"] { border-color: var(--magenta); background: var(--magenta-tint); color: var(--text); }
-  .step[aria-current="step"] .step-num { background: var(--magenta); color: #fff; }
+  .step[aria-current="step"] .step-num { background: var(--magenta-fill); color: var(--on-accent); }
   .step.done { color: var(--text-2); }
-  .step.done .step-num { background: var(--cyan); color: #06131b; }
+  .step.done .step-num { background: var(--cyan); color: #1c1013; }
 
   /* Card */
   .panel {
@@ -133,7 +139,7 @@
   .panel-head p { margin: 2px 0 0; color: var(--text-2); font-size: 14px; }
   .badge {
     margin-left: auto; flex: none; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
-    background: var(--cyan-tint); color: var(--cyan-ink); border: 1px solid rgba(31, 179, 240, 0.35);
+    background: var(--cyan-tint); color: var(--cyan-ink); border: 1px solid rgba(227, 165, 92, 0.35);
     display: inline-flex; align-items: center; gap: 5px;
   }
   .badge svg { width: 12px; height: 12px; stroke-width: 2.4; }
@@ -166,19 +172,20 @@
     display: grid; place-items: center; opacity: 0; transform: scale(0.6);
     transition: opacity 160ms var(--ease-out), transform 220ms var(--ease-out);
   }
-  .choice .tick svg { width: 12px; height: 12px; stroke-width: 3; color: #fff; }
+  .choice .tick svg { width: 12px; height: 12px; stroke-width: 3; color: var(--on-accent); }
   .choice[aria-checked="true"] { color: var(--text); }
   .choice[aria-checked="true"] .tick { opacity: 1; transform: scale(1); }
-  .choice[data-tone="cyan"][aria-checked="true"] { border-color: var(--cyan); background: var(--cyan-tint); box-shadow: 0 10px 26px -12px rgba(31, 179, 240, 0.65); }
+  .choice[data-tone="cyan"][aria-checked="true"] { border-color: var(--cyan); background: var(--cyan-tint); box-shadow: 0 10px 26px -12px rgba(227, 165, 92, 0.65); }
   .choice[data-tone="cyan"][aria-checked="true"] svg { color: var(--cyan); }
   .choice[data-tone="cyan"] .tick { background: var(--cyan); }
-  .choice[data-tone="pink"][aria-checked="true"] { border-color: var(--pink); background: var(--pink-tint); box-shadow: 0 10px 26px -12px rgba(240, 80, 155, 0.65); }
-  .choice[data-tone="pink"][aria-checked="true"] svg { color: var(--pink); }
-  .choice[data-tone="pink"] .tick { background: var(--pink); }
+  .choice[data-tone="cyan"][aria-checked] .tick svg { color: #1c1013; }
+  .choice[data-tone="pink"][aria-checked="true"] { border-color: var(--rose); background: var(--rose-tint); box-shadow: 0 10px 26px -12px rgba(240, 80, 155, 0.6); }
+  .choice[data-tone="pink"][aria-checked="true"] svg { color: var(--rose); }
+  .choice[data-tone="pink"] .tick { background: var(--rose); }
   .choice[data-tone="magenta"][aria-checked="true"] { border-color: var(--magenta); background: var(--magenta-tint); box-shadow: 0 10px 26px -12px rgba(197, 78, 242, 0.65); }
   .choice[data-tone="magenta"][aria-checked="true"] svg { color: var(--magenta); }
   .choice[data-tone="magenta"] .tick { background: var(--magenta); }
-  .choice[aria-checked] .tick svg { color: #fff; width: 12px; height: 12px; }
+  .choice[aria-checked] .tick svg { color: var(--on-accent); width: 12px; height: 12px; }
 
   /* Chips */
   .any-btn {
@@ -189,7 +196,7 @@
   }
   .any-btn svg { width: 16px; height: 16px; stroke-width: 2.6; display: none; }
   .any-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .any-btn[aria-pressed="true"] { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+  .any-btn[aria-pressed="true"] { background: var(--magenta-fill); border-color: var(--magenta-fill); color: var(--on-accent); }
   .any-btn[aria-pressed="true"] svg { display: block; }
   .chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
   .chip {
@@ -216,7 +223,7 @@
   }
   .num-field input::-webkit-outer-spin-button, .num-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .num-field input:hover { border-color: var(--border-strong); }
-  .num-field input:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(31, 179, 240, 0.25); }
+  .num-field input:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(227, 165, 92, 0.25); }
   .num-field input[aria-invalid="true"] { border-color: var(--danger); }
   .age-error { min-height: 20px; font-size: 13px; color: var(--danger); margin: 6px 0 0; }
   .age-error:empty { min-height: 0; margin: 0; }
@@ -247,8 +254,8 @@
   }
   .range input[type="range"]:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.12); }
   .range input[type="range"]:focus-visible { outline: none; }
-  .range input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(31, 179, 240, 0.55), 0 3px 8px rgba(0,0,0,.45); }
-  .range input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(31, 179, 240, 0.55); }
+  .range input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(227, 165, 92, 0.55), 0 3px 8px rgba(0,0,0,.45); }
+  .range input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(227, 165, 92, 0.55); }
   .range-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; padding: 0 4px; }
 
   /* Toggle row */
@@ -295,10 +302,10 @@
   /* Action bar */
   .actionbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-    background: rgba(12, 10, 19, 0.92); border-top: 1px solid var(--border);
+    background: rgba(18, 12, 15, 0.92); border-top: 1px solid var(--border);
     padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
   }
-  @supports (backdrop-filter: blur(1px)) { .actionbar { background: rgba(12, 10, 19, 0.78); backdrop-filter: blur(14px); } }
+  @supports (backdrop-filter: blur(1px)) { .actionbar { background: rgba(18, 12, 15, 0.78); backdrop-filter: blur(14px); } }
   .actionbar-inner { max-width: 600px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
   .summary { flex: 1; min-width: 0; font-size: 13px; color: var(--text-2); line-height: 1.35; }
   .summary strong { display: block; color: var(--text); font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -309,12 +316,12 @@
   .btn-secondary:hover { color: var(--text); }
   .btn-primary {
     min-height: 48px; padding: 0 22px; border-radius: 12px; border: 0;
-    background: var(--magenta); color: #fff; font-weight: 700; font-size: 15px;
+    background: var(--magenta-fill); color: var(--on-accent); font-weight: 700; font-size: 15px;
     display: inline-flex; align-items: center; gap: 8px; flex: none;
     box-shadow: 0 8px 22px -10px rgba(197, 78, 242, 0.8);
     transition: background-color 160ms var(--ease-out), transform 120ms var(--ease-out);
   }
-  .btn-primary:hover { background: #b23fe0; }
+  .btn-primary:hover { background: #9634c2; }
   .btn-primary:active { transform: translateY(1px); }
   .btn-primary { white-space: nowrap; }
   .btn-primary svg { width: 17px; height: 17px; stroke-width: 2.4; transition: transform 200ms var(--ease-out); }
@@ -332,6 +339,11 @@
     .step-sub { display: none; }
     .step-title .long { display: none; }
     .step-title .short { display: inline; }
+    .steps { gap: 6px; }
+    .step { padding: 8px 4px; min-height: 44px; }
+    .steps .step-btn { justify-content: center; }
+    .steps .step-num { display: none; }
+    .steps .step-text { flex: 1; text-align: center; }
     .step-title { font-size: 12px; }
     .chips { grid-template-columns: repeat(2, 1fr); }
     .panel { padding: 20px 16px 22px; }
@@ -360,7 +372,7 @@
   /* Unit toggle */
   .unit { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--bg-raise); border: 1px solid var(--border); }
   .unit button { border: 0; background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; min-height: 32px; min-width: 44px; padding: 0 10px; border-radius: 7px; }
-  .unit button[aria-checked="true"] { background: var(--magenta); color: #fff; }
+  .unit button[aria-checked="true"] { background: var(--magenta-fill); color: var(--on-accent); }
 
   /* Single sliders */
   .slider { position: relative; height: 36px; --fill: 50%; }
@@ -378,8 +390,8 @@
   .slider input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--text); border: 4px solid var(--magenta); cursor: grab; box-shadow: 0 3px 8px rgba(0,0,0,.45); }
   .slider input[type="range"]:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.12); }
   .slider input[type="range"]:focus-visible { outline: none; }
-  .slider input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(31,179,240,.55), 0 3px 8px rgba(0,0,0,.45); }
-  .slider input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(31,179,240,.55); }
+  .slider input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(227,165,92,.55), 0 3px 8px rgba(0,0,0,.45); }
+  .slider input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgba(227,165,92,.55); }
   .ticks { position: relative; height: 18px; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
   .ticks span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
   .ticks span:first-child { left: 4px; transform: none; }
@@ -391,7 +403,7 @@
   .switch-list { display: grid; gap: 8px; }
   .switch-list .toggle-row { margin-top: 0; }
   .toggle-row.plain .ti { background: var(--magenta-tint); color: var(--magenta-ink); }
-  .toggle-row.warn .ti { background: rgba(255, 122, 138, 0.13); color: var(--danger); }
+  .toggle-row.warn .ti { background: rgba(255, 143, 134, 0.13); color: var(--danger); }
 
   /* Segmented control */
   .seg { display: grid; gap: 8px; }
@@ -404,7 +416,7 @@
   }
   .seg button:hover { border-color: var(--border-strong); color: var(--text); }
   .seg button[aria-checked="true"] { border-color: var(--magenta); background: var(--magenta-tint); color: var(--text); }
-  .seg button[data-value="required"][aria-checked="true"] { background: var(--magenta); color: #fff; }
+  .seg button[data-value="required"][aria-checked="true"] { background: var(--magenta-fill); color: var(--on-accent); }
   .seg button[data-value="any"][aria-checked="true"] { border-color: var(--border-strong); background: var(--surface-2); color: var(--text); }
 
   .pref-list { display: grid; gap: 10px; }
@@ -422,7 +434,7 @@
     background: var(--bg-raise); color: var(--text); font: 600 15px var(--font-body); -webkit-appearance: none; appearance: none; cursor: pointer;
   }
   .select-wrap select:hover { border-color: var(--border-strong); }
-  .select-wrap select:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(31,179,240,.25); }
+  .select-wrap select:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(227,165,92,.25); }
   .select-wrap svg { position: absolute; right: 14px; top: 50%; transform: translateY(-50%) rotate(90deg); pointer-events: none; color: var(--text-2); }
 
   /* Tone cards */
@@ -439,10 +451,10 @@
   .notice svg { color: var(--pink); }
   .notice span { flex: 1; min-width: 0; }
   .notice span em { font-style: normal; color: var(--text-2); display: block; font-size: 13px; }
-  .link-btn { border: 0; background: transparent; color: #ff8cc0; font-weight: 700; font-size: 14px; padding: 8px 4px; min-height: 44px; flex: none; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,140,192,.4); }
+  .link-btn { border: 0; background: transparent; color: #ff9cc8; font-weight: 700; font-size: 14px; padding: 8px 4px; min-height: 44px; flex: none; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,156,200,.4); }
   .link-btn:hover { text-decoration-color: currentColor; }
 
-  .badge.pink { background: var(--pink-tint); color: #ffb3d6; border-color: rgba(240, 80, 155, 0.4); }
+  .badge.pink { background: var(--pink-tint); color: #ffb8d8; border-color: rgba(240, 80, 155, 0.4); }
   .panel-icon.pink { background: var(--pink-tint); color: var(--pink); }
   .panel-icon.magenta { background: var(--magenta-tint); color: var(--magenta); }
   .note { font-size: 13px; color: var(--text-3); margin: 10px 0 0; }
@@ -473,11 +485,11 @@
   .body-card .rarity {
     position: absolute; z-index: 1; top: 9px; left: 9px; padding: 2px 7px; border-radius: 999px;
     font-size: 11px; font-weight: 750; letter-spacing: 0.01em; font-variant-numeric: tabular-nums;
-    background: rgba(12, 10, 19, 0.82); color: #ffc2de; border: 1px solid rgba(240, 80, 155, 0.45);
+    background: rgba(18, 12, 15, 0.82); color: #ffc6df; border: 1px solid rgba(240, 80, 155, 0.45);
   }
   .body-card .rarity.r3, .body-card .rarity.r4 { background: var(--pink); color: #fff; border-color: var(--pink); }
   .body-card .tick { position: absolute; z-index: 1; top: 9px; right: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--magenta); display: grid; place-items: center; opacity: 0; transform: scale(.6); transition: opacity 160ms var(--ease-out), transform 220ms var(--ease-out); box-shadow: 0 2px 6px rgba(0,0,0,.35); }
-  .body-card .tick svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 3; fill: none; }
+  .body-card .tick svg { width: 12px; height: 12px; stroke: var(--on-accent); stroke-width: 3; fill: none; }
   .body-card[aria-pressed="true"] .tick { opacity: 1; transform: scale(1); }
 
   .group-title { font-family: var(--font-display); font-weight: 650; font-size: 17px; letter-spacing: -0.01em; margin: 30px 0 4px; }
@@ -515,7 +527,7 @@
   body.wide .page-head, body.wide .progress { display: none; }
   .demo-note {
     display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; border-radius: var(--radius-md);
-    border: 1px dashed rgba(31, 179, 240, 0.45); background: var(--cyan-tint); color: var(--cyan-ink); font-size: 13px;
+    border: 1px dashed rgba(227, 165, 92, 0.45); background: var(--cyan-tint); color: var(--cyan-ink); font-size: 13px;
   }
   .demo-note svg { width: 16px; height: 16px; color: var(--cyan); flex: none; }
   .demo-note.error { border-color: rgba(240, 31, 110, 0.5); background: transparent; color: var(--text); }
@@ -555,19 +567,19 @@
   .bd-bar { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
   .bd-bar span { display: block; height: 100%; border-radius: 6px; background: var(--magenta); transform-origin: left; animation: grow 700ms var(--ease-out) both; }
   .breakdown li.top .bd-bar span { background: var(--pink); }
-  .breakdown li.top .bd-val { color: #ff8cc0; }
+  .breakdown li.top .bd-val { color: #ff9cc8; }
   .breakdown li.none .bd-bar span { background: var(--border-strong); }
   @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .extras { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
   .extras h3 { margin: 0 0 4px; font-size: 15px; font-weight: 650; }
   .extras p { margin: 0 0 10px; font-size: 13px; color: var(--text-2); }
   .extra-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .extra-tags span { font-size: 13px; padding: 5px 10px; border-radius: 999px; background: var(--pink-tint); color: #ffc2de; border: 1px solid rgba(240,80,155,.3); }
+  .extra-tags span { font-size: 13px; padding: 5px 10px; border-radius: 999px; background: var(--pink-tint); color: #ffc6df; border: 1px solid rgba(240,80,155,.3); }
   .extras-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .extras-head h3 { margin: 0 0 4px; }
-  .extras-total { font-size: 15px; font-weight: 750; color: #ffb3d6; font-variant-numeric: tabular-nums; }
+  .extras-total { font-size: 15px; font-weight: 750; color: #ffb8d8; font-variant-numeric: tabular-nums; }
   .extra-tags span { display: inline-flex; align-items: center; gap: 8px; }
-  .extra-tags span b { font-size: 12px; font-weight: 750; padding: 1px 7px; border-radius: 999px; background: rgba(240, 80, 155, 0.28); color: #fff; font-variant-numeric: tabular-nums; }
+  .extra-tags span b { font-size: 12px; font-weight: 750; padding: 1px 7px; border-radius: 999px; background: rgba(240, 80, 155, 0.3); color: var(--text); font-variant-numeric: tabular-nums; }
   .cap-note { margin: 10px 0 0 !important; font-size: 13px; color: var(--text-2); }
   .score-math { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--bg-raise); border: 1px solid var(--border);
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; font-size: 14px; color: var(--text-2); }
@@ -579,9 +591,9 @@
     background: var(--bg-raise); color: var(--text); font: 600 15px var(--font-body);
   }
   .text-input::placeholder { color: var(--text-3); font-weight: 500; }
-  .text-input:focus-visible, .select-wrap select:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(31,179,240,.25); }
+  .text-input:focus-visible, .select-wrap select:focus-visible { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(227,165,92,.25); }
   .select-wrap select:disabled { opacity: 0.55; cursor: not-allowed; }
-  .select-wrap select[aria-invalid="true"] { border-color: rgba(255, 122, 138, 0.7); }
+  .select-wrap select[aria-invalid="true"] { border-color: rgba(255, 143, 134, 0.7); }
   .loc-msg { margin: 10px 0 0; font-size: 13px; color: var(--danger); }
   .loc-msg:empty { display: none; }
   .odds-local { margin: 6px 0 0; font-size: 13px; color: var(--cyan-ink); }
@@ -598,23 +610,27 @@
   .op-real .op-num.xlong { font-size: clamp(36px, 6vw, 54px); }
   .op-pct { font-size: 14px; color: var(--text-2); font-variant-numeric: tabular-nums; }
   .op-real .op-pct { color: var(--text); font-weight: 600; }
-  .op-mult { justify-self: start; font-size: 13px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: var(--pink-tint); color: #ffc2de; border: 1px dashed rgba(240, 80, 155, 0.5); }
+  .op-mult { justify-self: start; font-size: 13px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: var(--pink-tint); color: #ffc6df; border: 1px dashed rgba(240, 80, 155, 0.5); }
   .equation { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 14px; border-radius: var(--radius-md); background: var(--bg-raise); border: 1px solid var(--border); margin-bottom: 12px; }
   .eq-term { display: grid; gap: 1px; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); text-align: center; min-width: 74px; }
-  .eq-term b { font-size: 17px; font-weight: 750; font-variant-numeric: tabular-nums; color: #ffc2de; white-space: nowrap; }
+  .eq-term b { font-size: 17px; font-weight: 750; font-variant-numeric: tabular-nums; color: #ffc6df; white-space: nowrap; }
   .eq-term small { font-size: 11.5px; color: var(--text-3); }
   .eq-term.census b { color: var(--cyan-ink); }
   .eq-term.flat b { color: var(--text-3); }
-  .eq-term.result { background: var(--pink); }
-  .eq-term.result b, .eq-term.result small { color: #fff; }
+  .eq-term.result { background: var(--pink-deep); }
+  .eq-term.result b, .eq-term.result small { color: var(--text); }
   .eq-op { color: var(--text-3); font-weight: 700; font-size: 16px; }
   .pl-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   .pl-items li { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: baseline; font-size: 12.5px; padding: 6px 0; border-top: 1px solid var(--border); }
   .pi-name { color: var(--text); }
   .pi-keep { color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .pi-mult { font-weight: 750; color: #ffb3d6; font-variant-numeric: tabular-nums; }
+  .pi-mult { font-weight: 750; color: #ffb8d8; font-variant-numeric: tabular-nums; }
   .score-math .lead { color: var(--text-3); font-variant-numeric: tabular-nums; }
   .assume-note { margin: 12px 0 0; font-size: 12px; color: var(--text-3); }
+  .optin-status { margin: 10px 0 0; font-size: 13px; color: var(--cyan-ink); }
+  .optin-status:empty { display: none; }
+  #optin-panel .toggle-text span { line-height: 1.45; }
+  .chips.three-up { grid-template-columns: repeat(3, 1fr); }
   .slider-hint { margin: -4px 0 6px; font-size: 13px; color: var(--text-3); }
   .subscores { margin-top: 14px; display: grid; gap: 8px; text-align: left; }
   .subscore { display: grid; grid-template-columns: 112px 1fr 40px; grid-template-rows: auto auto; column-gap: 10px; align-items: center; }
@@ -628,7 +644,7 @@
   .pillar { padding: 14px; border-radius: var(--radius-md); background: var(--bg-raise); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
   .pl-head { display: flex; justify-content: space-between; align-items: baseline; }
   .pl-head h3 { margin: 0; font-size: 15px; font-weight: 700; }
-  .pl-val { font-family: var(--font-display); font-size: 26px; font-weight: 750; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: #ffb3d6; }
+  .pl-val { font-family: var(--font-display); font-size: 26px; font-weight: 750; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: #ffb8d8; }
   .pl-val small { font-size: 13px; color: var(--text-3); font-weight: 600; margin-left: 2px; letter-spacing: 0; }
   .pl-bar { height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
   .pl-bar i { display: block; height: 100%; border-radius: 6px; background: var(--pink); }
@@ -648,11 +664,12 @@
   .share-wrap { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start; }
   .share-card {
     width: 300px; aspect-ratio: 1 / 1; border-radius: 16px; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    background: radial-gradient(120% 90% at 20% 0%, #3a1650 0%, #17101f 55%, #0c0a13 100%); color: #fff; border: 1px solid var(--border);
+    background: radial-gradient(120% 90% at 20% 0%, #3d1838 0%, #1f141a 55%, #120c0f 100%); color: var(--text); border: 1px solid var(--border);
     box-shadow: 0 20px 40px -24px rgba(0,0,0,.8);
   }
   .share-card.story { aspect-ratio: 9 / 16; width: 230px; padding: 30px 18px; }
-  .share-card.light { background: radial-gradient(120% 90% at 20% 0%, #f6dcff 0%, #fff4fa 60%, #ffffff 100%); color: #1a1022; border-color: #ead7f3; }
+  .share-card.light .sc-odds { color: var(--pink-deep); }
+  .share-card.light { background: radial-gradient(120% 90% at 20% 0%, #f5dcea 0%, #fbf1ec 60%, #fdf8f4 100%); color: #2a1520; border-color: #ead3dc; }
   .sc-tier { font-family: var(--font-display); font-weight: 750; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase; }
   .sc-odds { font-family: var(--font-display); font-weight: 750; font-size: 56px; line-height: 1; letter-spacing: -0.04em; margin: 12px 0 4px; color: var(--pink); }
   .sc-sub { font-size: 13px; font-weight: 600; opacity: .85; }
@@ -669,7 +686,7 @@
     background: var(--bg-raise); color: var(--text); font-size: 14px; font-weight: 600; text-decoration: none; font-family: inherit;
   }
   .share-links a:hover, .share-links button:hover { border-color: var(--magenta); }
-  .share-links .primary { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+  .share-links .primary { background: var(--magenta-fill); border-color: var(--magenta-fill); color: var(--on-accent); }
   .panel-title { font-family: var(--font-display); font-weight: 650; font-size: 19px; letter-spacing: -0.015em; margin: 0; }
   .panel-sub { margin: 2px 0 18px; color: var(--text-2); font-size: 14px; }
 
@@ -692,6 +709,11 @@
     transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out);
   }
   .rr-text { display: grid; gap: 1px; }
+  .radio-row .dot.box { border-radius: 5px; }
+  .radio-row .dot.box::after { width: 10px; height: 6px; border-radius: 0; background: none; border-left: 2px solid var(--magenta); border-bottom: 2px solid var(--magenta); transform: rotate(-45deg) scale(0); margin-top: -2px; }
+  .radio-row[aria-pressed="true"] { border-color: var(--magenta); background: var(--magenta-tint); color: var(--text); }
+  .radio-row[aria-pressed="true"] .dot.box::after { transform: rotate(-45deg) scale(1); }
+  .radio-row[aria-pressed="true"] .rr-text small { color: var(--text-2); }
   .rr-text small { font-size: 12.5px; font-weight: 500; color: var(--text-3); }
   .radio-row[aria-checked="true"] .rr-text small { color: var(--text-2); }
   .radio-row:hover { border-color: var(--border-strong); color: var(--text); }
@@ -741,35 +763,43 @@
     <symbol id="i-calm" viewBox="0 0 24 24"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".5"/></symbol>
     <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M8 11h8M10 21l2-6 2 6"/></symbol>
     <symbol id="i-chef" viewBox="0 0 24 24"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 9.18 0A4 4 0 0 1 18 13.87V21H6Z"/><path d="M6 17h12"/></symbol>
+    <symbol id="i-water" viewBox="0 0 24 24"><path d="M6 3h12l-1.6 17.1a1 1 0 0 1-1 .9H8.6a1 1 0 0 1-1-.9L6 3z"/><path d="M6.7 9.5h10.6"/></symbol>
+    <symbol id="i-rocks" viewBox="0 0 24 24"><path d="M4.5 7h15l-1.3 12.2a2 2 0 0 1-2 1.8H7.8a2 2 0 0 1-2-1.8L4.5 7z"/><rect x="7.5" y="11" width="4" height="4" rx=".8"/><rect x="12.3" y="13" width="4" height="4" rx=".8"/></symbol>
+    <symbol id="i-shot" viewBox="0 0 24 24"><path d="M6 8h12l-1.5 11.6a1.6 1.6 0 0 1-1.6 1.4H9.1a1.6 1.6 0 0 1-1.6-1.4L6 8z"/><path d="M6.6 13h10.8"/><path d="M10 3.5l.8 2.2M14 3.5l-.8 2.2"/></symbol>
+    <symbol id="i-nope-m" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.6"/><path d="M5.5 21v-4.5a6.5 6.5 0 0 1 13 0V21"/><path d="M8 11.5l8 6M16 11.5l-8 6"/></symbol>
+    <symbol id="i-nope-w" viewBox="0 0 24 24"><circle cx="12" cy="5.2" r="2.6"/><path d="M9.2 5.6c-.6 2.4.2 3.6 1 4.2M14.8 5.6c.6 2.4-.2 3.6-1 4.2"/><path d="M5.5 21l1.4-5.2a5.3 5.3 0 0 1 10.2 0L18.5 21"/><path d="M8 11.5l8 6M16 11.5l-8 6"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M4 16.5V13l2.2-5.2A1.5 1.5 0 0 1 7.6 7h8.8a1.5 1.5 0 0 1 1.4.8L20 13v3.5"/><path d="M3.5 16.5h17"/><circle cx="7.5" cy="17" r="1.9"/><circle cx="16.5" cy="17" r="1.9"/><path d="M4.5 12.5h15"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/></symbol>
   </defs>
 </svg>
 
 <header class="topbar">
   <div class="brand">
     <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
-    Standards Calc
+    The Delulu Equation
   </div>
-  <div class="privacy"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Anonymous · stays on your device</span></div>
+  <div class="privacy"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Anonymous · nothing saved unless you opt in</span></div>
 </header>
 
 <main>
   <div class="page-head">
-    <h1 id="page-title">Who are you looking for?</h1>
-    <p id="page-sub">Set the basics. These filters drive the probability, using real population data.</p>
+    <h1 id="page-title">Let's start with the basics</h1>
+    <p id="page-sub">Who you're looking for, by the numbers. These run against real Census data.</p>
   </div>
 
   <div class="progress">
     <div class="progress-meta">
-      <span><strong id="step-label">Step 1 of 3</strong><span class="eta"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span id="eta">about 45 sec</span></span></span>
-      <span class="pct" id="pct">33%</span>
+      <span><strong id="step-label">Step 1 of 4</strong><span class="eta"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span id="eta">about 45 sec</span></span></span>
+      <span class="pct" id="pct">25%</span>
     </div>
-    <div class="track" role="progressbar" aria-label="Calculator progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33" id="progressbar"><div class="track-fill" id="track-fill"></div></div>
+    <div class="track" role="progressbar" aria-label="Calculator progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="progressbar"><div class="track-fill" id="track-fill"></div></div>
   </div>
 
   <ol class="steps" aria-label="Steps">
-    <li class="step" id="step-1"><button type="button" class="step-btn" data-step="1"><span class="step-num">1</span><span class="step-text"><span class="step-title"><span class="long">Statistical filters</span><span class="short">Filters</span></span><span class="step-sub">~45 sec</span></span></button></li>
-    <li class="step" id="step-2"><button type="button" class="step-btn" data-step="2"><span class="step-num">2</span><span class="step-text"><span class="step-title"><span class="long">Core preferences</span><span class="short">Preferences</span></span><span class="step-sub">Optional · ~20 sec</span></span></button></li>
-    <li class="step" id="step-3"><button type="button" class="step-btn" data-step="3"><span class="step-num">3</span><span class="step-text"><span class="step-title"><span class="long">Physical &amp; lifestyle</span><span class="short">Lifestyle</span></span><span class="step-sub">Optional · ~25 sec</span></span></button></li>
+    <li class="step" id="step-1"><button type="button" class="step-btn" data-step="1"><span class="step-num">1</span><span class="step-text"><span class="step-title"><span class="long">The Basics</span><span class="short">Basics</span></span><span class="step-sub">~45 sec</span></span></button></li>
+    <li class="step" id="step-2"><button type="button" class="step-btn" data-step="2"><span class="step-num">2</span><span class="step-text"><span class="step-title"><span class="long">Preference Filter</span><span class="short">Prefs</span></span><span class="step-sub">Optional</span></span></button></li>
+    <li class="step" id="step-3"><button type="button" class="step-btn" data-step="3"><span class="step-num">3</span><span class="step-text"><span class="step-title"><span class="long">Physical</span><span class="short">Physical</span></span><span class="step-sub">Optional</span></span></button></li>
+    <li class="step" id="step-4"><button type="button" class="step-btn" data-step="4"><span class="step-num">4</span><span class="step-text"><span class="step-title"><span class="long">Lifestyle &amp; Skills</span><span class="short">Lifestyle</span></span><span class="step-sub">Optional</span></span></button></li>
   </ol>
 
   <!-- ================= STEP 1 ================= -->
@@ -777,7 +807,7 @@
     <section class="panel" aria-labelledby="p1-title">
       <div class="panel-head">
         <span class="panel-icon" aria-hidden="true"><svg class="icon"><use href="#i-sliders"/></svg></span>
-        <div><h2 id="p1-title">Statistical filters</h2><p>Each one narrows your match pool.</p></div>
+        <div><h2 id="p1-title">The Basics</h2><p>Each one narrows your pool.</p></div>
         <span class="badge"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Census-backed</span>
       </div>
 
@@ -883,7 +913,7 @@
             <input type="range" id="pref-income" min="0" max="18" step="1" aria-labelledby="pref-income-label" aria-describedby="pref-income-hint">
           </div>
           <div class="ticks" aria-hidden="true"><span>$0</span><span class="mid">$100k</span><span>$1M+</span></div>
-          <p class="note" id="pref-income-hint">Can't be lower than your minimum. It doesn't filter anyone out, but it raises your strictness score.</p>
+          <p class="note" id="pref-income-hint">Can't be lower than your minimum. It doesn't change your census odds, but it makes your real-world odds rarer.</p>
         </div>
       </fieldset>
 
@@ -929,12 +959,12 @@
     <section class="panel" aria-labelledby="tone-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-message"/></svg></span>
-        <div><h2 id="tone-title">Result tone</h2><p>How should we break the news?</p></div>
+        <div><h2 id="tone-title">How do you take it?</h2><p>Pick how your results get poured.</p></div>
       </div>
       <div class="choices three tone" role="radiogroup" aria-label="Result tone" data-key="resultTone">
-        <button type="button" class="choice" role="radio" data-value="stats" data-tone="cyan"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>Just the stats<small>Straight numbers</small></button>
-        <button type="button" class="choice" role="radio" data-value="playful" data-tone="magenta"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-smile"/></svg>Playful<small>Gentle teasing</small></button>
-        <button type="button" class="choice" role="radio" data-value="brutal" data-tone="pink"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-flame"/></svg>Brutal<small>No sugar-coating</small></button>
+        <button type="button" class="choice" role="radio" data-value="stats" data-tone="cyan"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-water"/></svg>Water<small>Plain talk, just the data</small></button>
+        <button type="button" class="choice" role="radio" data-value="playful" data-tone="magenta"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-rocks"/></svg>On the rocks<small>How your friends would say it</small></button>
+        <button type="button" class="choice" role="radio" data-value="brutal" data-tone="pink"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-shot"/></svg>No chaser<small>Brutal honesty</small></button>
       </div>
     </section>
   </div>
@@ -949,8 +979,8 @@
     <section class="panel" aria-labelledby="p2-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-sparkle"/></svg></span>
-        <div><h2 id="p2-title">Preference filters</h2><p>These multiply your census odds into real-world odds.</p></div>
-        <span class="badge pink">Standards</span>
+        <div><h2 id="p2-title">Preference Filter</h2><p>Character, values and dealbreakers. These turn census odds into real-world odds.</p></div>
+        <span class="badge pink">Real-world odds</span>
       </div>
 
       <div class="field range-block" data-scale="looks">
@@ -964,8 +994,8 @@
       </div>
 
       <div class="field">
-        <span class="label"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg>Behaviour and wellbeing</span>
-        <p class="group-sub">Preferences about behaviour, not diagnoses. These aren't population statistics.</p>
+        <span class="label"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg>Behavior and well-being</span>
+        <p class="group-sub">Preferences about behavior, not diagnoses. These aren't population statistics.</p>
         <div class="pref-list" id="behavior-list"></div>
       </div>
 
@@ -983,6 +1013,18 @@
         <span class="label"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Dealbreakers</span>
         <div class="switch-list" id="dealbreaker-list"></div>
       </div>
+
+      <fieldset class="field">
+        <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Living situations you're okay with</legend>
+        <div class="chips three-up" id="living-chips">
+          <button type="button" class="chip" data-value="alone" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Lives alone</button>
+          <button type="button" class="chip" data-value="roommates" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>With roommates</button>
+          <button type="button" class="chip" data-value="parents" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>With parents</button>
+        </div>
+        <p class="hint" id="living-hint">Untick any that are a dealbreaker.</p>
+      </fieldset>
+      <div>
+      </div>
     </section>
   </div>
 
@@ -996,8 +1038,8 @@
     <section class="panel" aria-labelledby="p3-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-person"/></svg></span>
-        <div><h2 id="p3-title">Physical &amp; lifestyle</h2><p>These multiply your census odds into real-world odds.</p></div>
-        <span class="badge pink">Standards</span>
+        <div><h2 id="p3-title">Physical</h2><p>What catches your eye. These turn census odds into real-world odds.</p></div>
+        <span class="badge pink">Real-world odds</span>
       </div>
 
       <fieldset class="field">
@@ -1016,11 +1058,26 @@
         <p class="note">Average erect length is about 5.2 in (13.1 cm), from a 2015 review of 17 international studies.</p>
       </fieldset>
 
-      <h3 class="group-title">Skills &amp; habits</h3>
+    </section>
+  </div>
+
+  <!-- ================= STEP 4 ================= -->
+  <div class="view" id="view-4" hidden>
+    <div class="notice">
+      <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
+      <button type="button" class="link-btn" data-skip>Skip this step</button>
+    </div>
+    <section class="panel" aria-labelledby="p4-title">
+      <div class="panel-head">
+        <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-chef"/></svg></span>
+        <div><h2 id="p4-title">Lifestyle &amp; Skills</h2><p>How they move day to day. These turn census odds into real-world odds.</p></div>
+        <span class="badge pink">Real-world odds</span>
+      </div>
       <div id="skills"></div>
 
       <fieldset class="field" style="margin-top:26px">
-        <legend class="label">Their debt</legend>
+        <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-dollar"/></svg>Their money: debt</legend>
         <div class="radio-list" role="radiogroup" aria-label="Their debt" id="debt-pref">
           <button type="button" class="radio-row" role="radio" data-value="any"><span class="dot" aria-hidden="true"></span><span class="rr-text">Doesn't matter<small>I've got debt too</small></span></button>
           <button type="button" class="radio-row" role="radio" data-value="after_marriage"><span class="dot" aria-hidden="true"></span><span class="rr-text">Only matters if we get married<small>Not a dealbreaker for dating</small></span></button>
@@ -1028,11 +1085,32 @@
           <button type="button" class="radio-row" role="radio" data-value="debt_free"><span class="dot" aria-hidden="true"></span><span class="rr-text">Debt-free with great credit<small>Like me</small></span></button>
         </div>
       </fieldset>
+
+      <fieldset class="field" style="margin-top:26px">
+        <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>Their ride</legend>
+        <p class="group-sub">Select every ride you'd accept.</p>
+        <div class="radio-list multi" id="car-pref">
+          <button type="button" class="radio-row" data-value="any" aria-pressed="true"><span class="dot box" aria-hidden="true"></span><span class="rr-text">Getting from A to B is fine<small>Any car, or none at all</small></span></button>
+          <button type="button" class="radio-row" data-value="newer" aria-pressed="false"><span class="dot box" aria-hidden="true"></span><span class="rr-text">Newer models<small>2020 or newer</small></span></button>
+          <button type="button" class="radio-row" data-value="luxury" aria-pressed="false"><span class="dot box" aria-hidden="true"></span><span class="rr-text">Luxury<small>BMW, Mercedes, Audi</small></span></button>
+          <button type="button" class="radio-row" data-value="foreign_luxury" aria-pressed="false"><span class="dot box" aria-hidden="true"></span><span class="rr-text">Foreign luxury<small>Maserati, Porsche, G-Wagon, Bentley</small></span></button>
+        </div>
+      </fieldset>
+
+      <fieldset class="field" id="handy-field" style="margin-top:26px" hidden>
+        <legend class="label"><svg class="icon" aria-hidden="true"><use href="#i-ruler"/></svg><span id="handy-label">Handy</span></legend>
+        <div class="radio-list" role="radiogroup" aria-labelledby="handy-label" id="handy-pref">
+          <button type="button" class="radio-row" role="radio" data-value="any"><span class="dot" aria-hidden="true"></span><span class="rr-text">Doesn't matter<small>Not a factor for me</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="pays"><span class="dot" aria-hidden="true"></span><span class="rr-text">Only if he can pay someone<small>As long as it gets fixed</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="basics"><span class="dot" aria-hidden="true"></span><span class="rr-text">Handles the basics<small>Puts furniture together, changes a flat</small></span></button>
+          <button type="button" class="radio-row" role="radio" data-value="very"><span class="dot" aria-hidden="true"></span><span class="rr-text">Very handy<small>Lays new floors, swaps an engine</small></span></button>
+        </div>
+      </fieldset>
     </section>
   </div>
 
   <!-- ================= RESULTS ================= -->
-  <div class="view" id="view-4" hidden>
+  <div class="view" id="view-5" hidden>
     <div class="demo-note" id="data-status" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span id="data-status-text"></span><button type="button" class="link-btn" id="data-retry" hidden>Try again</button></div>
 
     <section class="panel hero" id="result-panel" tabindex="-1" aria-labelledby="r-tier">
@@ -1065,7 +1143,7 @@
           </figcaption>
         </figure>
         <div class="score">
-          <div class="score-label">Delusion score</div>
+          <div class="score-label">Delulu score</div>
           <div class="score-num"><span id="r-score"></span><small> / 10</small></div>
           <div class="meter" id="r-meter" aria-hidden="true"></div>
           <div class="meter-ends" aria-hidden="true"><span>Chill</span><span>Moderate</span><span>Extreme</span></div>
@@ -1078,24 +1156,28 @@
     </section>
 
     <section class="panel" aria-labelledby="bd-title">
-      <h2 class="panel-title" id="bd-title">Filter breakdown</h2>
+      <h2 class="panel-title" id="bd-title">What's narrowing your pool</h2>
       <p class="panel-sub">How much of the pool each filter keeps. Biggest cut first.</p>
       <ol class="breakdown" id="r-breakdown"></ol>
     </section>
 
-    <section class="panel" aria-labelledby="eq-title">
-      <h2 class="panel-title" id="eq-title">Your rarity equation</h2>
-      <p class="panel-sub">Your census odds, multiplied by how much each part of your standards narrows things down. Looks and Emotional Intelligence power up their part.</p>
-      <div class="equation" id="r-equation" role="math"></div>
-      <div class="pillars" id="r-pillars"></div>
-      <div class="score-math" id="r-score-math" aria-live="polite"></div>
-      <p class="assume-note">Census odds come from population data. The pass rates behind your standards are estimates (no survey measures them).</p>
-    </section>
 
     <section class="panel" aria-labelledby="wi-title">
-      <h2 class="panel-title" id="wi-title">What if you relaxed a little?</h2>
-      <p class="panel-sub">The one change that would help most is at the top.</p>
+      <h2 class="panel-title" id="wi-title">Where you could give a little</h2>
+      <p class="panel-sub">The change that would help most is at the top.</p>
       <ul class="whatif" id="r-whatif"></ul>
+    </section>
+
+    <section class="panel" aria-labelledby="optin-title" id="optin-panel">
+      <div class="toggle-row" style="margin-top:0">
+        <span class="ti" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
+        <div class="toggle-text">
+          <strong id="optin-title">Add my answers to the stats</strong>
+          <span id="optin-desc">Saves your answers and scores without your name, email or IP address attached. It helps power stats like "more delulu than X% of people". Because nothing links them to you, saved answers can't be deleted later.</span>
+        </div>
+        <button type="button" class="switch" role="switch" id="optin" aria-checked="false" aria-labelledby="optin-title" aria-describedby="optin-desc"></button>
+      </div>
+      <p class="optin-status" id="optin-status" aria-live="polite"></p>
     </section>
 
     <section class="panel" aria-labelledby="sh-title">
@@ -1105,10 +1187,10 @@
         <div class="share-card" id="share-card">
           <div class="sc-tier" id="sc-tier"></div>
           <div class="sc-odds" id="sc-odds"></div>
-          <div class="sc-sub">meet my dating standards</div>
+          <div class="sc-sub">fit my list</div>
           <ul class="sc-list" id="sc-list"></ul>
           <div class="sc-score" id="sc-score"></div>
-          <div class="sc-brand">Standards Calc</div>
+          <div class="sc-brand">The Delulu Equation</div>
         </div>
         <div class="share-side">
           <div class="share-opts">
@@ -1134,15 +1216,15 @@
     </section>
 
     <section class="panel" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-      <div><h2 class="panel-title">Not happy with that?</h2><p class="panel-sub" style="margin:2px 0 0">Change your filters and see how the odds move.</p></div>
-      <button type="button" class="btn-primary" id="edit-filters">Edit my filters<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <div><h2 class="panel-title">Want better odds?</h2><p class="panel-sub" style="margin:2px 0 0">Adjust your list and watch the numbers move.</p></div>
+      <button type="button" class="btn-primary" id="edit-filters">Adjust my list<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </section>
 
     <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 (national) and 2020–2024 (states and cities), CDC NHANES 2021–2023. <a href="#methodology">How this is calculated</a></p>
 
     <section class="panel method" id="methodology" aria-labelledby="method-title">
       <h2 class="panel-title" id="method-title">How this is calculated</h2>
-      <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. Nothing is sent anywhere: the data ships with the page and the maths runs on your device.</p>
+      <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. The census data ships with the page and the math runs on your device. Your answers are only sent anywhere if you switch on “Add my answers to the stats”.</p>
       <ul>
         <li><strong>Sex, age, relationship status, ethnicity, income, children:</strong> U.S. Census Bureau, American Community Survey 2024 1-year Public Use Microdata Sample (about 2.8 million adult respondents, representing 267 million US adults).</li>
         <li><strong>States and cities:</strong> the same survey's larger 2020–2024 5-year sample, so smaller places still have enough respondents. The census can't identify towns, only areas of 100,000+ people, so a city means its metro area, built from the census areas where most residents live inside it. A few small capitals (Juneau, Pierre, Helena, Carson City, Montpelier, Laramie) are smaller than any census area, so they use the surrounding region, and the page says so. Height and obesity use national figures for every location.</li>
@@ -1158,17 +1240,10 @@
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
-      <p><strong>Census odds</strong> use only the step 1 filters above. Everything in steps 2 and 3 (behaviour, Emotional Intelligence, dealbreakers, skills, body types, size, looks) isn't measured by any survey, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Census odds</strong> use only the step 1 filters above. Everything in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, living situation, body types, size, looks, skills, car, debt, handy) isn't measured by any survey we use, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
     </section>
   </div>
 
-  <details class="dev">
-    <summary><svg class="icon" aria-hidden="true"><use href="#i-chev"/></svg>Filter state (for building the data step)</summary>
-    <div class="dev-body">
-      <pre id="state-json"></pre>
-      <button type="button" class="copy-btn" id="copy-json">Copy JSON</button>
-    </div>
-  </details>
 </main>
 
 <div class="actionbar">
@@ -1193,7 +1268,7 @@
     // Step 1 – statistical (drives probability)
     gender: "male",
     seeking: "women",
-    ethnicities: "any",
+    ethnicities: ["black"],
     ageMin: 25,
     ageMax: 35,
     excludeMarried: true,
@@ -1201,7 +1276,7 @@
     heightMaxIn: null,          // null = no maximum
     heightUnit: "imperial",
     kidsMin: 0,                 // 4 means "4 or more"
-    kidsMax: 4,
+    kidsMax: 0,                 // default: no kids
     minIncome: 0,               // the floor they accept (filters the pool)
     preferredIncome: 0,         // what they'd like (strictness only, never below minIncome)
     excludeObese: false,
@@ -1210,17 +1285,20 @@
     city: null,                 // city id from US_STATES (e.g. "atlanta")
     cityName: null,             // display name of the picked city
     distance: "country",
-    resultTone: "stats",
+    resultTone: "playful",
     // Step 2 – preferences (strictness only)
     looksImportance: 5,
     behavior: { mentalHealth: "any", lowSubstanceUse: "any", communication: "any" },
     emotionalRegulation: 5,
-    dealbreakers: { heavyPartying: false, unreliable: false },
+    dealbreakers: { heavyPartying: false, nightlife: false, unreliable: false, multipleCoParents: false },
+    living: ["alone", "roommates", "parents"],   // living situations they can have
     // Step 3 – physical & lifestyle (strictness only)
     bodyTypes: "any",
     sizePreference: "any",       // only asked when looking for men
     skills: { cooking: "any", active: "any", cleanliness: "any" },
-    debt: "any"                 // any / after_marriage / has_plan / debt_free
+    debt: "any",                // any / after_marriage / has_plan / debt_free
+    handy: "any",               // asked when looking for men: any / pays / basics / very
+    car: "any"                  // "any" or an array of accepted rides: newer / luxury / foreign_luxury
   };
 
   /* ---------------- Helpers ---------------- */
@@ -1320,13 +1398,13 @@
       var changedSeeking = key === "seeking" && v !== state.seeking;
       state[key] = v;
       if (key === "heightUnit") paintHeight();
-      if (changedSeeking) { state.bodyTypes = "any"; buildBodies(); }
+      if (changedSeeking) { state.bodyTypes = "any"; buildBodies(); syncHandy(); buildDealbreakers(); }
       render();
     });
   });
 
   // Ethnicity: "Doesn't matter" or Black (single choice). State keeps the array shape: "any" or ["black"].
-  bindRadioGroup($("eth-group"), "any", function (v) { state.ethnicities = v === "any" ? "any" : [v]; render(); });
+  bindRadioGroup($("eth-group"), "black", function (v) { state.ethnicities = v === "any" ? "any" : [v]; render(); });
 
   // Age
   var minN = $("age-min-num"), maxN = $("age-max-num"), ageErr = $("age-error");
@@ -1525,22 +1603,52 @@
     paint();
   });
 
-  var DEALBREAKERS = [
-    { key: "heavyPartying", title: "Frequent heavy partying", desc: "Regular club or bar lifestyle" },
-    { key: "unreliable", title: "Unreliable behaviour", desc: "Flaky, inconsistent, hard to count on" }
-  ];
-  DEALBREAKERS.forEach(function (d, i) {
-    var row = document.createElement("div");
-    row.className = "toggle-row warn";
-    row.innerHTML =
-      '<span class="ti" aria-hidden="true"><svg class="icon"><use href="#i-alert"/></svg></span>' +
-      '<div class="toggle-text"><strong id="db-l-' + i + '"></strong><span id="db-d-' + i + '"></span></div>' +
-      '<button type="button" class="switch" role="switch" aria-labelledby="db-l-' + i + '" aria-describedby="db-d-' + i + '"></button>';
-    row.querySelector("strong").textContent = d.title;
-    row.querySelector("span#db-d-" + i).textContent = d.desc;
-    bindSwitch(row.querySelector(".switch"), function () { return state.dealbreakers[d.key]; }, function (v) { state.dealbreakers[d.key] = v; });
-    $("dealbreaker-list").appendChild(row);
+  /* Dealbreakers: wording and icon follow who you're looking for */
+  function dealbreakerList() {
+    var w = state.seeking === "women", m = state.seeking === "men";
+    return [
+      { key: "heavyPartying", title: "Parties too much", desc: "Out 4–5 nights a week" },
+      { key: "nightlife", title: "Works in nightlife", desc: w ? "Dancer, bottle girl, bartender, server" : m ? "Bartender, security, promoter, server" : "Dancer, bottle girl, bartender, security, server" },
+      { key: "unreliable", title: "Unreliable", desc: "Inconsistent calls, bad texter, never makes plans" },
+      { key: "multipleCoParents", title: m ? "Multiple BMs" : w ? "Multiple BDs" : "Multiple BMs / BDs",
+        desc: state.kidsMax <= 1 ? "Kids with more than one partner. Already covered by your kids filter." : "Kids with more than one partner" }
+    ];
+  }
+  function buildDealbreakers() {
+    var box = $("dealbreaker-list"); box.innerHTML = "";
+    dealbreakerList().forEach(function (d, i) {
+      var icon = state.seeking === "men" ? "i-nope-m" : state.seeking === "women" ? "i-nope-w" : (i % 2 ? "i-nope-m" : "i-nope-w");
+      var row = document.createElement("div");
+      row.className = "toggle-row warn";
+      row.innerHTML =
+        '<span class="ti" aria-hidden="true"><svg class="icon"><use href="#' + icon + '"/></svg></span>' +
+        '<div class="toggle-text"><strong id="db-l-' + i + '"></strong><span id="db-d-' + i + '"></span></div>' +
+        '<button type="button" class="switch" role="switch" aria-labelledby="db-l-' + i + '" aria-describedby="db-d-' + i + '"></button>';
+      row.querySelector("strong").textContent = d.title;
+      row.querySelector("span#db-d-" + i).textContent = d.desc;
+      bindSwitch(row.querySelector(".switch"), function () { return state.dealbreakers[d.key]; }, function (v) { state.dealbreakers[d.key] = v; });
+      box.appendChild(row);
+    });
+  }
+  buildDealbreakers();
+
+  /* Living situations they can have (multi-select, at least one) */
+  var livingChips = all("#living-chips .chip");
+  function paintLiving() {
+    livingChips.forEach(function (c) { c.setAttribute("aria-pressed", state.living.indexOf(c.getAttribute("data-value")) > -1 ? "true" : "false"); });
+  }
+  livingChips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      var v = c.getAttribute("data-value"), i = state.living.indexOf(v);
+      if (i > -1) {
+        if (state.living.length === 1) { $("living-hint").textContent = "Keep at least one. Everybody lives somewhere."; return; }
+        state.living.splice(i, 1);
+      } else state.living.push(v);
+      $("living-hint").textContent = "Untick any that are a dealbreaker.";
+      paintLiving(); render();
+    });
   });
+  paintLiving();
 
   /* ================= STEP 3 ================= */
   /* Body-type art: cropped from the user's illustration sheets (embedded WebP) */
@@ -1640,7 +1748,7 @@
   var SKILLS = [
     { key: "cooking", title: "Cooks", desc: "Willing to cook 3x a week minimum" },
     { key: "active", title: "Active", desc: "Works out or plays sport regularly" },
-    { key: "cleanliness", title: "Tidy", desc: "Keeps a clean, organised home" }
+    { key: "cleanliness", title: "Tidy", desc: "Keeps a clean, organized home" }
   ];
   SKILLS.forEach(function (s) {
     var d = document.createElement("div");
@@ -1653,22 +1761,111 @@
   });
 
   bindRadioGroup($("debt-pref"), state.debt, function (v) { state.debt = v; render(); });
+  /* Their ride: multi-select. "A to B" accepts everyone and clears the rest; picking any other
+     option unticks "A to B"; unticking everything falls back to "A to B". */
+  var carRows = all("#car-pref .radio-row");
+  function paintCar() {
+    carRows.forEach(function (r) {
+      var v = r.getAttribute("data-value");
+      r.setAttribute("aria-pressed", (v === "any" ? state.car === "any" : state.car !== "any" && state.car.indexOf(v) > -1) ? "true" : "false");
+    });
+  }
+  carRows.forEach(function (r) {
+    r.addEventListener("click", function () {
+      var v = r.getAttribute("data-value");
+      if (v === "any") state.car = "any";
+      else {
+        var list = state.car === "any" ? [] : state.car.slice(), i = list.indexOf(v);
+        if (i > -1) list.splice(i, 1); else list.push(v);
+        state.car = list.length ? list : "any";
+      }
+      paintCar(); render();
+    });
+  });
+  paintCar();
+  var paintHandy = function () {};
+  (function () {
+    var g = $("handy-pref");
+    bindRadioGroup(g, state.handy, function (v) { state.handy = v; render(); });
+    paintHandy = function () {
+      all('[role="radio"]', g).forEach(function (r) {
+        var on = r.getAttribute("data-value") === state.handy;
+        r.setAttribute("aria-checked", on ? "true" : "false"); r.tabIndex = on ? 0 : -1;
+      });
+    };
+  })();
+  function syncHandy() {
+    var ask = state.seeking !== "women";
+    $("handy-field").hidden = !ask;
+    $("handy-label").textContent = state.seeking === "either" ? "Handy (if he's a man)" : "Handy";
+    if (!ask && state.handy !== "any") { state.handy = "any"; paintHandy(); }
+  }
+  syncHandy();
+
+  /* ================= Anonymous stats (Supabase, opt-in) =================
+     Paste your Supabase Project URL and publishable key below. The publishable key is
+     meant to be public; Row Level Security only lets the site INSERT rows. Never put the
+     secret key (sb_secret_...) here. */
+  var SUPABASE_URL = "";            // e.g. "https://abcdxyz.supabase.co"
+  var SUPABASE_KEY = "";            // e.g. "sb_publishable_..."
+  var APP_VERSION = "2026-11-19";
+  var optIn = false, lastSaveRes = null, lastSavedKey = null, sbClient = null;
+
+  function getClient() {
+    if (sbClient) return Promise.resolve(sbClient);
+    return import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(function (m) {
+      sbClient = m.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
+      return sbClient;
+    });
+  }
+  function num(n) { return isFinite(n) ? n : null; }
+  function saveResult(res) {
+    var status = $("optin-status");
+    if (!SUPABASE_URL || !SUPABASE_KEY) { status.textContent = "Saving isn't connected yet (no database set up)."; return; }
+    var key = JSON.stringify(state);
+    if (key === lastSavedKey) { status.textContent = "Saved anonymously. Thanks!"; return; }
+    var row = {
+      app_version: APP_VERSION,
+      gender: state.gender, seeking: state.seeking,
+      age_min: state.ageMin, age_max: state.ageMax,
+      us_state: state.distance === "country" ? null : state.usState,
+      city: state.distance === "metro" ? state.city : null,
+      census_n: num(res.N), real_n: num(res.Nadj),
+      census_pts: num(res.censusPts), standards_pts: num(res.std.pts), delusion_score: res.score,
+      answers: JSON.parse(key)
+    };
+    status.textContent = "Saving…";
+    getClient().then(function (sb) { return sb.from("results").insert(row); })
+      .then(function (r) {
+        if (r && r.error) throw r.error;
+        lastSavedKey = key; status.textContent = "Saved anonymously. Thanks!";
+      })
+      .catch(function () { status.textContent = "Couldn't save right now. Your results are unaffected."; });
+  }
+  $("optin").addEventListener("click", function () {
+    optIn = !optIn;
+    this.setAttribute("aria-checked", optIn ? "true" : "false");
+    if (optIn && lastSaveRes) saveResult(lastSaveRes);
+    if (!optIn) $("optin-status").textContent = lastSavedKey ? "Nothing more will be saved." : "";
+  });
 
   /* ================= Navigation ================= */
   var STEPS = {
-    1: { title: "Who are you looking for?", sub: "Set the basics. These filters drive the probability, using real population data.", eta: "about 45 sec", pct: 33 },
-    2: { title: "What matters most?", sub: "Optional. These turn your census odds into real-world odds.", eta: "about 20 sec", pct: 67 },
-    3: { title: "The finer details", sub: "Optional. Looks and lifestyle, for the full picture.", eta: "about 25 sec", pct: 100 },
-    4: { title: "You're all set", sub: "Here's everything we'll calculate with.", eta: "done", pct: 100 }
+    1: { title: "Let's start with the basics", sub: "Who you're looking for, by the numbers. These run against real Census data.", eta: "about 45 sec", pct: 25 },
+    2: { title: "What you need from them", sub: "Optional. Character, values and dealbreakers.", eta: "about 20 sec", pct: 50 },
+    3: { title: "What catches your eye", sub: "Optional. Be honest, nobody's watching.", eta: "about 15 sec", pct: 75 },
+    4: { title: "How they move day to day", sub: "Optional. Habits, money and skills.", eta: "about 20 sec", pct: 100 },
+    5: { title: "Your Delulu results", sub: "Here's how your list stacks up.", eta: "done", pct: 100 }
   };
   var current = 1, furthest = 1;
   var nextBtn = $("next-btn"), backBtn = $("back-btn"), skipBtn = $("skip-btn");
 
   function goTo(step) {
     if (current === 1) { commit("min"); commit("max"); }
+    if (step === 2) buildDealbreakers();
     current = step; furthest = Math.max(furthest, step);
-    [1, 2, 3, 4].forEach(function (n) { $("view-" + n).hidden = n !== step; });
-    [1, 2, 3].forEach(function (n) {
+    [1, 2, 3, 4, 5].forEach(function (n) { $("view-" + n).hidden = n !== step; });
+    [1, 2, 3, 4].forEach(function (n) {
       var li = $("step-" + n), btn = li.querySelector(".step-btn"), num = li.querySelector(".step-num");
       var done = n !== step && n < furthest;
       li.classList.toggle("done", done);
@@ -1680,19 +1877,19 @@
     $("page-title").textContent = s.title;
     $("page-sub").textContent = s.sub;
     $("eta").textContent = s.eta;
-    $("step-label").textContent = step === 4 ? "All steps done" : "Step " + step + " of 3";
+    $("step-label").textContent = step === 5 ? "All steps done" : "Step " + step + " of 4";
     $("track-fill").style.width = s.pct + "%";
     $("pct").textContent = s.pct + "%";
     $("progressbar").setAttribute("aria-valuenow", s.pct);
     backBtn.hidden = step === 1;
-    skipBtn.hidden = !(step === 2 || step === 3);
-    nextBtn.hidden = step === 4;
-    $("next-label").textContent = step === 3 ? "Find out now" : "Continue";
+    skipBtn.hidden = !(step >= 2 && step <= 4);
+    nextBtn.hidden = step === 5;
+    $("next-label").textContent = step === 4 ? "Run the equation" : "Continue";
     var view = $("view-" + step);
     view.classList.remove("panel-enter"); void view.offsetWidth; view.classList.add("panel-enter");
     window.scrollTo({ top: 0, behavior: "smooth" });
-    document.body.classList.toggle("wide", step === 4);
-    if (step === 4) { renderResults(); $("result-panel").focus({ preventScroll: true }); }
+    document.body.classList.toggle("wide", step === 5);
+    if (step === 5) { renderResults(); $("result-panel").focus({ preventScroll: true }); }
     render();
   }
   all(".step-btn").forEach(function (b) { b.addEventListener("click", function () { goTo(+b.getAttribute("data-step")); }); });
@@ -1713,7 +1910,7 @@
   /* ================= Real-data model =================
      National odds: ACS 2024 1-year PUMS cube (site/data/acs_2024_cube.json). State and
      metro searches load that area's cube from site/data/state/ or site/data/metro/ (ACS
-     2020–2024 5-year PUMS) on demand; the maths is the same. Each cube gives weighted adults by
+     2020–2024 5-year PUMS) on demand; the math is the same. Each cube gives weighted adults by
      sex × age × single × ethnicity × income bucket × kids. We count the cells that match
      every filter at once, so correlated filters are never multiplied together.
      Height and obesity come from NHANES 2021–23 tables by sex × age band × race group,
@@ -1740,7 +1937,7 @@
         LOCAL[key] = { status: "error", error: err };
         if (window.console) console.error("Standards Calc: could not load " + key, err);
       })
-      .then(function () { if (current === 4) renderResults(); });
+      .then(function () { if (current === 5) renderResults(); });
   }
   // The dataset for a filter state: the national cube, or a local one once it has loaded
   function datasetFor(s) {
@@ -1763,7 +1960,7 @@
       if (window.console) console.error("Standards Calc: could not load data", e);
     }).then(function () {
       dataLoading = false; paintDataStatus();
-      if (current === 4) renderResults();
+      if (current === 5) renderResults();
     });
   }
 
@@ -1783,7 +1980,16 @@
     statusRetry = retry || null; $("data-retry").hidden = !isError;
   }
   function hideStatusIfReady() { if (DATA) $("data-status").hidden = true; }
+  var statusRetry = null;
+  function showStatus(msg, isError, retry) {
+    var box = $("data-status");
+    box.hidden = false; box.classList.toggle("error", !!isError);
+    $("data-status-text").textContent = msg;
+    statusRetry = retry || null; $("data-retry").hidden = !isError;
+  }
+  function hideStatusIfReady() { if (DATA) $("data-status").hidden = true; }
   function paintDataStatus() {
+    statusRetry = loadData;
     statusRetry = loadData;
     statusRetry = loadData;
     var box = $("data-status"), txt = $("data-status-text"), retry = $("data-retry");
@@ -1922,9 +2128,12 @@
     preferredPower: 0.5,        // Preferred = pass rate ^ 0.5
     character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, communication: 0.50 },
     lifestyle: { cooking: 0.60, active: 0.50, cleanliness: 0.60 },
-    dealbreakers: { heavyPartying: 0.85, unreliable: 0.70 },
+    dealbreakers: { heavyPartying: 0.85, nightlife: 0.93, unreliable: 0.70, multipleCoParents: 0.85 },
+    living: { alone: 0.35, roommates: 0.35, parents: 0.30 },        // shares among single 25–35s (estimate; ACS can measure this)
+    car: { newer: 1 / 2, luxury: 1 / 4.5, foreign_luxury: 1 / 10 },  // share of people with each ride: 2×, 4.5×, 10× rarer
     size: { average_plus: 0.69, above_average: 0.50 },  // from Veale et al. 2015 distribution
-    debt: { after_marriage: 0.90, has_plan: 0.75, debt_free: 0.25 }   // share of people who'd pass
+    debt: { after_marriage: 0.90, has_plan: 0.75, debt_free: 0.25 },  // share of people who'd pass
+    handy: { pays: 0.80, basics: 0.60, very: 0.15 }
   };
 
   // incomeKeep: share of the matching group earning >= preferred, from the cube (see compute()).
@@ -1950,12 +2159,28 @@
     if (RARITY.size[s.sizePreference]) phys.push(item(s.sizePreference === "above_average" ? "Size: above average only" : "Size: average or above", RARITY.size[s.sizePreference]));
     // Character
     var chr = triItems(s.behavior, RARITY.character);
-    if (s.dealbreakers.heavyPartying) chr.push(item("No heavy partying", RARITY.dealbreakers.heavyPartying));
-    if (s.dealbreakers.unreliable) chr.push(item("No unreliable behaviour", RARITY.dealbreakers.unreliable));
+    var DB_LABEL = { heavyPartying: "No partying 4–5 nights a week", nightlife: "Not in nightlife", unreliable: "Reliable", multipleCoParents: "Kids with one partner at most" };
+    Object.keys(DB_LABEL).forEach(function (k) {
+      if (!s.dealbreakers[k]) return;
+      if (k === "multipleCoParents" && s.kidsMax <= 1) return;   // already covered by the kids filter
+      chr.push(item(DB_LABEL[k], RARITY.dealbreakers[k]));
+    });
+    if (s.living.length < 3) {
+      var liv = s.living.reduce(function (t, k) { return t + RARITY.living[k]; }, 0);
+      var LIV_LABEL = { alone: "alone", roommates: "roommates", parents: "parents" };
+      chr.push(item("Living: " + s.living.map(function (k) { return LIV_LABEL[k]; }).join(" or "), liv));
+    }
     // Lifestyle
     var life = triItems(s.skills, RARITY.lifestyle);
     var DEBT_LABEL = { after_marriage: "Debt: only matters if married", has_plan: "Debt: fine with a plan", debt_free: "Debt-free with great credit" };
     if (RARITY.debt[s.debt]) life.push(item(DEBT_LABEL[s.debt], RARITY.debt[s.debt]));
+    if (s.car !== "any") {
+      var CAR_NAME = { newer: "newer model", luxury: "luxury", foreign_luxury: "foreign luxury" };
+      var carKeep = Math.min(1, s.car.reduce(function (t, k) { return t + RARITY.car[k]; }, 0));
+      life.push(item("Ride: " + s.car.map(function (k) { return CAR_NAME[k]; }).join(" or "), carKeep));
+    }
+    var HANDY_LABEL = { pays: "Handy: can pay someone", basics: "Handy: handles the basics", very: "Very handy" };
+    if (RARITY.handy[s.handy]) life.push(item(HANDY_LABEL[s.handy], RARITY.handy[s.handy]));
     if (s.preferredIncome > s.minIncome) {
       var ratio = incomeKeep != null ? incomeKeep : incomeAtLeast(s, s.preferredIncome) / incomeAtLeast(s, s.minIncome);
       life.push(item("Prefers " + fmtMoney(s.preferredIncome) + "+ income (preferred)", Math.pow(ratio, RARITY.preferredPower)));
@@ -2006,16 +2231,16 @@
 
   /* ================= Results rendering ================= */
   var TIERS = [
-    { max: 2, name: "Refreshingly realistic" },
-    { max: 4, name: "Reasonably picky" },
-    { max: 6, name: "Moderately choosy" },
-    { max: 8, name: "Very particular" },
-    { max: 10, name: "Certified delusional" }
+    { max: 2, name: "Grounded" },
+    { max: 4, name: "Knows what they want" },
+    { max: 6, name: "A little delulu" },
+    { max: 8, name: "Delulu" },
+    { max: 10, name: "Delulu is the solulu" }
   ];
   var LINES = {
-    stats: ["Your filters and standards are realistic.", "Selective, but well within normal range.", "Between your filters and your standards, you're narrowing things a lot.", "Few people clear both your filters and your standards.", "Almost nobody clears both your filters and your standards."],
-    playful: ["Honestly? Pretty reasonable. Go outside.", "Picky in a healthy way.", "You know what you want. So does everyone else.", "Your type exists. Rarely.", "Your ideal partner might be a unicorn."],
-    brutal: ["Your standards aren't the problem. Sorry.", "Fine. Not impressive, but fine.", "You're not delusional. You're not far off either.", "Your list is longer than your odds.", "Respectfully: this person does not exist."]
+    stats: ["Your list is realistic.", "Selective, but well within reach.", "Your filters and standards are narrowing things a lot.", "Few people clear both your filters and your standards.", "Almost nobody clears both your filters and your standards."],
+    playful: ["Honestly? You're good. Go say hi to somebody.", "Picky, but in a healthy way. We love that for you.", "A little delulu never hurt anybody. A little.", "Your type exists. Rarely. And they might already be booked.", "Respectfully, your friends are worried about you."],
+    brutal: ["Honestly? Your standards aren't the problem.", "Fine. Not impressive, but fine.", "You're not fully delulu. You're close.", "Your list is longer than your odds.", "Respectfully: this person does not exist."]
   };
   var NOUN = { women: "women", men: "men", either: "people" };
   var REGION = { us: "the United States", ca: "Canada", uk: "the United Kingdom", au: "Australia", eu: "Europe" };
@@ -2087,11 +2312,11 @@
   function renderResults() {
     var ready = !!DATA;
     $("result-panel").hidden = !ready;
-    all("#view-4 > section, #view-4 > .sources-line").forEach(function (el) { el.hidden = !ready; });
+    all("#view-5 > section, #view-5 > .sources-line").forEach(function (el) { el.hidden = !ready; });
     if (!ready) { if (!dataError) loadData(); paintDataStatus(); return; }
     var s = state, res = compute(s);
     if (res.pending) {   // this area's cube hasn't arrived yet
-      all("#view-4 > section, #view-4 > .sources-line").forEach(function (el) { el.hidden = true; });
+      all("#view-5 > section, #view-5 > .sources-line").forEach(function (el) { el.hidden = true; });
       var failed = res.entry && res.entry.status === "error";
       if (!failed) loadLocal(res.key);
       showStatus(failed ? "Couldn't load the census data for " + res.area.name + ". Check your connection and try again."
@@ -2105,7 +2330,7 @@
     var pair = $("result-panel").querySelector(".odds-pair");
     heroSide.hidden = pair.hidden = !!res.unavailable;
     if (res.unavailable) {   // the data can't answer this, so say so instead of guessing
-      all("#view-4 > section").forEach(function (el) { el.hidden = el.id !== "result-panel" && !el.querySelector("#edit-filters"); });
+      all("#view-5 > section").forEach(function (el) { el.hidden = el.id !== "result-panel" && !el.querySelector("#edit-filters"); });
       $("r-tier").textContent = "Not available";
       $("r-line").textContent = res.unavailable;
       $("r-sub").textContent = ""; $("r-flag").hidden = true; $("r-local").hidden = true;
@@ -2127,7 +2352,7 @@
     $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
     $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
     var area = searchArea(s);
-    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters; your standards come from Steps 2 and 3.";
+    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters; your standards come from Steps 2 to 4.";
     var local = area.level !== "us", thin = res.lowConfidence && res.people > 0;
     $("r-local").hidden = !local;
     if (local) {
@@ -2161,60 +2386,17 @@
 
     renderWhatIf(res);
     renderShare(res, tier);
+    lastSaveRes = res;
+    if (optIn) saveResult(res);
   }
 
   function fmtPts(n) { return (Math.round(n * 100) / 100).toFixed(2).replace(/0$/, "").replace(/\.$/, ""); }
   function renderEquation(res) {
-    var std = res.std;
-    function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-    // Equation strip
-    var eq = $("r-equation"); eq.innerHTML = "";
-    function term(num, label, cls) { var t = el("span", "eq-term " + (cls || "")); t.appendChild(el("b", null, num)); t.appendChild(el("small", null, label)); return t; }
-    eq.appendChild(term(fmtOdds(res.N), "census odds", "census"));
-    std.pillars.forEach(function (p) { eq.appendChild(el("span", "eq-op", "\u00d7")); eq.appendChild(term(fmtMult(p.R), p.label.toLowerCase(), p.R > 1.005 ? "" : "flat")); });
-    eq.appendChild(el("span", "eq-op", "="));
-    eq.appendChild(term(fmtOdds(res.Nadj), fmtPct(res.pAdj) + " of people", "result"));
-    eq.setAttribute("aria-label", fmtOdds(res.N) + " census odds times " + std.pillars.map(function (p) { return fmtMult(p.R) + " " + p.label; }).join(" times ") + " equals " + fmtOdds(res.Nadj));
-
-    // Pillar cards
-    var box = $("r-pillars"); box.innerHTML = "";
-    std.pillars.forEach(function (p) {
-      var card = el("div", "pillar " + p.key);
-      var head = el("div", "pl-head"); head.appendChild(el("h3", null, p.label));
-      var v = el("span", "pl-val", "\u00d7" + fmtMult(p.R)); head.appendChild(v); card.appendChild(head);
-      var calc = el("p", "pl-calc");
-      if (!p.items.length) calc.textContent = "Nothing set, so no change";
-      else if (p.powerLabel) calc.textContent = "Picks \u00d7" + fmtMult(p.baseR) + ", raised to the power " + p.power.toFixed(1) + " (" + p.powerLabel + ")";
-      else calc.textContent = "Picks \u00d7" + fmtMult(p.baseR);
-      card.appendChild(calc);
-      var list = el("ul", "pl-items");
-      p.items.slice().sort(function (a, b) { return a.keep - b.keep; }).forEach(function (it) {
-        var li = el("li");
-        li.appendChild(el("span", "pi-name", it.label));
-        li.appendChild(el("span", "pi-keep", "keeps " + fmtPct(it.keep)));
-        li.appendChild(el("span", "pi-mult", "\u00d7" + fmtMult(it.R)));
-        list.appendChild(li);
-      });
-      card.appendChild(list);
-      card.appendChild(el("p", "pl-weight", "+" + p.pts.toFixed(1) + " delusion points"));
-      box.appendChild(card);
-    });
-
-    // Score maths
-    var math = $("r-score-math"); math.innerHTML = "";
-    function part(num, txt) { var s = el("span"); s.appendChild(el("strong", null, num)); s.appendChild(document.createTextNode(" " + txt)); return s; }
-    math.appendChild(el("span", "lead", "2.1 \u00d7 log\u2081\u2080(" + fmtOdds(res.Nadj).replace("1 in ", "") + ") ="));
-    math.appendChild(part(res.censusPts.toFixed(1), "census"));
-    std.pillars.forEach(function (p) { math.appendChild(el("span", "op", "+")); math.appendChild(part(p.pts.toFixed(1), p.label.toLowerCase())); });
-    math.appendChild(el("span", "op", "="));
-    var fin = part(res.score + "/10", res.total > 10.05 ? "delusion score (" + res.total.toFixed(1) + ", capped)" : Math.abs(res.total - res.score) > 0.05 ? "delusion score (" + res.total.toFixed(1) + " rounded)" : "delusion score");
-    fin.className = "final"; math.appendChild(fin);
-
-    // Hero sub-scores
+    // Hero sub-scores: census points + standards points (= delusion score before rounding)
     $("r-odds-score").textContent = res.censusPts.toFixed(1);
-    $("r-std-score").textContent = "+" + std.pts.toFixed(1);
+    $("r-std-score").textContent = "+" + res.std.pts.toFixed(1);
     $("r-odds-bar").style.width = Math.min(100, res.censusPts * 10) + "%";
-    $("r-std-bar").style.width = Math.min(100, std.pts * 10) + "%";
+    $("r-std-bar").style.width = Math.min(100, res.std.pts * 10) + "%";
   }
 
   function renderWhatIf(res) {
@@ -2236,7 +2418,8 @@
     }
     if (s.kidsMin !== 0 || s.kidsMax !== 4) trial("Be open to any number of kids", "0 to 4+", function (c) { c.kidsMin = 0; c.kidsMax = 4; });
     if (s.excludeObese) trial("Allow any body weight", "Turn off the obesity filter", function (c) { c.excludeObese = false; });
-    if (s.excludeMarried) trial("Count people who are married", "Not recommended, but it's maths", function (c) { c.excludeMarried = false; });
+    if (s.excludeMarried) trial("Count people who are married", "Not recommended, but it's math", function (c) { c.excludeMarried = false; });
+    if (s.car !== "any") trial("Be fine with any ride", "Getting from A to B is fine", function (c) { c.car = "any"; });
     if (s.bodyTypes !== "any") trial("Accept every body type", "No body-type preference", function (c) { c.bodyTypes = "any"; });
     if (s.looksImportance > 5) trial("Turn looks importance down to 5", "Looks 5/10", function (c) { c.looksImportance = 5; });
     var hasReq = ["behavior", "skills"].some(function (g) { return Object.keys(s[g]).some(function (k) { return s[g][k] === "required"; }); });
@@ -2265,7 +2448,7 @@
   }
 
   function shareText(res, tier) {
-    return tier + ": only " + fmtOdds(res.Nadj) + " " + NOUN[state.seeking] + " (" + fmtPct(res.pAdj) + ") meet my dating standards. Census alone says " + fmtOdds(res.N) + ". Delusion score " + res.score + "/10. How picky are you?";
+    return tier + ": only " + fmtOdds(res.Nadj) + " " + NOUN[state.seeking] + " (" + fmtPct(res.pAdj) + ") fit my list. The census alone says " + fmtOdds(res.N) + ". Delulu score " + res.score + "/10. Run your own Delulu Equation.";
   }
   function renderShare(res, tier) {
     $("sc-tier").textContent = tier;
@@ -2276,7 +2459,7 @@
     if (res.std.R > 1.005) top.push({ label: "My standards", note: "\u00d7" + fmtMult(res.std.R) + " rarer" });
     var ul = $("sc-list"); ul.innerHTML = "";
     top.forEach(function (f) { var li = document.createElement("li"); var b = document.createElement("b"); b.textContent = f.label + ": "; li.appendChild(b); li.appendChild(document.createTextNode(f.note)); ul.appendChild(li); });
-    $("sc-score").textContent = "Delusion score " + res.score + "/10";
+    $("sc-score").textContent = "Delulu score " + res.score + "/10";
     var card = $("share-card");
     card.classList.toggle("light", cardTheme === "light");
     card.classList.toggle("story", cardShape === "story");
@@ -2303,18 +2486,8 @@
     if (state.ethnicities !== "any") bits.push("Black");
     $("summary-main").textContent = who + ", " + state.ageMin + "–" + state.ageMax;
     $("summary-sub").textContent = bits.join(" · ");
-    $("state-json").textContent = JSON.stringify(state, null, 2);
   }
 
-  $("copy-json").addEventListener("click", function () {
-    var btn = this;
-    function fail() { btn.textContent = "Copy blocked – select the text above"; }
-    try {
-      navigator.clipboard.writeText(JSON.stringify(state, null, 2)).then(function () {
-        btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy JSON"; }, 1600);
-      }, fail);
-    } catch (e) { fail(); }
-  });
 
   $("data-retry").addEventListener("click", function () { if (statusRetry) statusRetry(); });
   paintHeight(); paintIncome();
