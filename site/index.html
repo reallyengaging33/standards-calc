@@ -1328,7 +1328,7 @@
     var words = kind === "looks"
       ? ["Not important", "A little", "A little", "A little", "Somewhat", "Somewhat", "Somewhat", "Very", "Very", "Top priority", "Top priority"]
       : ["Not important", "Low", "Low", "Low", "Moderate", "Moderate", "Moderate", "High", "High", "Essential", "Essential"];
-    return words[v] + " · " + v + "/10 · \u00d7" + importanceMult(v).toFixed(1);
+    return words[v] + " · " + v + "/10";
   }
 
   /* Generic radiogroup: click + arrow keys + roving tabindex */
