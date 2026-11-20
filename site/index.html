@@ -1276,7 +1276,7 @@
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
-      <p><strong>Census odds</strong> use the step 1 filters above plus living situation. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) is applied as a pass rate on top of the census odds to give the <strong>real-world odds</strong>. Most of these are estimates. Two use real data: preferred income uses census income shares for the people who match your filters, and Therapy / Behavioral Work uses the share of adults who got counseling or therapy from a mental health professional in the past 12 months (10.9% of men, 16.9% of women; CDC / NCHS National Health Interview Survey 2024, Data Brief 564). When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Census odds</strong> use the step 1 filters above plus living situation. When you pick Black, the odds are counted among Black men or women (for example “1 in 153 Black men”), so choosing Black doesn't add to your Delulu score. “Doesn't matter” counts among all adults. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) is applied as a pass rate on top of the census odds to give the <strong>real-world odds</strong>. Most of these are estimates. Two use real data: preferred income uses census income shares for the people who match your filters, and Therapy / Behavioral Work uses the share of adults who got counseling or therapy from a mental health professional in the past 12 months (10.9% of men, 16.9% of women; CDC / NCHS National Health Interview Survey 2024, Data Brief 564). When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
       <p><strong>Delulu score:</strong> census odds add about 2 points for every 10× rarer. Your standards add points the same way, but with diminishing returns: the first few picks count almost fully, and a long list levels off at 3 points. Your real-world odds aren't softened.</p>
     </section>
   </div>
@@ -1845,7 +1845,7 @@
      secret key (sb_secret_...) here. */
   var SUPABASE_URL = "https://dxmpzgilhwhobfqpizsw.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Vvip55_DirJ4eF0S-KlUOw_zvSMFZRF";   // publishable (public) key; never the secret key
-  var APP_VERSION = "2026-11-20";   // bumped when scoring changed (diminishing returns, CDC therapy rates)
+  var APP_VERSION = "2026-11-20.2";   // bumped when scoring changes: .2 = Black odds counted among Black adults
   // Public address of the site, used on the share card and in shared text.
   var SITE_URL = "https://yourdelulunumber.app/";
   var lastSaveRes = null, lastSavedKey = null, sbClient = null;
@@ -2107,8 +2107,9 @@
     var hOn = s.heightMinIn !== null || s.heightMaxIn !== null, oOn = !!s.excludeObese;
     var both = bodyTable(s, sex, hOn, oOn), noH = bodyTable(s, sex, false, oOn), noO = bodyTable(s, sex, hOn, false);
     var livOk = LIVING_CODES.map(function (k) { return s.living.indexOf(k) > -1; }).concat([true]);
-    var matched = 0, matchedPref = 0, n = 0, without = [0, 0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0, 0];
+    var matched = 0, matchedPref = 0, n = 0, blackPool = 0, without = [0, 0, 0, 0, 0, 0, 0, 0], alone = [0, 0, 0, 0, 0, 0, 0, 0];
     for (var i = 0; i < t.w.length; i++) {
+      if (t.black[i] === 1) blackPool += t.w[i];
       var f0 = t.age[i] === AGE_TOP ? s.ageMax >= AGE_TOP : (t.age[i] >= s.ageMin && t.age[i] <= s.ageMax);
       var f1 = !wantBlack || t.black[i] === 1;
       var f2 = !s.excludeMarried || t.single[i] === 1;
@@ -2134,7 +2135,9 @@
         without[k] += w * pb;
       }
     }
-    return { pool: t.total, people: matched, peoplePref: matchedPref, n: n, without: without, alone: alone };
+    // Picking Black isn't treated as a standard (Nick's decision): the odds are counted among Black
+    // adults of that sex, so the race filter adds no delulu points. "Doesn't matter" uses all adults.
+    return { pool: wantBlack ? blackPool : t.total, people: matched, peoplePref: matchedPref, n: n, without: without, alone: alone };
   }
 
   function factorRows(s, matched, without, alone, pool) {
@@ -2155,7 +2158,11 @@
       // the share of all adults this filter keeps on its own.
       var v = without[i] > 0 ? matched / without[i] : alone[i] / pool;
       return { key: key, label: meta[key][0], note: meta[key][1], v: Math.min(1, v) };
-    }).filter(function (f) { return f.key !== "obesity" || s.excludeObese; });
+    }).filter(function (f) {
+      if (f.key === "obesity") return s.excludeObese;
+      if (f.key === "ethnicity") return false;   // Black sets the pool (see computeFor), so it isn't a cut
+      return true;
+    });
   }
 
   function incomeAtLeast(s, step, D) {
@@ -2400,7 +2407,7 @@
     var tier = TIERS[tierIdx].name;
     $("r-tier").textContent = tier;
     $("r-line").textContent = LINES[s.resultTone][tierIdx];
-    var noun = NOUN[s.seeking];
+    var noun = (s.ethnicities !== "any" ? "Black " : "") + NOUN[s.seeking];
     $("r-odds").textContent = fmtOdds(res.N);
     $("r-pct").textContent = res.people > 0 ? fmtPct(res.p) + " of " + noun + " \u00b7 about " + fmtPeopleShort(res.people) : "No survey respondents match all of these filters";
     var flag = $("r-flag");
@@ -2412,7 +2419,7 @@
     $("r-pct-adj").textContent = !(res.people > 0) ? "No survey respondents match all of these filters" : fmtPct(res.pAdj) + " of " + noun + " \u00b7 " + (res.peopleAdj < 1 ? "statistically, " : "about ") + fmtPeopleShort(res.peopleAdj);
     $("r-mult").textContent = res.std.R > 1.005 ? "\u00d7 " + fmtMult(res.std.R) + " rarer from your standards" : "No standards set, so no change";
     var area = searchArea(s);
-    $("r-sub").textContent = "Out of all " + (s.excludeMarried ? "single " : "") + "adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters and living situation; your other standards come from Steps 2 to 4.";
+    $("r-sub").textContent = "Out of all adult " + noun + " in " + area.name + ". Census odds use your Step 1 filters and living situation; your other standards come from Steps 2 to 4.";
     var local = area.level !== "us", thin = res.lowConfidence && res.people > 0;
     $("r-local").hidden = !local;
     if (local) {
@@ -2469,7 +2476,6 @@
     }
     trial("Widen your age range by 5 years", (Math.max(18, s.ageMin - 5)) + "–" + Math.min(99, s.ageMax + 5),
       function (c) { c.ageMin = Math.max(18, c.ageMin - 5); c.ageMax = Math.min(99, c.ageMax + 5); });
-    if (s.ethnicities !== "any") trial("Drop the ethnicity filter", "Open to anyone", function (c) { c.ethnicities = "any"; });
     if (s.heightMinIn !== null) trial("Drop the minimum height", "Any height above", function (c) { c.heightMinIn = null; });
     if (s.heightMaxIn !== null) trial("Drop the maximum height", "Any height below", function (c) { c.heightMaxIn = null; });
     if (s.minIncome) {

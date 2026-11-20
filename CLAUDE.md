@@ -148,6 +148,10 @@ Variables (confirm in the 2024 dictionary):
 > of any Hispanic origin** (use `RACBLK` = 1 if present in the dictionary, otherwise `RAC1P` = 2
 > or a multiracial code that includes Black). Store this as its own boolean in the cube
 > (`black`), separate from the mutually exclusive group used for NHANES lookups.
+> **Race doesn't add delulu points (Nick's decision).** When Black is picked, the census odds
+> are counted among Black adults of the sought sex (pool = Black adults, not all adults), the
+> results say "of Black men/women", and the ethnicity row and its "what if" are hidden.
+> "Doesn't matter" uses all adults. Rows from `APP_VERSION` 2026-11-20.2 on use this.
 > **As built:** `RACBLK` exists in both the 2024 and 2020–2024 dictionaries (1 = Black alone
 > or in combination); every cube has a `black` column from it (36.1M adults, 13.5%, in 2024).
 
