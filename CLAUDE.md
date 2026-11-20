@@ -308,8 +308,10 @@ caption is copied for pasting.
 ---
 
 ## Anonymous stats (Supabase, opt-in)
-- Results page has an **opt-in** switch ("Add my answers to the stats"), off by default.
-  Only when it's on does the page insert one row into the Supabase table `results`.
+- Results page has an **opt-in** panel ("Help us make our stats and app better") with an
+  "Add my answers" button, off by default. Only after it's clicked does the page insert a row
+  into the Supabase table `results` (and again if they change their answers and rerun).
+  "Stop adding my answers" turns it back off.
 - Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
   **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
   secret key in the site or the repo.

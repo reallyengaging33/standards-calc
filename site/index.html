@@ -629,7 +629,21 @@
   .assume-note { margin: 12px 0 0; font-size: 12px; color: var(--text-3); }
   .optin-status { margin: 10px 0 0; font-size: 13px; color: var(--cyan-ink); }
   .optin-status:empty { display: none; }
-  #optin-panel .toggle-text span { line-height: 1.45; }
+  .optin-cta { border-color: rgba(197, 78, 242, 0.45); background: radial-gradient(120% 140% at 0% 0%, rgba(197, 78, 242, 0.16) 0%, rgba(240, 80, 155, 0.06) 45%, transparent 75%), var(--surface); }
+  .optin-head { display: flex; gap: 14px; align-items: flex-start; }
+  .optin-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--magenta-tint); color: var(--magenta-ink); flex: none; }
+  .optin-icon svg { width: 22px; height: 22px; }
+  .optin-cta .panel-title { font-size: 21px; }
+  .optin-lede { margin: 4px 0 0; color: var(--text-2); font-size: 15px; line-height: 1.5; max-width: 60ch; }
+  .optin-points { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .optin-points li { display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; }
+  .optin-points svg { width: 16px; height: 16px; color: var(--cyan); stroke-width: 2.6; flex: none; }
+  .optin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 18px; }
+  .optin-actions .btn-primary svg { transform: none !important; }
+  #optin[aria-pressed="true"] { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--cyan); cursor: default; }
+  #optin[aria-pressed="true"] svg { color: var(--cyan); }
+  .optin-fine { margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
+  @media (max-width: 760px) { .optin-actions .btn-primary { width: 100%; justify-content: center; } }
   .chips.three-up { grid-template-columns: repeat(3, 1fr); }
   .slider-hint { margin: -4px 0 6px; font-size: 13px; color: var(--text-3); }
   .subscores { margin-top: 14px; display: grid; gap: 8px; text-align: left; }
@@ -1173,15 +1187,24 @@
       <ul class="whatif" id="r-whatif"></ul>
     </section>
 
-    <section class="panel" aria-labelledby="optin-title" id="optin-panel">
-      <div class="toggle-row" style="margin-top:0">
-        <span class="ti" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
-        <div class="toggle-text">
-          <strong id="optin-title">Add my answers to the stats</strong>
-          <span id="optin-desc">Saves your answers and scores without your name, email or IP address attached. It helps power stats like "more delulu than X% of people". Because nothing links them to you, saved answers can't be deleted later.</span>
+    <section class="panel optin-cta" aria-labelledby="optin-title" id="optin-panel">
+      <div class="optin-head">
+        <span class="optin-icon" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
+        <div>
+          <h2 class="panel-title" id="optin-title">Help us make our stats and app better</h2>
+          <p class="optin-lede" id="optin-desc">Add your answers to the stats. Every answer makes the numbers sharper for everyone, and you stay anonymous.</p>
         </div>
-        <button type="button" class="switch" role="switch" id="optin" aria-checked="false" aria-labelledby="optin-title" aria-describedby="optin-desc"></button>
       </div>
+      <ul class="optin-points">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>No link to your name or email</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>No IP address stored with your answers</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Helps us improve the data and the app</li>
+      </ul>
+      <div class="optin-actions">
+        <button type="button" class="btn-primary" id="optin" aria-pressed="false" aria-describedby="optin-desc">Add my answers</button>
+        <button type="button" class="link-btn" id="optin-stop" hidden>Stop adding my answers</button>
+      </div>
+      <p class="optin-fine">Because nothing links back to you, saved answers can't be deleted later.</p>
       <p class="optin-status" id="optin-status" aria-live="polite"></p>
     </section>
 
@@ -1837,7 +1860,7 @@
     var status = $("optin-status");
     if (!SUPABASE_URL || !SUPABASE_KEY) { status.textContent = "Saving isn't connected yet (no database set up)."; return; }
     var key = JSON.stringify(state);
-    if (key === lastSavedKey) { status.textContent = "Saved anonymously. Thanks!"; return; }
+    if (key === lastSavedKey) { optinUI("added"); return; }
     var row = {
       app_version: APP_VERSION,
       gender: state.gender, seeking: state.seeking,
@@ -1848,19 +1871,35 @@
       census_pts: num(res.censusPts), standards_pts: num(res.std.pts), delusion_score: res.score,
       answers: JSON.parse(key)
     };
-    status.textContent = "Saving…";
+    status.textContent = ""; optinUI("saving");
     getClient().then(function (sb) { return sb.from("results").insert(row); })
       .then(function (r) {
         if (r && r.error) throw r.error;
-        lastSavedKey = key; status.textContent = "Saved anonymously. Thanks!";
+        lastSavedKey = key; optinUI("added");
+        status.textContent = "You're in. Thanks for helping make the numbers better!";
       })
-      .catch(function () { status.textContent = "Couldn't save right now. Your results are unaffected."; });
+      .catch(function () {
+        optIn = false; optinUI("off");
+        status.textContent = "Couldn't add your answers right now. Your results are unaffected. Try again in a moment.";
+      });
+  }
+  var CHECK_SVG = '<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>';
+  function optinUI(mode) {
+    var b = $("optin");
+    b.setAttribute("aria-pressed", mode === "off" ? "false" : "true");
+    if (mode === "off") b.textContent = "Add my answers";
+    else if (mode === "saving") b.textContent = "Adding…";
+    else b.innerHTML = CHECK_SVG + "Answers added";
+    $("optin-stop").hidden = mode === "off";
   }
   $("optin").addEventListener("click", function () {
-    optIn = !optIn;
-    this.setAttribute("aria-checked", optIn ? "true" : "false");
-    if (optIn && lastSaveRes) saveResult(lastSaveRes);
-    if (!optIn) $("optin-status").textContent = lastSavedKey ? "Nothing more will be saved." : "";
+    if (optIn) return;
+    optIn = true;
+    if (lastSaveRes) saveResult(lastSaveRes); else optinUI("added");
+  });
+  $("optin-stop").addEventListener("click", function () {
+    optIn = false; optinUI("off");
+    $("optin-status").textContent = "Got it. Nothing more will be added.";
   });
 
   /* ================= Navigation ================= */
