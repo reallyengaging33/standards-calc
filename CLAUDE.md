@@ -96,7 +96,10 @@ that state; otherwise the whole US. There is no free-text city: PUMS can't ident
 
 The page has **4 steps + results**: 1 The Basics (census filters), 2 Preference Filter,
 3 Physical (body types, size), 4 Lifestyle & Skills (cooks, active, tidy, debt, handy).
-Results are view 5. Score label in the UI is "Delulu score".
+Results are view 5. Score label in the UI is "Delulu score". **Every step is required**: no
+"Optional step" notices and no Skip button (Nick's decision). Step 2 order: looks slider,
+Emotional Intelligence slider, behavior (`mentalHealth` = "Therapy / Behavioral Work",
+`lowSubstanceUse` = "No substance abuse", `communication`), dealbreakers, living.
 | `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Physical multiplier: rarity-weighted share of builds accepted (rarity values in `BODY_SETS`) |
 | `sizePreference` | `any` / `average_plus` / `above_average` | Physical multiplier (69% / 50% pass) |
 

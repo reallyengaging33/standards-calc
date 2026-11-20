@@ -447,20 +447,10 @@
   .tone-note[data-tone="pink"] { border-left-color: var(--pink); }
   .tone-note strong { display: block; font-size: 14px; font-weight: 700; }
   .tone-note span { display: block; font-size: 13px; color: var(--text-2); margin-top: 1px; }
-  .tone-note em { display: block; font-style: normal; font-size: 13px; color: var(--text); margin-top: 6px; }
   .tone-note.pop { animation: tonePop 260ms var(--ease-out); }
   @keyframes tonePop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .tone-note.pop { animation: none; } }
 
-  /* Optional notice */
-  .notice {
-    display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 16px;
-    border-radius: var(--radius-md); border: 1px solid rgba(240, 80, 155, 0.35); background: var(--pink-tint);
-    font-size: 14px; color: var(--text);
-  }
-  .notice svg { color: var(--pink); }
-  .notice span { flex: 1; min-width: 0; }
-  .notice span em { font-style: normal; color: var(--text-2); display: block; font-size: 13px; }
   .link-btn { border: 0; background: transparent; color: #ff9cc8; font-weight: 700; font-size: 14px; padding: 8px 4px; min-height: 44px; flex: none; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,156,200,.4); }
   .link-btn:hover { text-decoration-color: currentColor; }
 
@@ -829,9 +819,9 @@
 
   <ol class="steps" aria-label="Steps">
     <li class="step" id="step-1"><button type="button" class="step-btn" data-step="1"><span class="step-num">1</span><span class="step-text"><span class="step-title"><span class="long">The Basics</span><span class="short">Basics</span></span><span class="step-sub">~45 sec</span></span></button></li>
-    <li class="step" id="step-2"><button type="button" class="step-btn" data-step="2"><span class="step-num">2</span><span class="step-text"><span class="step-title"><span class="long">Preference Filter</span><span class="short">Prefs</span></span><span class="step-sub">Optional</span></span></button></li>
-    <li class="step" id="step-3"><button type="button" class="step-btn" data-step="3"><span class="step-num">3</span><span class="step-text"><span class="step-title"><span class="long">Physical</span><span class="short">Physical</span></span><span class="step-sub">Optional</span></span></button></li>
-    <li class="step" id="step-4"><button type="button" class="step-btn" data-step="4"><span class="step-num">4</span><span class="step-text"><span class="step-title"><span class="long">Lifestyle &amp; Skills</span><span class="short">Lifestyle</span></span><span class="step-sub">Optional</span></span></button></li>
+    <li class="step" id="step-2"><button type="button" class="step-btn" data-step="2"><span class="step-num">2</span><span class="step-text"><span class="step-title"><span class="long">Preference Filter</span><span class="short">Prefs</span></span><span class="step-sub">~20 sec</span></span></button></li>
+    <li class="step" id="step-3"><button type="button" class="step-btn" data-step="3"><span class="step-num">3</span><span class="step-text"><span class="step-title"><span class="long">Physical</span><span class="short">Physical</span></span><span class="step-sub">~15 sec</span></span></button></li>
+    <li class="step" id="step-4"><button type="button" class="step-btn" data-step="4"><span class="step-num">4</span><span class="step-text"><span class="step-title"><span class="long">Lifestyle &amp; Skills</span><span class="short">Lifestyle</span></span><span class="step-sub">~20 sec</span></span></button></li>
   </ol>
 
   <!-- ================= STEP 1 ================= -->
@@ -993,17 +983,12 @@
         <button type="button" class="choice" role="radio" data-value="playful" data-tone="magenta"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-rocks"/></svg>On the rocks<small>How your friends would say it</small></button>
         <button type="button" class="choice" role="radio" data-value="brutal" data-tone="pink"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-shot"/></svg>No chaser<small>Brutal honesty</small></button>
       </div>
-      <div class="tone-note" id="tone-note" aria-live="polite"><strong id="tone-note-title"></strong><span id="tone-note-desc"></span><em id="tone-note-sample"></em></div>
+      <div class="tone-note" id="tone-note" aria-live="polite"><strong id="tone-note-title"></strong><span id="tone-note-desc"></span></div>
     </section>
   </div>
 
   <!-- ================= STEP 2 ================= -->
   <div class="view" id="view-2" hidden>
-    <div class="notice">
-      <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
-      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
-      <button type="button" class="link-btn" data-skip>Skip this step</button>
-    </div>
     <section class="panel" aria-labelledby="p2-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-sparkle"/></svg></span>
@@ -1016,15 +1001,8 @@
           <span class="label" id="looks-label"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>How much do looks matter?</span>
           <output class="value-out" id="looks-out"></output>
         </div>
-        <p class="slider-hint">Powers up how much your physical picks (body types, size) narrow things.</p>
         <div class="slider"><div class="range-rail" aria-hidden="true"></div><input type="range" min="0" max="10" step="1" data-key="looksImportance" aria-labelledby="looks-label"></div>
         <div class="ticks" aria-hidden="true"><span>0</span><span class="mid">5</span><span>10</span></div>
-      </div>
-
-      <div class="field">
-        <span class="label"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg>Behavior and well-being</span>
-        <p class="group-sub">Preferences about behavior, not diagnoses. These aren't population statistics.</p>
-        <div class="pref-list" id="behavior-list"></div>
       </div>
 
       <div class="field range-block">
@@ -1032,9 +1010,15 @@
           <span class="label" id="emo-label"><svg class="icon" aria-hidden="true"><use href="#i-calm"/></svg>Emotional Intelligence &amp; Healthy Attachment</span>
           <output class="value-out" id="emo-out"></output>
         </div>
-        <p class="slider-hint">Manages their emotions, communicates needs, feels secure in a relationship. Powers up how much your character picks narrow things.</p>
+        <p class="slider-hint">Manages their emotions, communicates needs, feels secure in a relationship.</p>
         <div class="slider"><div class="range-rail" aria-hidden="true"></div><input type="range" min="0" max="10" step="1" data-key="emotionalRegulation" aria-labelledby="emo-label"></div>
         <div class="ticks" aria-hidden="true"><span>0</span><span class="mid">5</span><span>10</span></div>
+      </div>
+
+      <div class="field">
+        <span class="label"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg>Behavior and well-being</span>
+        <p class="group-sub">Preferences about behavior, not diagnoses. These aren't population statistics.</p>
+        <div class="pref-list" id="behavior-list"></div>
       </div>
 
       <div class="field">
@@ -1058,20 +1042,15 @@
 
   <!-- ================= STEP 3 ================= -->
   <div class="view" id="view-3" hidden>
-    <div class="notice">
-      <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
-      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
-      <button type="button" class="link-btn" data-skip>Skip this step</button>
-    </div>
     <section class="panel" aria-labelledby="p3-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-person"/></svg></span>
-        <div><h2 id="p3-title">Physical</h2><p>What catches your eye. These turn census odds into real-world odds.</p></div>
+        <div><h2 id="p3-title">Physical</h2><p>Pick every type you'd date.</p></div>
         <span class="badge pink">Real-world odds</span>
       </div>
 
       <fieldset class="field">
-        <legend class="label" id="body-label">Body types you're into</legend>
+        <legend class="label" id="body-label">Body types you're okay with</legend>
         <p class="group-sub">Select all that apply.</p>
         <div class="bodies" id="bodies"></div>
       </fieldset>
@@ -1091,11 +1070,6 @@
 
   <!-- ================= STEP 4 ================= -->
   <div class="view" id="view-4" hidden>
-    <div class="notice">
-      <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
-      <span>Optional step<em>Turns your census odds into real-world odds.</em></span>
-      <button type="button" class="link-btn" data-skip>Skip this step</button>
-    </div>
     <section class="panel" aria-labelledby="p4-title">
       <div class="panel-head">
         <span class="panel-icon pink" aria-hidden="true"><svg class="icon"><use href="#i-chef"/></svg></span>
@@ -1294,7 +1268,6 @@
   <div class="actionbar-inner">
     <div class="summary" aria-live="polite"><strong id="summary-main"></strong><span id="summary-sub"></span></div>
     <button type="button" class="btn-secondary" id="back-btn" hidden><span style="display:inline-flex;align-items:center;gap:6px"><svg class="icon" aria-hidden="true" style="width:16px;height:16px"><use href="#i-back"/></svg>Back</span></button>
-    <button type="button" class="btn-ghost" id="skip-btn" hidden><svg class="icon" aria-hidden="true"><use href="#i-skip"/></svg>Skip</button>
     <button type="button" class="btn-primary" id="next-btn"><span id="next-label">Continue</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
@@ -1623,8 +1596,8 @@
   }
 
   var BEHAVIOR = [
-    { key: "mentalHealth", title: "Actively works on themselves", desc: "Therapy, coaching or self-improvement" },
-    { key: "lowSubstanceUse", title: "Low substance use", desc: "No active addiction issues" },
+    { key: "mentalHealth", title: "Therapy / Behavioral Work", desc: "Actively in therapy or has gone in the past" },
+    { key: "lowSubstanceUse", title: "No substance abuse", desc: "No active addiction issues" },
     { key: "communication", title: "Good communicator", desc: "Can talk through issues calmly" }
   ];
   BEHAVIOR.forEach(function (b) {
@@ -1723,7 +1696,7 @@
     $("size-field").hidden = !askSize;
     if (!askSize && state.sizePreference !== "any") { state.sizePreference = "any"; paintSize(); }
     $("size-field").querySelector("legend").textContent = state.seeking === "either" ? "Penis size preference (men)" : "Penis size preference";
-    $("body-label").textContent = "Body types you're into (" + { women: "women", men: "men", either: "anyone" }[state.seeking] + ")";
+    $("body-label").textContent = "Body types you're okay with (" + { women: "women", men: "men", either: "anyone" }[state.seeking] + ")";
     var tick = '<span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
     function card(id, name, sub, sex, rarity) {
       var c = document.createElement("button");
@@ -1902,7 +1875,7 @@
     else { optinUI("off"); $("optin-status").textContent = lastSavedKey ? "Got it. Nothing more will be added." : ""; }
   });
 
-  /* Result tone: on phones, show the picked option's description and a sample line under the cards */
+  /* Result tone: on phones, show the picked option's description under the cards */
   var TONE_NOTES = {
     stats: { tone: "cyan", title: "Water", desc: "Plain talk, just the data." },
     playful: { tone: "magenta", title: "On the rocks", desc: "How your friends would say it." },
@@ -1915,7 +1888,6 @@
     box.setAttribute("data-tone", n.tone);
     $("tone-note-title").textContent = n.title;
     $("tone-note-desc").textContent = n.desc;
-    $("tone-note-sample").textContent = "Sounds like: \u201c" + LINES[key][2] + "\u201d";
     if (animate) { box.classList.remove("pop"); void box.offsetWidth; box.classList.add("pop"); }
   }
   document.querySelector('[data-key="resultTone"]').addEventListener("click", function () { paintToneNote(true); });
@@ -1923,13 +1895,13 @@
   /* ================= Navigation ================= */
   var STEPS = {
     1: { title: "Let's start with the basics", sub: "Who you're looking for, by the numbers. These run against real Census data.", eta: "about 45 sec", pct: 25 },
-    2: { title: "What you need from them", sub: "Optional. Character, values and dealbreakers.", eta: "about 20 sec", pct: 50 },
-    3: { title: "What catches your eye", sub: "Optional. Be honest, nobody's watching.", eta: "about 15 sec", pct: 75 },
-    4: { title: "How they move day to day", sub: "Optional. Habits, money and skills.", eta: "about 20 sec", pct: 100 },
+    2: { title: "What you need from them", sub: "Character, values and dealbreakers.", eta: "about 20 sec", pct: 50 },
+    3: { title: "What types are you okay with?", sub: "Be honest, nobody's watching.", eta: "about 15 sec", pct: 75 },
+    4: { title: "How they move day to day", sub: "Habits, money and skills.", eta: "about 20 sec", pct: 100 },
     5: { title: "Your Delulu results", sub: "Here's how your list stacks up.", eta: "done", pct: 100 }
   };
   var current = 1, furthest = 1;
-  var nextBtn = $("next-btn"), backBtn = $("back-btn"), skipBtn = $("skip-btn");
+  var nextBtn = $("next-btn"), backBtn = $("back-btn");
 
   function goTo(step) {
     if (current === 1) { commit("min"); commit("max"); }
@@ -1953,7 +1925,6 @@
     $("pct").textContent = s.pct + "%";
     $("progressbar").setAttribute("aria-valuenow", s.pct);
     backBtn.hidden = step === 1;
-    skipBtn.hidden = !(step >= 2 && step <= 4);
     nextBtn.hidden = step === 5;
     $("next-label").textContent = step === 4 ? "Get my number" : "Continue";
     var view = $("view-" + step);
@@ -1966,8 +1937,6 @@
   all(".step-btn").forEach(function (b) { b.addEventListener("click", function () { goTo(+b.getAttribute("data-step")); }); });
   nextBtn.addEventListener("click", function () { goTo(current + 1); });
   backBtn.addEventListener("click", function () { goTo(current - 1); });
-  skipBtn.addEventListener("click", function () { goTo(current + 1); });
-  all("[data-skip]").forEach(function (b) { b.addEventListener("click", function () { goTo(current + 1); }); });
 
   /* ================= Summary / results ================= */
   var LABELS = { white: "White", black: "Black", asian: "Asian", middle_eastern: "Middle Eastern", mixed: "Mixed" };
@@ -2213,7 +2182,7 @@
 
   // incomeKeep: share of the matching group earning >= preferred, from the cube (see compute()).
   function standardsRarity(s, incomeKeep) {
-    var names = { mentalHealth: "Works on themselves", lowSubstanceUse: "Low substance use", communication: "Good communicator", cooking: "Cooks", active: "Active", cleanliness: "Tidy" };
+    var names = { mentalHealth: "Therapy / behavioral work", lowSubstanceUse: "No substance abuse", communication: "Good communicator", cooking: "Cooks", active: "Active", cleanliness: "Tidy" };
     function item(label, keep) { return { label: label, keep: keep, R: 1 / keep }; }
     function triItems(obj, rates) {
       var out = [];
