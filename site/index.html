@@ -673,7 +673,7 @@
 
   .share-wrap { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start; }
   .share-card {
-    width: 300px; aspect-ratio: 1 / 1; border-radius: 16px; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    width: 300px; aspect-ratio: 1 / 1; border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
     background: radial-gradient(120% 90% at 20% 0%, #3d1838 0%, #1f141a 55%, #120c0f 100%); color: var(--text); border: 1px solid var(--border);
     box-shadow: 0 20px 40px -24px rgba(0,0,0,.8);
   }
@@ -681,18 +681,24 @@
   .share-card.light .sc-odds { color: var(--pink-deep); }
   .share-card.light { background: radial-gradient(120% 90% at 20% 0%, #f5dcea 0%, #fbf1ec 60%, #fdf8f4 100%); color: #2a1520; border-color: #ead3dc; }
   .sc-kicker { font-family: var(--font-display); font-weight: 750; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
-  .sc-odds { font-family: var(--font-display); font-weight: 750; font-size: 60px; line-height: 1; letter-spacing: -0.04em; margin: 10px 0 8px; color: var(--pink); }
-  .sc-line { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
-  .sc-hook { margin-top: 6px; font-size: 13px; font-weight: 500; opacity: .85; max-width: 24ch; }
-  .sc-rule { width: 40px; height: 2px; border-radius: 2px; background: currentColor; opacity: .3; margin: 18px 0 14px; }
-  .sc-cta { font-size: 14px; font-weight: 750; }
-  .sc-sub { margin-top: 3px; font-size: 12px; font-weight: 500; opacity: .85; }
+  .sc-odds { font-family: var(--font-display); font-weight: 750; font-size: 44px; line-height: 1; letter-spacing: -0.04em; margin: 6px 0 5px; color: var(--pink); }
+  .sc-line { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
+  .sc-stats { list-style: none; margin: 6px 0 0; padding: 0; font-size: 11px; line-height: 1.35; }
+  .sc-stats b { font-weight: 700; }
+  .sc-score { margin-top: 5px; font-size: 11.5px; font-weight: 750; }
+  .sc-hook { margin-top: 6px; font-size: 11px; font-weight: 500; opacity: .85; }
+  .sc-rule { width: 40px; height: 2px; border-radius: 2px; background: currentColor; opacity: .3; margin: 7px 0 6px; }
+  .sc-cta { font-size: 12.5px; font-weight: 750; }
+  .sc-sub { margin-top: 2px; font-size: 11px; font-weight: 500; opacity: .85; }
   .sc-sub b { font-weight: 700; }
-  .share-card.story .sc-odds { font-size: 50px; }
+  .share-card.story .sc-odds { font-size: 44px; }
   .share-card.story .sc-line { font-size: 14px; }
+  .share-card.story .sc-stats { margin-top: 14px; font-size: 11.5px; line-height: 1.5; }
+  .share-card.story .sc-score { margin-top: 8px; font-size: 12px; }
+  .share-card.story .sc-hook { margin-top: 16px; max-width: 22ch; }
   .share-card.story .sc-cta { font-size: 13px; }
-  .share-card.story .sc-sub { font-size: 11px; }
-  .share-card.story .sc-rule { margin: 26px 0 20px; }
+  .share-card.story .sc-sub { font-size: 10.5px; }
+  .share-card.story .sc-rule { margin: 20px 0 16px; }
   .share-side h3 { margin: 0 0 4px; font-size: 15px; font-weight: 650; }
   .share-side p { margin: 0 0 14px; font-size: 13px; color: var(--text-2); }
   .share-opts { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
@@ -1193,6 +1199,8 @@
           <div class="sc-kicker">Your Delulu Number</div>
           <div class="sc-odds" id="sc-odds"></div>
           <div class="sc-line">That's how rare my type is.</div>
+          <ul class="sc-stats" id="sc-stats"></ul>
+          <div class="sc-score" id="sc-score"></div>
           <div class="sc-hook">Think your standards are reasonable? Let's see.</div>
           <div class="sc-rule" aria-hidden="true"></div>
           <div class="sc-cta">What's your Delulu Number?</div>
@@ -2478,7 +2486,22 @@
     return "My Delulu Number is " + fmtOdds(res.Nadj) + ". That's how rare my type is.\n\nThink your standards are reasonable? Let's see. What's your Delulu Number? Find yours at " + siteHost();
   }
   function siteHost() { return SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
+  // The census filters shown on the share card, plus the Delulu score
+  function cardStats(res) {
+    return [
+      ["Census odds", fmtOdds(res.N)],
+      ["Ethnicity", state.ethnicities === "any" ? "Any" : "Black"],
+      ["Minimum income", state.minIncome ? incomeFloor(state.minIncome) : "Any"],
+      ["Height", (state.heightMinIn === null && state.heightMaxIn === null) ? "Any" : heightText()]
+    ];
+  }
   function renderShare(res, tier) {
+    var ul = $("sc-stats"); ul.innerHTML = "";
+    cardStats(res).forEach(function (r) {
+      var li = document.createElement("li"), b = document.createElement("b");
+      b.textContent = r[0] + ": "; li.appendChild(b); li.appendChild(document.createTextNode(r[1])); ul.appendChild(li);
+    });
+    $("sc-score").textContent = "Delulu score " + res.score + "/10";
     $("sc-odds").textContent = fmtOdds(res.Nadj);
     $("sc-odds").className = "sc-odds" + (fmtOdds(res.Nadj).length > 8 ? " long" : "");
     $("sc-url").textContent = siteHost();
@@ -2515,19 +2538,22 @@
       words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (cur && x.measureText(t).width > width) { lines.push(cur); cur = w; } else cur = t; });
       if (cur) lines.push(cur); return lines;
     }
-    var odds = fmtOdds(res.Nadj), oddsPx = story ? 250 : 220;
+    var odds = fmtOdds(res.Nadj), oddsPx = story ? 220 : 170;
     x.font = font(750, oddsPx, DISPLAY);
     while (x.measureText(odds).width > maxW && oddsPx > 90) { oddsPx -= 6; x.font = font(750, oddsPx, DISPLAY); }
     var host = siteHost(), k = story ? 1.12 : 1;
     // Each block: lines, font, colour, line height, space after
+    var stats = cardStats(res).map(function (r) { return [r[0] + ": ", r[1]]; });
     var blocks = [
-      { kind: "kicker", lines: ["YOUR DELULU NUMBER"], f: font(750, 46 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 56 * k, after: 30 * k },
-      { lines: [odds], f: font(750, oddsPx, DISPLAY), col: pink, lh: oddsPx * 1.02, after: 34 * k },
-      { lines: wrap("That's how rare my type is.", font(700, 58 * k, DISPLAY), maxW), f: font(700, 58 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 70 * k, after: 18 * k },
-      { lines: wrap("Think your standards are reasonable? Let's see.", font(500, 46 * k, BODY), 780), f: font(500, 46 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 62 * k, after: 0 },
-      { kind: "rule", h: 7, after: 0, before: (story ? 120 : 62) },
-      { lines: ["What's your Delulu Number?"], f: font(700, 52 * k, BODY), col: "rgba(" + ink + ",1)", lh: 64 * k, after: 10 * k, before: (story ? 100 : 50) },
-      { kind: "sub", lines: ["Find yours at "], f: font(500, 44 * k, BODY), bold: font(700, 44 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 58 * k, after: 0 }
+      { kind: "kicker", lines: ["YOUR DELULU NUMBER"], f: font(750, 40 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 50 * k, after: 18 * k },
+      { lines: [odds], f: font(750, oddsPx, DISPLAY), col: pink, lh: oddsPx * 1.02, after: 20 * k },
+      { lines: wrap("That's how rare my type is.", font(700, 50 * k, DISPLAY), maxW), f: font(700, 50 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 60 * k, after: (story ? 50 : 22) },
+      { kind: "pair", lines: stats, f: font(500, 36 * k, BODY), bold: font(700, 36 * k, BODY), col: "rgba(" + ink + ",.9)", lh: (story ? 56 : 48) * k, after: 12 * k },
+      { lines: ["Delulu score " + res.score + "/10"], f: font(750, 40 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 52 * k, after: (story ? 50 : 24) },
+      { lines: wrap("Think your standards are reasonable? Let's see.", font(500, 36 * k, BODY), story ? 820 : 960), f: font(500, 36 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 48 * k, after: 0 },
+      { kind: "rule", h: 6, after: 0, before: (story ? 70 : 28) },
+      { lines: ["What's your Delulu Number?"], f: font(700, 44 * k, BODY), col: "rgba(" + ink + ",1)", lh: 56 * k, after: 4 * k, before: (story ? 60 : 26) },
+      { kind: "pair", lines: [["Find yours at ", host]], reverse: true, f: font(500, 38 * k, BODY), bold: font(700, 38 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 50 * k, after: 0 }
     ];
     var total = 0;
     blocks.forEach(function (b) { total += (b.before || 0) + (b.kind === "rule" ? b.h : b.lines.length * b.lh) + b.after; });
@@ -2546,11 +2572,13 @@
           chars.forEach(function (ch) { wTot += x.measureText(ch).width + sp; }); wTot -= sp;
           var cx = (W - wTot) / 2;
           chars.forEach(function (ch) { x.fillText(ch, cx, cy); cx += x.measureText(ch).width + sp; });
-        } else if (b.kind === "sub") {
-          var w1 = x.measureText(line).width; x.font = b.bold; var w2 = x.measureText(host).width;
+        } else if (b.kind === "pair") {
+          // two parts on one centered line; the bold part is the label (or the site name when reversed)
+          var fa = b.reverse ? b.f : b.bold, fb = b.reverse ? b.bold : b.f;
+          x.font = fa; var w1 = x.measureText(line[0]).width; x.font = fb; var w2 = x.measureText(line[1]).width;
           var sx = (W - w1 - w2) / 2;
-          x.font = b.f; x.fillText(line, sx, cy);
-          x.font = b.bold; x.fillStyle = "rgba(" + ink + ",1)"; x.fillText(host, sx + w1, cy);
+          x.font = fa; x.fillStyle = b.reverse ? b.col : "rgba(" + ink + ",1)"; x.fillText(line[0], sx, cy);
+          x.font = fb; x.fillStyle = b.reverse ? "rgba(" + ink + ",1)" : b.col; x.fillText(line[1], sx + w1, cy);
         } else {
           x.textAlign = "center"; x.fillText(line, W / 2, cy); x.textAlign = "left";
         }
