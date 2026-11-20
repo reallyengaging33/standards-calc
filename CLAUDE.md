@@ -1,6 +1,6 @@
-# Standards Calc — project guide for Claude Code
+# The Delulu Equation — project guide for Claude Code
 
-A dating-standards calculator. People set filters (age, income, height…) and see how many
+A dating-standards calculator for Black men and women, mostly 25–35. People set filters (age, income, height…) and see how many
 real people match: "1 in N", a delusion score out of 10, a filter breakdown and a share card.
 
 The UI is finished and lives in `site/index.html`, a single self-contained file. It currently
@@ -62,16 +62,16 @@ opened by double-clicking:
 
 ## Filter state (the contract between UI and data)
 
-The UI builds this object (see the "Filter state" panel at the bottom of the page):
+The UI builds this object (the `state` variable in index.html; log it with `console.log(state)` to inspect it):
 
 | Field | Values | Used for |
 |---|---|---|
 | `gender` | `male` / `female` | the user, not the filter |
 | `seeking` | `men` / `women` / `either` | **odds** (sex) |
-| `ethnicities` | `"any"` or `["black"]` (the only option in the UI) | **odds** |
+| `ethnicities` | `"any"` or `["black"]` (the only option in the UI). **Default `["black"]`** | **odds** |
 | `ageMin`, `ageMax` | 18–99 | **odds** |
 | `excludeMarried` | bool | **odds** |
-| `kidsMin`, `kidsMax` | 0–4 (4 means "4 or more") | **odds** |
+| `kidsMin`, `kidsMax` | 0–4 (4 means "4 or more"). **Default 0–0 (no kids)** | **odds** |
 | `heightMinIn`, `heightMaxIn` | inches 59–88, or `null` = no limit | **odds** (via NHANES) |
 | `heightUnit` | `imperial` / `metric` | display only |
 | `minIncome` | one of the `INCOME_STEPS` values (0 … 1,000,000) | **odds** |
@@ -84,12 +84,19 @@ The UI builds this object (see the "Filter state" panel at the bottom of the pag
 
 Search area: `metro` + state + city → that metro area; `metro` or `state` with only a state →
 that state; otherwise the whole US. There is no free-text city: PUMS can't identify towns.
-| `resultTone` | `stats` / `playful` / `brutal` | copy only |
+| `resultTone` | `stats` ("Water") / `playful` ("On the rocks", default) / `brutal` ("No chaser") | copy only |
 | `looksImportance` | 0–10 | power on the Physical rarity multiplier (0.5 to 1.5) |
 | `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
 | `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
-| `dealbreakers.*` | bool | pass-rate multipliers (Character) |
+| `dealbreakers.*` | `heavyPartying` (out 4–5 nights a week, 85%), `nightlife` (works in nightlife, 93%), `unreliable` (70%), `multipleCoParents` (multiple BMs/BDs, 85%; ignored when `kidsMax` ≤ 1) | pass-rate multipliers (Character) |
+| `living` | array of `alone` / `roommates` / `parents` they can have (default all, at least one) | pass-rate multiplier (Character). Estimates 35% / 35% / 30%. **ACS can measure this** (household size 1 = alone; child of householder = with parents; non-relatives = roommates): in Phase 2 add it to the cube and move it to the census side if Nick agrees |
+| `car` | `"any"` (A to B is fine) or an array of accepted rides: `newer` (2020+), `luxury` (BMW, Mercedes, Audi), `foreign_luxury` (Maserati, Porsche, G-Wagon, Bentley) | pass-rate multiplier (Lifestyle): sum of accepted shares 0.5 / 0.22 / 0.10 (capped at 1) |
 | `debt` | `any` / `after_marriage` / `has_plan` / `debt_free` | pass-rate multiplier (Lifestyle): 100% / 90% / 75% / 25% |
+| `handy` | `any` / `pays` / `basics` / `very` (asked only when looking for men) | pass-rate multiplier (Lifestyle): 100% / 80% / 60% / 15% |
+
+The page has **4 steps + results**: 1 The Basics (census filters), 2 Preference Filter,
+3 Physical (body types, size), 4 Lifestyle & Skills (cooks, active, tidy, debt, handy).
+Results are view 5. Score label in the UI is "Delulu score".
 | `bodyTypes` | `"any"` or array of ids (`w01`–`w13`, `m01`–`m11`) | Physical multiplier: rarity-weighted share of builds accepted (rarity values in `BODY_SETS`) |
 | `sizePreference` | `any` / `average_plus` / `above_average` | Physical multiplier (69% / 50% pass) |
 
@@ -170,7 +177,7 @@ Veale et al., BJU International 2015, erect length mean 13.12 cm, SD 1.66 cm (n 
 **Leave as strictness-only unless Nick says otherwise.**
 
 ### Not from any dataset (rarity multipliers on top of the census odds)
-Body types, all of Step 2 (behaviour, Emotional Intelligence, dealbreakers), skills, debt,
+Body types, all of Step 2 (behavior, Emotional Intelligence, dealbreakers), skills, debt,
 looks importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
 odds** (real-world odds), never the census odds themselves. Body-type rarity multipliers in `BODY_SETS` are Nick's
 assumptions. Do not invent proxies or replace them with "data".
@@ -287,6 +294,27 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
    hosting (Cloudflare Pages / Vercel / Netlify), share-image download.
 
 ## Data credits to show on the site
+(Brand name on the site: **The Delulu Equation**.)
 - U.S. Census Bureau, American Community Survey 2024 1-year PUMS
 - CDC / NCHS, National Health and Nutrition Examination Survey, Aug 2021–Aug 2023
 - Veale et al. (2015), BJU International (only if the size factor is used)
+
+---
+
+## Anonymous stats (Supabase, opt-in)
+- Results page has an **opt-in** switch ("Add my answers to the stats"), off by default.
+  Only when it's on does the page insert one row into the Supabase table `results`.
+- Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
+  **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
+  secret key in the site or the repo.
+- The table and its insert-only Row Level Security policy are in `supabase-setup.sql`.
+  The public key can insert, never read. Reading and analysis happen in the dashboard
+  or later through a server-side job using the secret key (stored as a secret, never committed).
+- Never add names, emails, IP addresses or free text to the row.
+- Later: use these rows (server-side, aggregated) for "more delusional than X% of people"
+  and body-type popularity stats, refreshed into a small static JSON file, so the site still
+  never reads the table directly.
+
+
+## Copy style
+US English throughout the site (organized, behavior, math, well-being).
