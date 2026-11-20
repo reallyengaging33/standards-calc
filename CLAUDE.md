@@ -89,7 +89,7 @@ that state; otherwise the whole US. There is no free-text city: PUMS can't ident
 | `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
 | `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
 | `dealbreakers.*` | `heavyPartying` (out 4–5 nights a week, 85%), `nightlife` (works in nightlife, 93%), `unreliable` (70%), `multipleCoParents` (multiple BMs/BDs, 85%; ignored when `kidsMax` ≤ 1) | pass-rate multipliers (Character) |
-| `living` | array of `alone` / `roommates` / `parents` they can have (default all, at least one) | pass-rate multiplier (Character). Estimates 35% / 35% / 30%. **ACS can measure this** (household size 1 = alone; child of householder = with parents; non-relatives = roommates): in Phase 2 add it to the cube and move it to the census side if Nick agrees |
+| `living` | array of `alone` / `roommates` / `parents` they can have (default all, at least one) | **odds** (census; Nick agreed). Cube column `living`: 0 alone (head of a 1-person household), 1 roommates (roommate/other non-relative of the head, a head with no partner living with non-relatives, or non-institutional group quarters), 2 parents (adult child of the head, RELSHIPP 25–27), 3 other (never excluded). Matches ACS B09021. No longer in `standardsRarity()` |
 | `car` | `"any"` (A to B is fine) or an array of accepted rides: `newer` (2020+), `luxury` (BMW, Mercedes, Audi), `foreign_luxury` (Maserati, Porsche, G-Wagon, Bentley) | pass-rate multiplier (Lifestyle): sum of accepted shares 0.5 / 0.22 / 0.10 (capped at 1) |
 | `debt` | `any` / `after_marriage` / `has_plan` / `debt_free` | pass-rate multiplier (Lifestyle): 100% / 90% / 75% / 25% |
 | `handy` | `any` / `pays` / `basics` / `very` (asked only when looking for men) | pass-rate multiplier (Lifestyle): 100% / 80% / 60% / 15% |
@@ -193,7 +193,7 @@ Aggregate ACS adults into a **weighted cube** (state dropped, because location n
 the odds):
 
 ```
-dimensions: sex(2) × age(18..90, 90 = 90+) × single(2) × ethnicity group(7) × black(2) × income bucket(19) × kids(0..4)
+dimensions: sex(2) × age(18..90, 90 = 90+) × single(2) × ethnicity group(7) × black(2) × income bucket(19) × kids(0..4) × living(4)
 values:     sum of PWGTP (population), count of rows (sample size)
 ```
 - Income bucket = the highest `INCOME_STEPS` value that the person's adjusted income is ≥.

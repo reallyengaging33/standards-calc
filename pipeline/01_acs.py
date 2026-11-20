@@ -144,6 +144,32 @@ def ethnicity(df: pd.DataFrame) -> np.ndarray:
     return out.astype(np.int8)
 
 
+LIVING = ["alone", "roommates", "parents", "other"]
+
+
+def living(df: pd.DataFrame) -> np.ndarray:
+    """Living situation per person (needs every household member's row), from RELSHIPP:
+      alone      head of a one-person household (ACS "lives alone")
+      parents    adult son/daughter of the head: biological, adopted, step (25-27;
+                 ACS "child of householder")
+      roommates  roommate/housemate or other non-relative of the head (34, 36), a head with
+                 no spouse/partner living with such non-relatives, or the non-institutional
+                 group-quarters population (38: dorms, barracks, group homes)
+      other      everyone else: with a spouse/partner, own kids, other relatives, or in an
+                 institution (37). The site's filter only ever excludes the first three.
+    Matches the categories of ACS table B09021 (living arrangements of adults)."""
+    r = df.RELSHIPP
+    size = df.groupby("SERIALNO").SERIALNO.transform("size")
+    hh = df.SERIALNO
+    nonrel = r.isin([34, 36]).groupby(hh).transform("any")
+    partner = r.isin([21, 22, 23, 24]).groupby(hh).transform("any")
+    out = np.full(len(df), 3, dtype=np.int8)                                   # other
+    out[((r == 20) & nonrel & ~partner).to_numpy() | r.isin([34, 36, 38]).to_numpy()] = 1   # roommates
+    out[r.isin([25, 26, 27]).to_numpy()] = 2                                   # parents
+    out[((r == 20) & (size == 1)).to_numpy()] = 0                              # alone
+    return out
+
+
 def black_flag(df: pd.DataFrame) -> np.ndarray:
     """The site's only ethnicity filter: Black alone or in combination, of any Hispanic origin.
     RACBLK (2024 dictionary): 1 = Black or African American alone or in combination. Kept as
@@ -170,6 +196,7 @@ def main():
     print(f"  {len(df):,} person records", file=sys.stderr)
 
     df["kids"] = own_children(df)  # needs children rows, so before the 18+ filter
+    df["living"] = living(df)      # needs every household member
     a = df[df.AGEP >= 18].copy()
     a["single"] = a.MAR.isin([2, 3, 5]).astype(np.int8)
     a["eth"] = ethnicity(a)
@@ -180,7 +207,7 @@ def main():
     a["AGEP"] = a.AGEP.clip(upper=AGE_TOP)   # top-coded ages -> one 90+ group (cube only)
 
     # ---- cube ----------------------------------------------------------------------
-    dims = ["sex", "AGEP", "single", "eth", "black", "inc", "kids"]
+    dims = ["sex", "AGEP", "single", "eth", "black", "inc", "kids", "living"]
     cube = (a.groupby(dims, sort=True)
               .agg(w=("PWGTP", "sum"), n=("PWGTP", "size"))
               .reset_index())
@@ -193,15 +220,16 @@ def main():
             "single": ["not single (married or separated)", "single (never married, divorced, widowed)"],
             "eth": ETHNICITIES,
             "black": "1 = Black alone or in combination with other races, any Hispanic origin (RACBLK = 1)",
+            "living": LIVING,
             "inc": INCOME_STEPS,
             "kids": "own children under 18 in household, 0-4 (4 = 4+)",
         },
-        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "w", "n"],
+        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "living", "w", "n"],
         "w": "sum of PWGTP (weighted people)",
         "n": "unweighted respondent rows",
         "data": {
             "sex": cube.sex.tolist(), "age": cube.AGEP.tolist(), "single": cube.single.tolist(),
-            "eth": cube.eth.tolist(), "black": cube.black.tolist(), "inc": cube.inc.tolist(), "kids": cube.kids.tolist(),
+            "eth": cube.eth.tolist(), "black": cube.black.tolist(), "inc": cube.inc.tolist(), "kids": cube.kids.tolist(), "living": cube.living.tolist(),
             "w": cube.w.tolist(), "n": cube.n.tolist(),
         },
     }

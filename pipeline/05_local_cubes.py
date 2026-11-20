@@ -47,7 +47,7 @@ crosswalk = importlib.util.module_from_spec(cw); cw.loader.exec_module(crosswalk
 
 COLS = ["SERIALNO", "PUMA", "PWGTP", "AGEP", "SEX", "MAR", "RAC1P", "RACBLK", "HISP", "ANC1P", "ANC2P",
         "PINCP", "ADJINC", "RELSHIPP", "SFN", "SFR"]
-DIMS = ["sex", "age", "single", "eth", "black", "inc", "kids"]
+DIMS = ["sex", "age", "single", "eth", "black", "inc", "kids", "living"]
 
 
 def check_dictionary():
@@ -81,6 +81,7 @@ def aggregate_state(st: str, fips: str) -> Path:
     for c in ["SFN", "SFR", "ANC1P", "ANC2P", "PINCP"]:
         df[c] = df[c].fillna(0)
     df["kids"] = acs.own_children(df)                       # needs the children's rows
+    df["living"] = acs.living(df)                           # needs every household member
     a = df[df.AGEP >= 18].copy()
     a["single"] = a.MAR.isin([2, 3, 5]).astype(np.int8)
     a["eth"] = acs.ethnicity(a)
@@ -102,7 +103,7 @@ def write_cube(path: Path, g: pd.DataFrame, info: dict) -> dict:
     doc = {
         "source": "ACS 2020–2024 5-year PUMS, person file",
         "area": info,
-        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "w", "n"],
+        "columns": ["sex", "age", "single", "eth", "black", "inc", "kids", "living", "w", "n"],
         "data": {c: cube[c].astype(int).tolist() for c in DIMS + ["w", "n"]},
     }
     path.parent.mkdir(parents=True, exist_ok=True)
