@@ -291,7 +291,13 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
 4. **Wire up:** replace the demo model in `index.html`, add loading, error and low-confidence states.
 5. **Validate:** run `03_validate.py`, fix anything off, then click through the site.
 6. **Later:** methodology page,
-   hosting (Cloudflare Pages / Vercel / Netlify), share-image download.
+   hosting (Cloudflare Pages / Vercel / Netlify).
+
+Sharing (done): the results page shares to Instagram, Snapchat, X, Threads and Facebook.
+The card is drawn to a PNG on a canvas (`drawCard()`, 1080×1080 or 1080×1920). Instagram and
+Snapchat open the phone's share sheet with that image (desktop: save image + copy caption);
+X and Threads use web intents with the text; Facebook's sharer takes only the link, so the
+caption is copied for pasting.
 
 ## Data credits to show on the site
 (Brand name on the site: **Your Delulu Number**. Live at https://yourdelulunumber.app, set in `SITE_URL` in index.html.)

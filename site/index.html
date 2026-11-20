@@ -693,6 +693,10 @@
   }
   .share-links a:hover, .share-links button:hover { border-color: var(--magenta); }
   .share-links .primary { background: var(--magenta-fill); border-color: var(--magenta-fill); color: var(--on-accent); }
+  .share-links button { cursor: pointer; }
+  .share-extra { margin-top: 8px; }
+  .share-extra button { min-height: 36px; font-size: 13px; background: transparent; }
+  .share-side p.share-status { margin: 10px 0 0; min-height: 1.4em; color: var(--text); font-weight: 500; }
   .panel-title { font-family: var(--font-display); font-weight: 650; font-size: 19px; letter-spacing: -0.015em; margin: 0; }
   .panel-sub { margin: 2px 0 18px; color: var(--text-2); font-size: 14px; }
 
@@ -1211,13 +1215,19 @@
             </div>
           </div>
           <h3>Post it</h3>
-          <p>Each link opens the app with your result pre-written.</p>
+          <p>Instagram and Snapchat share the card as an image. X, Threads and Facebook open with your result ready to post.</p>
           <div class="share-links">
-            <button type="button" class="primary" id="copy-result">Copy result text</button>
-            <a id="sh-x" target="_blank" rel="noopener">X / Twitter</a>
-            <a id="sh-wa" target="_blank" rel="noopener">WhatsApp</a>
-            <a id="sh-rd" target="_blank" rel="noopener">Reddit</a>
+            <button type="button" class="primary" id="sh-ig">Instagram</button>
+            <button type="button" class="primary" id="sh-sc">Snapchat</button>
+            <a id="sh-x" target="_blank" rel="noopener">X</a>
+            <a id="sh-th" target="_blank" rel="noopener">Threads</a>
+            <a id="sh-fb" target="_blank" rel="noopener">Facebook</a>
           </div>
+          <div class="share-links share-extra">
+            <button type="button" id="copy-result">Copy text</button>
+            <button type="button" id="save-card">Save image</button>
+          </div>
+          <p class="share-status" id="share-status" aria-live="polite"></p>
         </div>
       </div>
     </section>
@@ -2471,16 +2481,138 @@
     card.classList.toggle("light", cardTheme === "light");
     card.classList.toggle("story", cardShape === "story");
     var txt = encodeURIComponent(shareText(res, tier));
-    $("sh-x").href = "https://twitter.com/intent/tweet?text=" + txt;
-    $("sh-wa").href = "https://wa.me/?text=" + txt;
-    $("sh-rd").href = "https://www.reddit.com/submit?url=" + encodeURIComponent(SITE_URL) + "&title=" + encodeURIComponent("My Delulu Number is " + fmtOdds(res.Nadj) + ". That's how rare my type is. What's yours?");
+    $("sh-x").href = "https://x.com/intent/tweet?text=" + txt;
+    $("sh-th").href = "https://www.threads.com/intent/post?text=" + txt;
+    $("sh-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SITE_URL);
+    $("share-status").textContent = "";
+    buildCardFile(res);
   }
+
+  /* ---- Share card as an image (for Instagram, Snapchat and Save image) ----
+     Drawn on a canvas to match the on-screen card: 1080×1080 post or 1080×1920 story.
+     Built ahead of the click, so the phone's share sheet can open straight away. */
+  var cardFile = null, cardBuildId = 0;
+  function isTouch() { return window.matchMedia && window.matchMedia("(pointer: coarse)").matches; }
+  function drawCard(res, theme, shape) {
+    var W = 1080, H = shape === "story" ? 1920 : 1080, light = theme === "light";
+    var c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d");
+    var g = x.createRadialGradient(W * 0.2, 0, 0, W * 0.2, 0, Math.max(W, H) * 1.15);
+    if (light) { g.addColorStop(0, "#f5dcea"); g.addColorStop(0.6, "#fbf1ec"); g.addColorStop(1, "#fdf8f4"); }
+    else { g.addColorStop(0, "#3d1838"); g.addColorStop(0.55, "#1f141a"); g.addColorStop(1, "#120c0f"); }
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    var ink = light ? "42,21,32" : "245,236,230", pink = light ? "#c8357a" : "#f0509b";
+    var DISPLAY = '"Bricolage Grotesque", "Figtree", system-ui, sans-serif', BODY = '"Figtree", system-ui, sans-serif';
+    var maxW = W - 160, story = shape === "story";
+    function font(w, px, fam) { return w + " " + px + "px " + fam; }
+    function wrap(text, f, width) {
+      x.font = f; var words = text.split(" "), lines = [], cur = "";
+      words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (cur && x.measureText(t).width > width) { lines.push(cur); cur = w; } else cur = t; });
+      if (cur) lines.push(cur); return lines;
+    }
+    var odds = fmtOdds(res.Nadj), oddsPx = story ? 250 : 220;
+    x.font = font(750, oddsPx, DISPLAY);
+    while (x.measureText(odds).width > maxW && oddsPx > 90) { oddsPx -= 6; x.font = font(750, oddsPx, DISPLAY); }
+    var host = siteHost(), k = story ? 1.12 : 1;
+    // Each block: lines, font, colour, line height, space after
+    var blocks = [
+      { kind: "kicker", lines: ["YOUR DELULU NUMBER"], f: font(750, 46 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 56 * k, after: 30 * k },
+      { lines: [odds], f: font(750, oddsPx, DISPLAY), col: pink, lh: oddsPx * 1.02, after: 34 * k },
+      { lines: wrap("That's how rare my type is.", font(700, 58 * k, DISPLAY), maxW), f: font(700, 58 * k, DISPLAY), col: "rgba(" + ink + ",1)", lh: 70 * k, after: 18 * k },
+      { lines: wrap("Think your standards are reasonable? Let's see.", font(500, 46 * k, BODY), 780), f: font(500, 46 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 62 * k, after: 0 },
+      { kind: "rule", h: 7, after: 0, before: (story ? 120 : 62) },
+      { lines: ["What's your Delulu Number?"], f: font(700, 52 * k, BODY), col: "rgba(" + ink + ",1)", lh: 64 * k, after: 10 * k, before: (story ? 100 : 50) },
+      { kind: "sub", lines: ["Find yours at "], f: font(500, 44 * k, BODY), bold: font(700, 44 * k, BODY), col: "rgba(" + ink + ",.85)", lh: 58 * k, after: 0 }
+    ];
+    var total = 0;
+    blocks.forEach(function (b) { total += (b.before || 0) + (b.kind === "rule" ? b.h : b.lines.length * b.lh) + b.after; });
+    var y = (H - total) / 2;
+    x.textAlign = "left"; x.textBaseline = "middle";
+    blocks.forEach(function (b) {
+      y += b.before || 0;
+      if (b.kind === "rule") {
+        x.fillStyle = "rgba(" + ink + ",.3)"; x.fillRect(W / 2 - 72, y, 144, b.h); y += b.h + b.after; return;
+      }
+      b.lines.forEach(function (line) {
+        var cy = y + b.lh / 2;
+        x.fillStyle = b.col; x.font = b.f;
+        if (b.kind === "kicker") {
+          var sp = 46 * k * 0.14, wTot = 0, chars = line.split("");
+          chars.forEach(function (ch) { wTot += x.measureText(ch).width + sp; }); wTot -= sp;
+          var cx = (W - wTot) / 2;
+          chars.forEach(function (ch) { x.fillText(ch, cx, cy); cx += x.measureText(ch).width + sp; });
+        } else if (b.kind === "sub") {
+          var w1 = x.measureText(line).width; x.font = b.bold; var w2 = x.measureText(host).width;
+          var sx = (W - w1 - w2) / 2;
+          x.font = b.f; x.fillText(line, sx, cy);
+          x.font = b.bold; x.fillStyle = "rgba(" + ink + ",1)"; x.fillText(host, sx + w1, cy);
+        } else {
+          x.textAlign = "center"; x.fillText(line, W / 2, cy); x.textAlign = "left";
+        }
+        y += b.lh;
+      });
+      y += b.after;
+    });
+    return c;
+  }
+  function buildCardFile(res) {
+    var id = ++cardBuildId; cardFile = null;
+    var ready = document.fonts && document.fonts.load
+      ? Promise.all([document.fonts.load('750 60px "Bricolage Grotesque"'), document.fonts.load('700 20px "Figtree"'), document.fonts.load('500 20px "Figtree"')]).catch(function () {})
+      : Promise.resolve();
+    ready.then(function () {
+      if (id !== cardBuildId) return;
+      drawCard(res, cardTheme, cardShape).toBlob(function (blob) {
+        if (id !== cardBuildId || !blob) return;
+        try { cardFile = new File([blob], "my-delulu-number.png", { type: "image/png" }); }
+        catch (e) { cardFile = blob; cardFile.name = "my-delulu-number.png"; }
+      }, "image/png");
+    });
+  }
+  function shareStatus(msg) { $("share-status").textContent = msg; }
+  function copyCaption() {
+    try { return navigator.clipboard.writeText(shareText(lastResult, $("r-tier").textContent)).then(function () { return true; }, function () { return false; }); }
+    catch (e) { return Promise.resolve(false); }
+  }
+  function downloadCard() {
+    if (!cardFile) return false;
+    var url = URL.createObjectURL(cardFile), a = document.createElement("a");
+    a.href = url; a.download = "my-delulu-number.png"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    return true;
+  }
+  // Instagram and Snapchat have no web share link for images. On a phone, open the share
+  // sheet with the card (both apps appear there); elsewhere, save the image and copy the caption.
+  function shareImage(app) {
+    if (!cardFile) { shareStatus("Your card is still being made. Try again in a second."); return; }
+    var canFiles = false;
+    try { canFiles = !!(navigator.canShare && navigator.canShare({ files: [cardFile] })); } catch (e) {}
+    if (isTouch() && canFiles) {
+      copyCaption();
+      navigator.share({ files: [cardFile] }).then(function () { shareStatus(""); }, function (err) {
+        if (err && err.name === "AbortError") return;
+        downloadCard(); shareStatus("Card saved to your device. Open " + app + " and post it.");
+      });
+      shareStatus("Pick " + app + " from the share menu. Your caption is copied, so you can paste it in.");
+      return;
+    }
+    if (app === "Snapchat") { window.open("https://www.snapchat.com/share?link=" + encodeURIComponent(SITE_URL), "_blank", "noopener"); }
+    downloadCard();
+    copyCaption().then(function (ok) {
+      shareStatus("Card saved" + (ok ? " and caption copied" : "") + ". " + (app === "Instagram" ? "Post it from Instagram on your phone." : "Add it to a Snap from your phone."));
+    });
+  }
+  $("sh-ig").addEventListener("click", function () { shareImage("Instagram"); });
+  $("sh-sc").addEventListener("click", function () { shareImage("Snapchat"); });
+  // Facebook doesn't allow pre-written text, so copy it for pasting
+  $("sh-fb").addEventListener("click", function () { copyCaption().then(function (ok) { if (ok) shareStatus("Caption copied. Paste it into your Facebook post."); }); });
+  $("save-card").addEventListener("click", function () { shareStatus(downloadCard() ? "Card saved." : "Your card is still being made. Try again in a second."); });
   bindRadioGroup($("sc-theme"), cardTheme, function (v) { cardTheme = v; if (lastResult) renderShare(lastResult, $("r-tier").textContent); });
   bindRadioGroup($("sc-shape"), cardShape, function (v) { cardShape = v; if (lastResult) renderShare(lastResult, $("r-tier").textContent); });
   $("copy-result").addEventListener("click", function () {
     var btn = this, txt = shareText(lastResult, $("r-tier").textContent);
     function fail() { btn.textContent = "Copy blocked"; }
-    try { navigator.clipboard.writeText(txt).then(function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy result text"; }, 1600); }, fail); } catch (e) { fail(); }
+    try { navigator.clipboard.writeText(txt).then(function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy text"; }, 1600); }, fail); } catch (e) { fail(); }
   });
   $("edit-filters").addEventListener("click", function () { goTo(1); });
 
