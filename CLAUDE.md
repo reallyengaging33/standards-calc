@@ -270,7 +270,7 @@ with code that:
      of the Looks multiplier (0.5 to 1.5), Character to the Emotional Intelligence multiplier
    - Real-world odds: N_adj = N × Physical × Character × Lifestyle (also shown as a %)
    - Delusion score = census points + standards points, capped at 10. Census points =
-     2.1 × log10(N). Standards points have **diminishing returns** (Nick's decision):
+     2.55 × log10(N) (`RARITY.censusScale`; 2.1 before `APP_VERSION` 2026-11-20.3). Standards points have **diminishing returns** (Nick's decision):
      `stdCap × (1 − e^(−raw ÷ stdCap))`, raw = 2.1 × log10(standards rarity), `stdCap` = 3 in
      `RARITY`. The "1 in N" real-world odds are not softened. Rows saved before
      `APP_VERSION` 2026-11-20 used the old, unsoftened standards points.

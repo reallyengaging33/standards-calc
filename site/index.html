@@ -1277,7 +1277,7 @@
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
       <p><strong>Census odds</strong> use the step 1 filters above plus living situation. When you pick Black, the odds are counted among Black men or women (for example “1 in 153 Black men”), so choosing Black doesn't add to your Delulu score. “Doesn't matter” counts among all adults. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) is applied as a pass rate on top of the census odds to give the <strong>real-world odds</strong>. Most of these are estimates. Two use real data: preferred income uses census income shares for the people who match your filters, and Therapy / Behavioral Work uses the share of adults who got counseling or therapy from a mental health professional in the past 12 months (10.9% of men, 16.9% of women; CDC / NCHS National Health Interview Survey 2024, Data Brief 564). When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
-      <p><strong>Delulu score:</strong> census odds add about 2 points for every 10× rarer. Your standards add points the same way, but with diminishing returns: the first few picks count almost fully, and a long list levels off at 3 points. Your real-world odds aren't softened.</p>
+      <p><strong>Delulu score:</strong> census odds add about 2.5 points for every 10× rarer. Your standards add points the same way, but with diminishing returns: the first few picks count almost fully, and a long list levels off at 3 points. Your real-world odds aren't softened.</p>
     </section>
   </div>
 
@@ -1845,7 +1845,7 @@
      secret key (sb_secret_...) here. */
   var SUPABASE_URL = "https://dxmpzgilhwhobfqpizsw.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Vvip55_DirJ4eF0S-KlUOw_zvSMFZRF";   // publishable (public) key; never the secret key
-  var APP_VERSION = "2026-11-20.2";   // bumped when scoring changes: .2 = Black odds counted among Black adults
+  var APP_VERSION = "2026-11-20.3";   // bumped when scoring changes: .2 = Black odds counted among Black adults, .3 = census 2.55 pts per 10×
   // Public address of the site, used on the share card and in shared text.
   var SITE_URL = "https://yourdelulunumber.app/";
   var lastSaveRes = null, lastSavedKey = null, sbClient = null;
@@ -2186,7 +2186,8 @@
                      equal 2.1 × log10 of the standards rarity once the list gets long.
      Pass rates below are estimates, not survey data, except therapy (CDC NHIS 2024). Tune them here. */
   var RARITY = {
-    scale: 2.1,                 // delusion points per 10× rarer
+    scale: 2.1,                 // standards: delusion points per 10× rarer (before diminishing returns)
+    censusScale: 2.55,          // census odds: points per 10× rarer (raised from 2.1 once Black odds were counted among Black adults)
     preferredPower: 0.5,        // Preferred = pass rate ^ 0.5
     character: { lowSubstanceUse: 0.80, communication: 0.50 },   // mentalHealth comes from RARITY.therapy
     // Therapy / Behavioral Work: share of adults who got counseling or therapy from a mental health
@@ -2287,7 +2288,7 @@
     var incomeKeep = people > 0 ? sum(function (r) { return r.peoplePref; }) / people : null;
     var std = standardsRarity(s, incomeKeep);
     var Nadj = N * std.R;                                   // real-world odds
-    var censusPts = isFinite(N) ? Math.max(0, RARITY.scale * Math.log10(N)) : Infinity;
+    var censusPts = isFinite(N) ? Math.max(0, RARITY.censusScale * Math.log10(N)) : Infinity;
     var total = censusPts + std.pts;                         // census points + standards points (with diminishing returns)
     var score = Math.max(0, Math.min(10, Math.round(total)));
     return { p: p, N: N, people: people, factors: factors, std: std, Nadj: Nadj, pAdj: p / std.R, peopleAdj: people / std.R,
@@ -2306,7 +2307,7 @@
   var LINES = {
     stats: ["Your list is realistic.", "Selective, but well within reach.", "Your filters and standards are narrowing things a lot.", "Few people clear both your filters and your standards.", "Almost nobody clears both your filters and your standards."],
     playful: ["Honestly? You're good. Go say hi to somebody.", "Picky, but in a healthy way. We love that for you.", "A little delulu never hurt anybody. A little.", "Your type exists. Rarely. And they might already be booked.", "Respectfully, your friends are worried about you."],
-    brutal: ["Honestly? Your standards aren't the problem.", "Fine. Not impressive, but fine.", "You're not fully delulu. You're close.", "Your list is longer than your odds.", "Respectfully: you're looking for a unicorn. Keep the must-haves, cut the rest."]
+    brutal: ["Honestly? Your standards aren't the problem.", "Fine. Not impressive, but fine.", "You're not fully delulu. You're close.", "Your list is longer than your odds.", "Respectfully: you're looking for a unicorn."]
   };
   var NOUN = { women: "women", men: "men", either: "people" };
   var REGION = { us: "the United States", ca: "Canada", uk: "the United Kingdom", au: "Australia", eu: "Europe" };
