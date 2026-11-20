@@ -441,6 +441,16 @@
   .tone .choice { min-height: 104px; }
   .tone .choice small { display: block; font-weight: 500; font-size: 12px; color: var(--text-3); margin-top: -4px; }
   .tone .choice[aria-checked="true"] small { color: var(--text-2); }
+  /* On phones the descriptions don't fit in the cards, so the picked one shows here */
+  .tone-note { display: none; margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--bg-raise); border: 1px solid var(--border); border-left: 3px solid var(--magenta); }
+  .tone-note[data-tone="cyan"] { border-left-color: var(--cyan); }
+  .tone-note[data-tone="pink"] { border-left-color: var(--pink); }
+  .tone-note strong { display: block; font-size: 14px; font-weight: 700; }
+  .tone-note span { display: block; font-size: 13px; color: var(--text-2); margin-top: 1px; }
+  .tone-note em { display: block; font-style: normal; font-size: 13px; color: var(--text); margin-top: 6px; }
+  .tone-note.pop { animation: tonePop 260ms var(--ease-out); }
+  @keyframes tonePop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .tone-note.pop { animation: none; } }
 
   /* Optional notice */
   .notice {
@@ -517,6 +527,7 @@
     .body-grid { grid-template-columns: repeat(3, 1fr); }
     .seg.cols-2.wrap-sm { grid-template-columns: 1fr 1fr; }
     .tone .choice small { display: none; }
+    .tone-note { display: block; }
     .btn-ghost { display: none; }
     .seg button { font-size: 13px; padding: 8px 6px; }
   }
@@ -638,12 +649,9 @@
   .optin-points { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
   .optin-points li { display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; }
   .optin-points svg { width: 16px; height: 16px; color: var(--cyan); stroke-width: 2.6; flex: none; }
-  .optin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 18px; }
-  .optin-actions .btn-primary svg { transform: none !important; }
-  #optin[aria-pressed="true"] { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--cyan); cursor: default; }
-  #optin[aria-pressed="true"] svg { color: var(--cyan); }
+  .optin-toggle { margin-top: 18px; border-color: rgba(197, 78, 242, 0.5); }
+  .optin-toggle strong { font-size: 16px; font-weight: 700; }
   .optin-fine { margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
-  @media (max-width: 760px) { .optin-actions .btn-primary { width: 100%; justify-content: center; } }
   .chips.three-up { grid-template-columns: repeat(3, 1fr); }
   .slider-hint { margin: -4px 0 6px; font-size: 13px; color: var(--text-3); }
   .subscores { margin-top: 14px; display: grid; gap: 8px; text-align: left; }
@@ -985,6 +993,7 @@
         <button type="button" class="choice" role="radio" data-value="playful" data-tone="magenta"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-rocks"/></svg>On the rocks<small>How your friends would say it</small></button>
         <button type="button" class="choice" role="radio" data-value="brutal" data-tone="pink"><span class="tick" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span><svg class="icon" aria-hidden="true"><use href="#i-shot"/></svg>No chaser<small>Brutal honesty</small></button>
       </div>
+      <div class="tone-note" id="tone-note" aria-live="polite"><strong id="tone-note-title"></strong><span id="tone-note-desc"></span><em id="tone-note-sample"></em></div>
     </section>
   </div>
 
@@ -1200,9 +1209,9 @@
         <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>No IP address stored with your answers</li>
         <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Helps us improve the data and the app</li>
       </ul>
-      <div class="optin-actions">
-        <button type="button" class="btn-primary" id="optin" aria-pressed="false" aria-describedby="optin-desc">Add my answers</button>
-        <button type="button" class="link-btn" id="optin-stop" hidden>Stop adding my answers</button>
+      <div class="toggle-row optin-toggle">
+        <div class="toggle-text"><strong id="optin-label">Add my answers to the stats</strong><span>Anonymous, and one tap to turn off.</span></div>
+        <button type="button" class="switch" role="switch" id="optin" aria-checked="false" aria-labelledby="optin-label" aria-describedby="optin-desc"></button>
       </div>
       <p class="optin-fine">Because nothing links back to you, saved answers can't be deleted later.</p>
       <p class="optin-status" id="optin-status" aria-live="polite"></p>
@@ -1883,24 +1892,33 @@
         status.textContent = "Couldn't add your answers right now. Your results are unaffected. Try again in a moment.";
       });
   }
-  var CHECK_SVG = '<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>';
   function optinUI(mode) {
-    var b = $("optin");
-    b.setAttribute("aria-pressed", mode === "off" ? "false" : "true");
-    if (mode === "off") b.textContent = "Add my answers";
-    else if (mode === "saving") b.textContent = "Adding…";
-    else b.innerHTML = CHECK_SVG + "Answers added";
-    $("optin-stop").hidden = mode === "off";
+    $("optin").setAttribute("aria-checked", mode === "off" ? "false" : "true");
+    if (mode === "saving") $("optin-status").textContent = "Adding your answers…";
   }
   $("optin").addEventListener("click", function () {
-    if (optIn) return;
-    optIn = true;
-    if (lastSaveRes) saveResult(lastSaveRes); else optinUI("added");
+    optIn = !optIn;
+    if (optIn) { if (lastSaveRes) saveResult(lastSaveRes); else optinUI("added"); }
+    else { optinUI("off"); $("optin-status").textContent = lastSavedKey ? "Got it. Nothing more will be added." : ""; }
   });
-  $("optin-stop").addEventListener("click", function () {
-    optIn = false; optinUI("off");
-    $("optin-status").textContent = "Got it. Nothing more will be added.";
-  });
+
+  /* Result tone: on phones, show the picked option's description and a sample line under the cards */
+  var TONE_NOTES = {
+    stats: { tone: "cyan", title: "Water", desc: "Plain talk, just the data." },
+    playful: { tone: "magenta", title: "On the rocks", desc: "How your friends would say it." },
+    brutal: { tone: "pink", title: "No chaser", desc: "Brutal honesty. No sugar on it." }
+  };
+  function paintToneNote(animate) {
+    var picked = document.querySelector('[data-key="resultTone"] [aria-checked="true"]');
+    var key = picked ? picked.getAttribute("data-value") : "playful", n = TONE_NOTES[key], box = $("tone-note");
+    if (!n || !box) return;
+    box.setAttribute("data-tone", n.tone);
+    $("tone-note-title").textContent = n.title;
+    $("tone-note-desc").textContent = n.desc;
+    $("tone-note-sample").textContent = "Sounds like: \u201c" + LINES[key][2] + "\u201d";
+    if (animate) { box.classList.remove("pop"); void box.offsetWidth; box.classList.add("pop"); }
+  }
+  document.querySelector('[data-key="resultTone"]').addEventListener("click", function () { paintToneNote(true); });
 
   /* ================= Navigation ================= */
   var STEPS = {
@@ -2662,7 +2680,7 @@
 
 
   $("data-retry").addEventListener("click", function () { if (statusRetry) statusRetry(); });
-  paintHeight(); paintIncome();
+  paintHeight(); paintIncome(); paintToneNote(false);
   loadData();
   goTo(1);
   window.scrollTo(0, 0);

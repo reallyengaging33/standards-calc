@@ -84,7 +84,7 @@ The UI builds this object (the `state` variable in index.html; log it with `cons
 
 Search area: `metro` + state + city → that metro area; `metro` or `state` with only a state →
 that state; otherwise the whole US. There is no free-text city: PUMS can't identify towns.
-| `resultTone` | `stats` ("Water") / `playful` ("On the rocks", default) / `brutal` ("No chaser") | copy only |
+| `resultTone` | `stats` ("Water") / `playful` ("On the rocks", default) / `brutal` ("No chaser") | copy only. On phones the picked option's description and a sample line show under the cards (`#tone-note`, `TONE_NOTES`) |
 | `looksImportance` | 0–10 | power on the Physical rarity multiplier (0.5 to 1.5) |
 | `emotionalRegulation` | 0–10 | UI label "Emotional Intelligence & Healthy Attachment". power on the Character rarity multiplier (0.5 to 1.5). Key name kept for compatibility |
 | `behavior.*`, `skills.*` | `any` / `preferred` / `required` | pass-rate multipliers (Character / Lifestyle) |
@@ -309,9 +309,8 @@ caption is copied for pasting.
 
 ## Anonymous stats (Supabase, opt-in)
 - Results page has an **opt-in** panel ("Help us make our stats and app better") with an
-  "Add my answers" button, off by default. Only after it's clicked does the page insert a row
-  into the Supabase table `results` (and again if they change their answers and rerun).
-  "Stop adding my answers" turns it back off.
+  "Add my answers to the stats" switch, off by default. Only when it's on does the page insert
+  a row into the Supabase table `results` (and again if they change their answers and rerun).
 - Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
   **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
   secret key in the site or the repo.
