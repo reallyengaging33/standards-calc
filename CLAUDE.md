@@ -181,6 +181,9 @@ Veale et al., BJU International 2015, erect length mean 13.12 cm, SD 1.66 cm (n 
 **Leave as strictness-only unless Nick says otherwise.**
 
 ### Not from any dataset (rarity multipliers on top of the census odds)
+**Therapy / Behavioral Work uses real data:** share of adults with counseling or therapy from a
+mental health professional in the past 12 months, CDC/NCHS Data Brief 564 (NHIS 2024): men 10.9%,
+women 16.9%, all 14.0% (`RARITY.therapy`, by who they're looking for). Everything else below is an estimate.
 Body types, all of Step 2 (behavior, Emotional Intelligence, dealbreakers), skills, debt,
 looks importance, preferred income. No survey measures these. They become **rarity multipliers on top of the census
 odds** (real-world odds), never the census odds themselves. Body-type rarity multipliers in `BODY_SETS` are Nick's
@@ -262,8 +265,11 @@ with code that:
    - Each pillar's rarity = 1 / (product of its pass rates). Physical is raised to the power
      of the Looks multiplier (0.5 to 1.5), Character to the Emotional Intelligence multiplier
    - Real-world odds: N_adj = N × Physical × Character × Lifestyle (also shown as a %)
-   - Delusion score = 2.1 × log10(N_adj), capped at 10. This splits exactly into census
-     points + each pillar's points, which the equation panel shows.
+   - Delusion score = census points + standards points, capped at 10. Census points =
+     2.1 × log10(N). Standards points have **diminishing returns** (Nick's decision):
+     `stdCap × (1 − e^(−raw ÷ stdCap))`, raw = 2.1 × log10(standards rarity), `stdCap` = 3 in
+     `RARITY`. The "1 in N" real-world odds are not softened. Rows saved before
+     `APP_VERSION` 2026-11-20 used the old, unsoftened standards points.
 9. **Location filters the census odds.** Use `searchArea(state)` to pick the cube: the metro
    file, the state file, or the national cube. Load it on demand (show a loading state), and
    run the same calculation on it. Update `#r-local`: remove the "Demo: showing national

@@ -1256,7 +1256,7 @@
       <button type="button" class="btn-primary" id="edit-filters">Adjust my list<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
     </section>
 
-    <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 (national) and 2020–2024 (states and cities), CDC NHANES 2021–2023. <a href="#methodology">How this is calculated</a></p>
+    <p class="sources-line">Sources: U.S. Census Bureau ACS 2024 (national) and 2020–2024 (states and cities), CDC NHANES 2021–2023, CDC NHIS 2024. <a href="#methodology">How this is calculated</a></p>
 
     <section class="panel method" id="methodology" aria-labelledby="method-title">
       <h2 class="panel-title" id="method-title">How this is calculated</h2>
@@ -1276,7 +1276,8 @@
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
-      <p><strong>Census odds</strong> use the step 1 filters above plus living situation. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) isn't measured by any survey we use, so it's applied as an estimated pass rate on top of the census odds to give the <strong>real-world odds</strong>. The one exception is preferred income, which uses real census income shares for the people who match your filters. When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Census odds</strong> use the step 1 filters above plus living situation. Everything else in steps 2–4 (behavior, Emotional Intelligence, dealbreakers, body types, size, looks, skills, car, debt, handy) is applied as a pass rate on top of the census odds to give the <strong>real-world odds</strong>. Most of these are estimates. Two use real data: preferred income uses census income shares for the people who match your filters, and Therapy / Behavioral Work uses the share of adults who got counseling or therapy from a mental health professional in the past 12 months (10.9% of men, 16.9% of women; CDC / NCHS National Health Interview Survey 2024, Data Brief 564). When fewer than 30 respondents match, the result is marked as a rough estimate.</p>
+      <p><strong>Delulu score:</strong> census odds add about 2 points for every 10× rarer. Your standards add points the same way, but with diminishing returns: the first few picks count almost fully, and a long list levels off at 3 points. Your real-world odds aren't softened.</p>
     </section>
   </div>
 
@@ -1844,7 +1845,7 @@
      secret key (sb_secret_...) here. */
   var SUPABASE_URL = "https://dxmpzgilhwhobfqpizsw.supabase.co";
   var SUPABASE_KEY = "sb_publishable_Vvip55_DirJ4eF0S-KlUOw_zvSMFZRF";   // publishable (public) key; never the secret key
-  var APP_VERSION = "2026-11-19";
+  var APP_VERSION = "2026-11-20";   // bumped when scoring changed (diminishing returns, CDC therapy rates)
   // Public address of the site, used on the share card and in shared text.
   var SITE_URL = "https://yourdelulunumber.app/";
   var lastSaveRes = null, lastSavedKey = null, sbClient = null;
@@ -2173,13 +2174,21 @@
        Physical  rarity is raised to the power of the Looks multiplier (×0.5 to ×1.5)
        Character rarity is raised to the power of the Emotional Intelligence multiplier
      Real-world odds = census odds × Physical × Character × Lifestyle
-     Delusion score  = 2.1 × log10(real-world N), capped at 10,
-                     which splits exactly into census points + each pillar's points.
-     Pass rates below are estimates, not survey data. Tune them here. */
+     Delusion score  = census points (2.1 × log10 census N) + standards points, capped at 10.
+                     Standards points have diminishing returns (see stdCap), so they no longer
+                     equal 2.1 × log10 of the standards rarity once the list gets long.
+     Pass rates below are estimates, not survey data, except therapy (CDC NHIS 2024). Tune them here. */
   var RARITY = {
     scale: 2.1,                 // delusion points per 10× rarer
     preferredPower: 0.5,        // Preferred = pass rate ^ 0.5
-    character: { mentalHealth: 0.40, lowSubstanceUse: 0.80, communication: 0.50 },
+    character: { lowSubstanceUse: 0.80, communication: 0.50 },   // mentalHealth comes from RARITY.therapy
+    // Therapy / Behavioral Work: share of adults who got counseling or therapy from a mental health
+    // professional in the past 12 months. CDC/NCHS Data Brief 564 (NHIS 2024), Figure 1: men 10.9%,
+    // women 16.9%, all adults 14.0%.
+    therapy: { men: 0.109, women: 0.169, either: 0.140 },
+    // Diminishing returns: standards points = stdCap × (1 − e^(−raw ÷ stdCap)), where raw = 2.1 × log10(rarity).
+    // A short list counts almost fully; a long list levels off below stdCap. The "1 in N" odds are not softened.
+    stdCap: 3,
     lifestyle: { cooking: 0.60, active: 0.50, cleanliness: 0.60 },
     dealbreakers: { heavyPartying: 0.85, nightlife: 0.93, unreliable: 0.70, multipleCoParents: 0.85 },
     // living: now measured from the census (see computeFor), so no estimate here
@@ -2211,7 +2220,7 @@
     }
     if (RARITY.size[s.sizePreference]) phys.push(item(s.sizePreference === "above_average" ? "Size: above average only" : "Size: average or above", RARITY.size[s.sizePreference]));
     // Character
-    var chr = triItems(s.behavior, RARITY.character);
+    var chr = triItems(s.behavior, Object.assign({ mentalHealth: RARITY.therapy[s.seeking] || RARITY.therapy.either }, RARITY.character));
     var DB_LABEL = { heavyPartying: "No partying 4–5 nights a week", nightlife: "Not in nightlife", unreliable: "Reliable", multipleCoParents: "Kids with one partner at most" };
     Object.keys(DB_LABEL).forEach(function (k) {
       if (!s.dealbreakers[k]) return;
@@ -2245,7 +2254,8 @@
       pillar("lifestyle", "Lifestyle", life, 1, "")
     ];
     var R = pillars.reduce(function (t, p) { return t * p.R; }, 1);
-    return { pillars: pillars, R: R, pts: RARITY.scale * Math.log10(R) };
+    var rawPts = RARITY.scale * Math.log10(R);
+    return { pillars: pillars, R: R, rawPts: rawPts, pts: RARITY.stdCap * (1 - Math.exp(-rawPts / RARITY.stdCap)) };
   }
 
   function compute(s) {
@@ -2271,7 +2281,7 @@
     var std = standardsRarity(s, incomeKeep);
     var Nadj = N * std.R;                                   // real-world odds
     var censusPts = isFinite(N) ? Math.max(0, RARITY.scale * Math.log10(N)) : Infinity;
-    var total = censusPts + std.pts;                         // = 2.1 × log10(Nadj)
+    var total = censusPts + std.pts;                         // census points + standards points (with diminishing returns)
     var score = Math.max(0, Math.min(10, Math.round(total)));
     return { p: p, N: N, people: people, factors: factors, std: std, Nadj: Nadj, pAdj: p / std.R, peopleAdj: people / std.R,
              censusPts: censusPts, total: total, score: score, n: n, lowConfidence: n < LOW_N,
