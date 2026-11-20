@@ -76,7 +76,7 @@ The UI builds this object (the `state` variable in index.html; log it with `cons
 | `heightUnit` | `imperial` / `metric` | display only |
 | `minIncome` | one of the `INCOME_STEPS` values (0 … 1,000,000) | **odds** |
 | `preferredIncome` | ≥ `minIncome` | Lifestyle rarity multiplier (uses real income shares) |
-| `excludeObese` | bool (BMI ≥ 30) | **odds** (via NHANES) |
+| `excludeObese` | bool (BMI ≥ 30). **Removed from the UI (Nick's decision), always `false`.** The data and math are kept, so it could come back | **odds** (via NHANES) |
 | `region` | always `us` for now | dataset choice |
 | `distance` | `metro` / `state` / `country` | **odds**: sets the search area (see `searchArea()` in index.html) |
 | `usState` | 2-letter code (`GA`) or `null` | **odds**: the state for `state`/`metro` searches |

@@ -927,11 +927,6 @@
         </div>
       </fieldset>
 
-      <div class="toggle-row plain">
-        <span class="ti" aria-hidden="true"><svg class="icon"><use href="#i-scale"/></svg></span>
-        <div class="toggle-text"><strong id="obese-label">Exclude obesity</strong><span id="obese-desc">BMI 30+, about 40% of US adults (CDC, 2021–23)</span></div>
-        <button type="button" class="switch" role="switch" data-key="excludeObese" aria-labelledby="obese-label" aria-describedby="obese-desc"></button>
-      </div>
     </section>
 
     <section class="panel" aria-labelledby="loc-title">
@@ -1244,8 +1239,8 @@
       <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. The census data ships with the page and the math runs on your device. Your answers are only sent anywhere if you switch on “Add my answers to the stats”.</p>
       <ul>
         <li><strong>Sex, age, relationship status, ethnicity, income, children:</strong> U.S. Census Bureau, American Community Survey 2024 1-year Public Use Microdata Sample (about 2.8 million adult respondents, representing 267 million US adults).</li>
-        <li><strong>States and cities:</strong> the same survey's larger 2020–2024 5-year sample, so smaller places still have enough respondents. The census can't identify towns, only areas of 100,000+ people, so a city means its metro area, built from the census areas where most residents live inside it. A few small capitals (Juneau, Pierre, Helena, Carson City, Montpelier, Laramie) are smaller than any census area, so they use the surrounding region, and the page says so. Height and obesity use national figures for every location.</li>
-        <li><strong>Height and obesity:</strong> CDC / NCHS National Health and Nutrition Examination Survey, August 2021–August 2023 (measured, not self-reported). Applied by sex, age band and ethnicity. Some smaller groups are pooled across age bands.</li>
+        <li><strong>States and cities:</strong> the same survey's larger 2020–2024 5-year sample, so smaller places still have enough respondents. The census can't identify towns, only areas of 100,000+ people, so a city means its metro area, built from the census areas where most residents live inside it. A few small capitals (Juneau, Pierre, Helena, Carson City, Montpelier, Laramie) are smaller than any census area, so they use the surrounding region, and the page says so. Height uses national figures for every location.</li>
+        <li><strong>Height:</strong> CDC / NCHS National Health and Nutrition Examination Survey, August 2021–August 2023 (measured, not self-reported). Applied by sex, age band and ethnicity. Some smaller groups are pooled across age bands.</li>
       </ul>
       <h3>Definitions</h3>
       <ul>
@@ -1253,8 +1248,7 @@
         <li><strong>Children:</strong> their own children under 18 living in the same home. Children who live elsewhere aren't recorded.</li>
         <li><strong>Living situation:</strong> from who lives in the home. Alone means the only person in the household. With parents means an adult son or daughter of the head of the household. Roommates means a roommate or other non-relative of the head (or a head with no partner who lives with them), plus dorms and similar shared housing. People who live with a partner, their own kids or other relatives are never excluded by this filter.</li>
         <li><strong>Income:</strong> total personal income from all sources, in 2024 dollars.</li>
-        <li><strong>Ethnicity:</strong> the filter is “Doesn't matter” or Black. Black means Black or African American alone or in combination with other races, of any Hispanic origin (the census RACBLK recode). Height and obesity use each person's NHANES race and Hispanic-origin group.</li>
-        <li><strong>Obesity:</strong> BMI of 30 or more.</li>
+        <li><strong>Ethnicity:</strong> the filter is “Doesn't matter” or Black. Black means Black or African American alone or in combination with other races, of any Hispanic origin (the census RACBLK recode). Height uses each person's NHANES race and Hispanic-origin group.</li>
         <li><strong>Age 90 and over</strong> is one group. The census doesn't publish exact ages above that.</li>
         <li><strong>Distance</strong> doesn't change the odds. They're national shares.</li>
       </ul>
@@ -2125,7 +2119,7 @@
       // the share of all adults this filter keeps on its own.
       var v = without[i] > 0 ? matched / without[i] : alone[i] / pool;
       return { key: key, label: meta[key][0], note: meta[key][1], v: Math.min(1, v) };
-    });
+    }).filter(function (f) { return f.key !== "obesity" || s.excludeObese; });
   }
 
   function incomeAtLeast(s, step, D) {
