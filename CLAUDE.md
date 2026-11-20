@@ -16,8 +16,9 @@ runs on a **demo model**: rough national guesses that treat every filter as inde
    using their survey weights.
 2. **Never invent or estimate a number** that should come from data. If a figure can't be
    computed, say so in the UI ("not available") instead of guessing.
-3. **Everything runs in the browser.** No server and no live API calls at runtime. The site
-   promises "Anonymous · stays on your device". The data ships as a static file.
+3. **Everything runs in the browser.** No server and no live API calls for the math. The site
+   says "Anonymous · no name, email or IP saved". The data ships as a static file. The only
+   network call is the anonymous stats insert (see "Anonymous stats" below).
 4. **Keep the filter state shape exactly as it is** (listed below). The UI depends on it.
 5. **Raw downloads never go in git.** `data/raw/` is gitignored. Only the small, processed
    files in `site/data/` are committed.
@@ -310,10 +311,11 @@ caption is copied for pasting.
 
 ---
 
-## Anonymous stats (Supabase, opt-in)
-- Results page has an **opt-in** panel ("Help us make our stats and app better") with an
-  "Add my answers to the stats" switch, off by default. Only when it's on does the page insert
-  a row into the Supabase table `results` (and again if they change their answers and rerun).
+## Anonymous stats (Supabase, automatic)
+- **No opt-in (Nick's decision).** Every finished result inserts one row into the Supabase
+  table `results` automatically; a changed set of answers inserts another row, identical
+  reruns don't. The results page tells people this in the "Your answers help make our stats
+  and app better" panel, and the methodology section says it too. Keep that disclosure.
 - Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
   **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
   secret key in the site or the repo.

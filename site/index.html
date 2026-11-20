@@ -639,9 +639,7 @@
   .optin-points { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
   .optin-points li { display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; }
   .optin-points svg { width: 16px; height: 16px; color: var(--cyan); stroke-width: 2.6; flex: none; }
-  .optin-toggle { margin-top: 18px; border-color: rgba(197, 78, 242, 0.5); }
-  .optin-toggle strong { font-size: 16px; font-weight: 700; }
-  .optin-fine { margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
+  .optin-fine { margin: 14px 0 0; font-size: 12px; color: var(--text-3); }
   .chips.three-up { grid-template-columns: repeat(3, 1fr); }
   .slider-hint { margin: -4px 0 6px; font-size: 13px; color: var(--text-3); }
   .subscores { margin-top: 14px; display: grid; gap: 8px; text-align: left; }
@@ -800,7 +798,7 @@
     <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
     Your Delulu Number
   </div>
-  <div class="privacy"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Anonymous · nothing saved unless you opt in</span></div>
+  <div class="privacy"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Anonymous · no name, email or IP saved</span></div>
 </header>
 
 <main>
@@ -1174,8 +1172,8 @@
       <div class="optin-head">
         <span class="optin-icon" aria-hidden="true"><svg class="icon"><use href="#i-chart"/></svg></span>
         <div>
-          <h2 class="panel-title" id="optin-title">Help us make our stats and app better</h2>
-          <p class="optin-lede" id="optin-desc">Add your answers to the stats. Every answer makes the numbers sharper for everyone, and you stay anonymous.</p>
+          <h2 class="panel-title" id="optin-title">Your answers help make our stats and app better</h2>
+          <p class="optin-lede" id="optin-desc">We add your answers to our anonymous stats, so the numbers get sharper for everyone.</p>
         </div>
       </div>
       <ul class="optin-points">
@@ -1183,10 +1181,6 @@
         <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>No IP address stored with your answers</li>
         <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Helps us improve the data and the app</li>
       </ul>
-      <div class="toggle-row optin-toggle">
-        <div class="toggle-text"><strong id="optin-label">Add my answers to the stats</strong><span>Anonymous, and one tap to turn off.</span></div>
-        <button type="button" class="switch" role="switch" id="optin" aria-checked="false" aria-labelledby="optin-label" aria-describedby="optin-desc"></button>
-      </div>
       <p class="optin-fine">Because nothing links back to you, saved answers can't be deleted later.</p>
       <p class="optin-status" id="optin-status" aria-live="polite"></p>
     </section>
@@ -1242,7 +1236,7 @@
 
     <section class="panel method" id="methodology" aria-labelledby="method-title">
       <h2 class="panel-title" id="method-title">How this is calculated</h2>
-      <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. The census data ships with the page and the math runs on your device. Your answers are only sent anywhere if you switch on “Add my answers to the stats”.</p>
+      <p>We count real survey respondents who match <em>all</em> of your filters at once, using their survey weights, so overlaps between age, income, marital status, kids and ethnicity are built in. The census data ships with the page and the math runs on your device. When you reach your results, your answers and scores are added to our anonymous stats, with no name, email or IP address attached.</p>
       <ul>
         <li><strong>Sex, age, relationship status, ethnicity, income, children:</strong> U.S. Census Bureau, American Community Survey 2024 1-year Public Use Microdata Sample (about 2.8 million adult respondents, representing 267 million US adults).</li>
         <li><strong>States and cities:</strong> the same survey's larger 2020–2024 5-year sample, so smaller places still have enough respondents. The census can't identify towns, only areas of 100,000+ people, so a city means its metro area, built from the census areas where most residents live inside it. A few small capitals (Juneau, Pierre, Helena, Carson City, Montpelier, Laramie) are smaller than any census area, so they use the surrounding region, and the page says so. Height uses national figures for every location.</li>
@@ -1819,7 +1813,8 @@
   }
   syncHandy();
 
-  /* ================= Anonymous stats (Supabase, opt-in) =================
+  /* ================= Anonymous stats (Supabase, automatic) =================
+     Every finished result is added as one anonymous row (no name, email or IP in the row).
      Paste your Supabase Project URL and publishable key below. The publishable key is
      meant to be public; Row Level Security only lets the site INSERT rows. Never put the
      secret key (sb_secret_...) here. */
@@ -1828,7 +1823,7 @@
   var APP_VERSION = "2026-11-19";
   // Public address of the site, used on the share card and in shared text.
   var SITE_URL = "https://yourdelulunumber.app/";
-  var optIn = false, lastSaveRes = null, lastSavedKey = null, sbClient = null;
+  var lastSaveRes = null, lastSavedKey = null, sbClient = null;
 
   function getClient() {
     if (sbClient) return Promise.resolve(sbClient);
@@ -1842,7 +1837,7 @@
     var status = $("optin-status");
     if (!SUPABASE_URL || !SUPABASE_KEY) { status.textContent = "Saving isn't connected yet (no database set up)."; return; }
     var key = JSON.stringify(state);
-    if (key === lastSavedKey) { optinUI("added"); return; }
+    if (key === lastSavedKey) return;
     var row = {
       app_version: APP_VERSION,
       gender: state.gender, seeking: state.seeking,
@@ -1853,27 +1848,17 @@
       census_pts: num(res.censusPts), standards_pts: num(res.std.pts), delusion_score: res.score,
       answers: JSON.parse(key)
     };
-    status.textContent = ""; optinUI("saving");
+    lastSavedKey = key;   // claim it now so a quick rerun can't send the same row twice
     getClient().then(function (sb) { return sb.from("results").insert(row); })
       .then(function (r) {
         if (r && r.error) throw r.error;
-        lastSavedKey = key; optinUI("added");
-        status.textContent = "You're in. Thanks for helping make the numbers better!";
+        status.textContent = "Added to the anonymous stats. Thanks!";
       })
-      .catch(function () {
-        optIn = false; optinUI("off");
-        status.textContent = "Couldn't add your answers right now. Your results are unaffected. Try again in a moment.";
+      .catch(function (err) {
+        lastSavedKey = null;   // let the next result try again; nothing to show the person
+        if (window.console) console.warn("Stats save failed", err);
       });
   }
-  function optinUI(mode) {
-    $("optin").setAttribute("aria-checked", mode === "off" ? "false" : "true");
-    if (mode === "saving") $("optin-status").textContent = "Adding your answers…";
-  }
-  $("optin").addEventListener("click", function () {
-    optIn = !optIn;
-    if (optIn) { if (lastSaveRes) saveResult(lastSaveRes); else optinUI("added"); }
-    else { optinUI("off"); $("optin-status").textContent = lastSavedKey ? "Got it. Nothing more will be added." : ""; }
-  });
 
   /* Result tone: on phones, show the picked option's description under the cards */
   var TONE_NOTES = {
@@ -2428,7 +2413,7 @@
     renderWhatIf(res);
     renderShare(res, tier);
     lastSaveRes = res;
-    if (optIn) saveResult(res);
+    saveResult(res);
   }
 
   function fmtPts(n) { return (Math.round(n * 100) / 100).toFixed(2).replace(/0$/, "").replace(/\.$/, ""); }
