@@ -307,7 +307,8 @@ Keep `computeFor()` / `compute()` returning the same shape the results UI alread
 - Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
   **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
   secret key in the site or the repo.
-- The table and its insert-only Row Level Security policy are in `supabase-setup.sql`.
+- The table and its insert-only Row Level Security policy are in `supabase/setup.sql`
+  (run once in the Supabase SQL Editor; the live project is set up).
   The public key can insert, never read. Reading and analysis happen in the dashboard
   or later through a server-side job using the secret key (stored as a secret, never committed).
 - Never add names, emails, IP addresses or free text to the row.

@@ -1806,8 +1806,8 @@
      Paste your Supabase Project URL and publishable key below. The publishable key is
      meant to be public; Row Level Security only lets the site INSERT rows. Never put the
      secret key (sb_secret_...) here. */
-  var SUPABASE_URL = "";            // e.g. "https://abcdxyz.supabase.co"
-  var SUPABASE_KEY = "";            // e.g. "sb_publishable_..."
+  var SUPABASE_URL = "https://dxmpzgilhwhobfqpizsw.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_Vvip55_DirJ4eF0S-KlUOw_zvSMFZRF";   // publishable (public) key; never the secret key
   var APP_VERSION = "2026-11-19";
   var optIn = false, lastSaveRes = null, lastSavedKey = null, sbClient = null;
 
@@ -2310,6 +2310,7 @@
   }
 
   function renderResults() {
+    lastSaveRes = null;   // only a finished result for the current answers can be saved
     var ready = !!DATA;
     $("result-panel").hidden = !ready;
     all("#view-5 > section, #view-5 > .sources-line").forEach(function (el) { el.hidden = !ready; });
