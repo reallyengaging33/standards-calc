@@ -303,6 +303,10 @@ Snapchat open the phone's share sheet with that image (desktop: save image + cop
 X and Threads use web intents with the text; Facebook's sharer takes only the link, so the
 caption is copied for pasting.
 
+Link previews: Open Graph / Twitter tags at the top of index.html point to
+`https://yourdelulunumber.app/og-image.jpg` (Nick's image, 1200×628, in `site/`). Replace that file to change
+the preview; keep the full URLs in the tags in step with `SITE_URL`.
+
 ## Data credits to show on the site
 (Brand name on the site: **Your Delulu Number**. Live at https://yourdelulunumber.app, set in `SITE_URL` in index.html.)
 - U.S. Census Bureau, American Community Survey 2024 1-year PUMS
