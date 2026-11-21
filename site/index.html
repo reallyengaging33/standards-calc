@@ -1848,15 +1848,9 @@
   var APP_VERSION = "2026-11-20.3";   // bumped when scoring changes: .2 = Black odds counted among Black adults, .3 = census 2.55 pts per 10×
   // Public address of the site, used on the share card and in shared text.
   var SITE_URL = "https://yourdelulunumber.app/";
-  var lastSaveRes = null, lastSavedKey = null, sbClient = null;
-
-  function getClient() {
-    if (sbClient) return Promise.resolve(sbClient);
-    return import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(function (m) {
-      sbClient = m.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: false } });
-      return sbClient;
-    });
-  }
+  var lastSaveRes = null, lastSavedKey = null;
+  // Add ?debug=1 to the address to see on the results page whether the save worked.
+  var STATS_DEBUG = /[?&]debug=1\b/.test(location.search);
   function num(n) { return isFinite(n) ? n : null; }
   function saveResult(res) {
     var status = $("optin-status");
@@ -1874,14 +1868,22 @@
       answers: JSON.parse(key)
     };
     lastSavedKey = key;   // claim it now so a quick rerun can't send the same row twice
-    getClient().then(function (sb) { return sb.from("results").insert(row); })
+    // Plain POST to Supabase's REST API (no client library to download). The publishable key goes
+    // in the apikey header only; Row Level Security allows inserts and nothing else.
+    fetch(SUPABASE_URL + "/rest/v1/results", {
+      method: "POST",
+      keepalive: true,
+      headers: { "apikey": SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
+      body: JSON.stringify(row)
+    })
       .then(function (r) {
-        if (r && r.error) throw r.error;
-        status.textContent = "Added to the anonymous stats. Thanks!";
+        if (!r.ok) return r.text().then(function (t) { throw new Error("HTTP " + r.status + " " + t.slice(0, 200)); });
+        status.textContent = "Added to the anonymous stats. Thanks!" + (STATS_DEBUG ? " (saved: HTTP " + r.status + ")" : "");
       })
       .catch(function (err) {
         lastSavedKey = null;   // let the next result try again; nothing to show the person
         if (window.console) console.warn("Stats save failed", err);
+        if (STATS_DEBUG) status.textContent = "Stats save failed: " + (err && err.message ? err.message : err);
       });
   }
 

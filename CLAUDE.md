@@ -330,6 +330,9 @@ the preview; keep the full URLs in the tags in step with `SITE_URL`.
   table `results` automatically; a changed set of answers inserts another row, identical
   reruns don't. The results page tells people this in the "Your answers help make our stats
   and app better" panel, and the methodology section says it too. Keep that disclosure.
+- The save is a plain `fetch` POST to `SUPABASE_URL/rest/v1/results` with the publishable key
+  in the `apikey` header (no supabase-js, no CDN). Open the site with `?debug=1` to see on the
+  results page whether the save worked and the error if it didn't.
 - Config is two constants in index.html: `SUPABASE_URL` and `SUPABASE_KEY` (the
   **publishable** key, `sb_publishable_...`, which is designed to be public). Never put the
   secret key in the site or the repo.
